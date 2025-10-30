@@ -1,0 +1,273 @@
+<!-- ========================== -->
+<!-- 🌟 TOPBAR START -->
+<!-- ========================== -->
+<div class="topbar-custom">
+  <div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center position-relative">
+
+      <!-- Left Section -->
+      <ul class="list-unstyled topnav-menu mb-0 d-flex align-items-center">
+        <li>
+          <button class="button-toggle-menu nav-link">
+            <i data-feather="menu" class="noti-icon"></i>
+          </button>
+        </li>
+        <li class="d-none d-lg-block">
+          <h5 class="mb-0">Good Morning, RNS</h5>
+        </li>
+
+        <!-- 🌟 Logo versi HP (tengah topbar) -->
+        <li class="d-block d-lg-none text-center w-100 mobile-logo">
+          <img
+            src="{{ asset('assets/images/hp-logo.png') }}"
+            alt="Logo HP"
+            class="hp-logo"
+          />
+        </li>
+      </ul>
+
+      <!-- Right Section -->
+      <ul class="list-unstyled topnav-menu mb-0 d-flex align-items-center">
+
+        <!-- Fullscreen -->
+        <li class="d-none d-sm-flex">
+          <button type="button" class="btn nav-link" data-toggle="fullscreen">
+            <i data-feather="maximize" class="align-middle fullscreen noti-icon"></i>
+          </button>
+        </li>
+
+        <!-- Dark/Light Mode -->
+        <li class="d-none d-sm-flex">
+          <button type="button" class="btn nav-link" id="light-dark-mode">
+            <i data-feather="moon" class="align-middle dark-mode"></i>
+            <i data-feather="sun" class="align-middle light-mode"></i>
+          </button>
+        </li>
+
+        <!-- 🌟 Profile Dropdown -->
+        <li class="dropdown notification-list topbar-dropdown">
+          <a
+            class="nav-link dropdown-toggle nav-user me-0 d-flex align-items-center"
+            data-bs-toggle="dropdown"
+            href="#"
+            role="button"
+            aria-haspopup="false"
+            aria-expanded="false"
+          >
+            <!-- Hapus foto profil di HP -->
+            <img
+              src="{{ asset('assets/images/users/user-13.jpg') }}"
+              alt="user-image"
+              class="rounded-circle d-none d-lg-inline-block"
+            />
+            <span class="pro-user-name ms-1 fw-semibold text-dark">
+              Heri Pirdaus
+              <i class="mdi mdi-chevron-down"></i>
+            </span>
+          </a>
+
+          <div class="dropdown-menu dropdown-menu-end profile-dropdown">
+            <div class="dropdown-header noti-title">
+              <h6 class="text-overflow m-0">Welcome!</h6>
+            </div>
+
+            <a href="eror-404" class="dropdown-item notify-item">
+              <i class="mdi mdi-account-circle-outline fs-16 align-middle"></i>
+              <span>My Account</span>
+            </a>
+
+            <div class="dropdown-divider"></div>
+
+            <a href="#" class="dropdown-item notify-item" id="logoutBtn">
+              <i class="mdi mdi-location-exit fs-16 align-middle"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- ========================== -->
+<!-- 🌟 TOPBAR END -->
+<!-- ========================== -->
+
+<!-- ========================== -->
+<!-- 🌟 SIDEBAR START -->
+<!-- ========================== -->
+<div class="app-sidebar-menu">
+  <div class="h-100" data-simplebar>
+    <div id="sidebar-menu">
+      <!-- Logo -->
+      <div class="logo-box">
+        <a href="/" class="logo logo-light">
+          <span class="logo-sm d-flex align-items-center">
+            <img
+              src="{{ asset('assets/images/logo-rns-bg.png') }}"
+              alt="Logo Light"
+              height="40"
+              class="me-2"
+            />
+            <span class="fw-bold text-white fs-5"></span>
+          </span>
+        </a>
+
+        <a href="/" class="logo logo-dark">
+          <span class="logo-sm d-flex align-items-center">
+            <img
+              src="{{ asset('assets/images/logo-rns-bg.png') }}"
+              alt="Logo Dark"
+              height="40"
+              class="me-2"
+            />
+            <span class="fw-bold text-dark fs-5">OwnerPanel</span>
+          </span>
+        </a>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <ul id="side-menu">
+        <li class="menu-title">Menu</li>
+
+        <li>
+          <a href="/dashboard" class="{{ Request::is('dashboard') ? 'active' : '' }}">
+            <i data-feather="home"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="/kelola-stok" class="{{ Request::is('kelola-stok*') ? 'active' : '' }}">
+            <i data-feather="box"></i>
+            <span>Kelola Stok</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="/kelola-pembelian" class="{{ Request::is('kelola-pembelian*') ? 'active' : '' }}">
+            <i data-feather="shopping-cart"></i>
+            <span>Kelola Pembelian</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="/riwayat-pembelian" class="{{ Request::is('riwayat-pembelian*') ? 'active' : '' }}">
+            <i data-feather="file-text"></i>
+            <span>Riwayat Pembelian</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#sidebarDokumen" data-bs-toggle="collapse">
+            <i data-feather="folder"></i>
+            <span>Dokumen</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="sidebarDokumen">
+            <ul class="nav-second-level">
+              <li><a href="/sph" class="tp-link">Surat Penawaran Harga</a></li>
+              <li><a href="/kwitansi" class="tp-link">Surat Kwitansi</a></li>
+              <li><a href="/invoice" class="tp-link">Surat Invoice</a></li>
+              <li><a href="/surat-jalan" class="tp-link">Surat Jalan</a></li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="menu-title">Autentikasi</li>
+
+        <li>
+          <a href="#sidebarAuth" data-bs-toggle="collapse">
+            <i data-feather="users"></i>
+            <span>Kelola Admin</span>
+            <span class="menu-arrow"></span>
+          </a>
+          <div class="collapse" id="sidebarAuth">
+            <ul class="nav-second-level">
+              <li><a href="kelola-admin" class="tp-link">List Admin</a></li>
+              <li><a href="eror-404" class="tp-link">Profile</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- ========================== -->
+<!-- 🌟 SIDEBAR END -->
+<!-- ========================== -->
+
+<!-- ========================== -->
+<!-- 🔔 LOGOUT SWEETALERT -->
+<!-- ========================== -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        Swal.fire({
+          title: "Apakah Anda yakin ingin logout?",
+          text: "Anda akan keluar dari sesi ini.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Ya, Logout",
+          cancelButtonText: "Batal",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "/logout";
+          }
+        });
+      });
+    }
+  });
+</script>
+
+<!-- ========================== -->
+<!-- 🌟 RESPONSIVE LOGO CSS -->
+<!-- ========================== -->
+<style>
+/* 🌟 Logo di tampilan HP */
+.mobile-logo {
+  pointer-events: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -45%);
+  z-index: 0;
+}
+
+.hp-logo {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Sembunyikan logo HP di layar besar */
+@media (min-width: 992px) {
+  .mobile-logo {
+    display: none !important;
+  }
+}
+
+/* Agar topbar tetap rapi di HP */
+@media (max-width: 991px) {
+  .topbar-custom {
+    position: relative;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .topbar-custom h5 {
+    margin-bottom: 0;
+    font-size: 14px;
+  }
+
+  /* Hapus foto profil di HP */
+  .nav-user img {
+    display: none !important;
+  }
+}
+</style>
