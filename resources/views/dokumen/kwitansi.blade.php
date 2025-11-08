@@ -45,20 +45,37 @@
             <!-- Card Table -->
             <div class="card shadow-sm border-0">
               <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-4">
                   <div>
                     <h5 class="fw-semibold mb-1">Daftar Kwitansi Pembayaran</h5>
                     <p class="text-muted mb-0">Kelola dan pantau seluruh kwitansi transaksi Anda</p>
                   </div>
-                  <!-- Search -->
-                    <li class="d-none d-lg-block">
-                        <form class="app-search d-none d-md-block me-auto">
-                            <div class="position-relative topbar-search">
-                                <input type="text" class="form-control ps-4" placeholder="Search..." />
-                                <i class="mdi mdi-magnify fs-16 position-absolute text-muted top-50 translate-middle-y ms-2"></i>
-                            </div>
-                        </form>
-                    </li>
+                  
+                  <!-- Filter & Search -->
+                  <div class="d-flex align-items-center gap-2">
+                    <!-- Filter Waktu -->
+                    <div class="dropdown">
+                      <button class="btn btn-light border dropdown-toggle" type="button" id="filterWaktu" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="mdi mdi-calendar-range me-1"></i>
+                        <span id="selectedFilter">Semua Waktu</span>
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="filterWaktu">
+                        <li><a class="dropdown-item" href="#" onclick="setFilter('Hari Ini')">Hari Ini</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setFilter('Minggu Ini')">Minggu Ini</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setFilter('Bulan Ini')">Bulan Ini</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="setFilter('Semua Waktu')">Semua Waktu</a></li>
+                      </ul>
+                    </div>
+                    
+                    <!-- Search -->
+                    <form class="app-search">
+                      <div class="position-relative topbar-search">
+                        <input type="text" class="form-control ps-4" placeholder="Cari kwitansi..." style="min-width: 200px;" id="searchInput" onkeyup="searchKwitansi()" />
+                        <i class="mdi mdi-magnify fs-16 position-absolute text-muted top-50 translate-middle-y ms-2"></i>
+                      </div>
+                    </form>
+                  </div>
                 </div>
 
                 <div class="table-responsive">
@@ -78,7 +95,7 @@
                     <tbody>
                       <tr>
                         <td class="text-center">1</td>
-                        <td>KW/001/RNS/2025</td>
+                        <td><strong>KW/001/RNS/2025</strong></td>
                         <td class="text-center">15 Okt 2025</td>
                         <td>PT Medika Sejahtera</td>
                         <td>Pembayaran termin pertama proyek alat kesehatan</td>
@@ -90,7 +107,7 @@
                           <button class="btn btn-sm btn-light border me-1" title="Lihat Detail">
                             <i class="mdi mdi-square-edit-outline text-primary"></i>
                           </button>
-                          <a href="javascript:window.print()" class="btn btn-sm btn-light border" title="Print Kwitansi">
+                          <a href="print-kwitansi" class="btn btn-sm btn-light border" title="Print Kwitansi">
                             <i class="mdi mdi-printer text-dark"></i>
                           </a>
                         </td>
@@ -98,7 +115,7 @@
 
                       <tr>
                         <td class="text-center">2</td>
-                        <td>KW/002/RNS/2025</td>
+                        <td><strong>KW/002/RNS/2025</strong></td>
                         <td class="text-center">18 Okt 2025</td>
                         <td>CV DentalTech</td>
                         <td>Pembayaran sebagian untuk pembelian alat laboratorium</td>
@@ -118,7 +135,7 @@
 
                       <tr>
                         <td class="text-center">3</td>
-                        <td>KW/003/RNS/2025</td>
+                        <td><strong>KW/003/RNS/2025</strong></td>
                         <td class="text-center">22 Okt 2025</td>
                         <td>PT Sentosa Medika</td>
                         <td>Pembayaran akhir pengadaan barang proyek X</td>
@@ -138,10 +155,21 @@
                     </tbody>
                   </table>
                 </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                  <small class="text-muted">Menampilkan 1–3 dari 50 kwitansi</small>
+                  <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                      <li class="page-item"><a class="page-link" href="#">‹</a></li>
+                      <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item"><a class="page-link" href="#">›</a></li>
+                    </ul>
+                  </nav>
+                </div>
               </div>
             </div>
-
-            
           </div>
         </div>
 
@@ -160,19 +188,135 @@
             </div>
           </div>
         </footer>
+
         <!-- Floating Button Tambah Kwitansi -->
-            <div class="content position-relative">
-              <button
-                type="button"
-                class="btn btn-primary rounded-circle shadow-lg"
-                style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;"
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-                title="Tambah Kwitansi"
-              >
-                <i class="mdi mdi-plus fs-3 text-white"></i>
-              </button>
-            </div>
+        <div class="content position-relative">
+          <button
+            type="button"
+            id="btnTambahKwitansi"
+            class="btn btn-primary rounded-circle shadow-lg"
+            style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; z-index: 1000;"
+            data-bs-toggle="modal"
+            data-bs-target="#modalTambahKwitansi"
+            title="Tambah Kwitansi"
+          >
+            <i class="mdi mdi-plus fs-3 text-white"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Tambah Kwitansi -->
+    <div class="modal fade" id="modalTambahKwitansi" tabindex="-1" aria-labelledby="modalTambahKwitansiLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="modalTambahKwitansiLabel">
+              <i class="mdi mdi-receipt me-2"></i>Tambah Kwitansi Baru
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="formKwitansi">
+              <div class="row">
+                <!-- Nomor Kwitansi -->
+                <div class="col-md-6 mb-3">
+                  <label for="nomorKwitansi" class="form-label fw-semibold">
+                    Nomor Kwitansi <span class="text-danger">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="nomorKwitansi" 
+                    name="nomorKwitansi"
+                    placeholder="KW/004/RNS/2025"
+                    required
+                  />
+                </div>
+
+                <!-- Tanggal -->
+                <div class="col-md-6 mb-3">
+                  <label for="tanggalKwitansi" class="form-label fw-semibold">
+                    Tanggal <span class="text-danger">*</span>
+                  </label>
+                  <input 
+                    type="date" 
+                    class="form-control" 
+                    id="tanggalKwitansi" 
+                    name="tanggalKwitansi"
+                    required
+                  />
+                </div>
+
+                <!-- Nama Klien -->
+                <div class="col-12 mb-3">
+                  <label for="namaKlien" class="form-label fw-semibold">
+                    Nama Klien <span class="text-danger">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="namaKlien" 
+                    name="namaKlien"
+                    placeholder="Contoh: PT Medika Sejahtera"
+                    required
+                  />
+                </div>
+
+                <!-- Keterangan Pembayaran -->
+                <div class="col-12 mb-3">
+                  <label for="keteranganPembayaran" class="form-label fw-semibold">
+                    Keterangan Pembayaran <span class="text-danger">*</span>
+                  </label>
+                  <textarea 
+                    class="form-control" 
+                    id="keteranganPembayaran" 
+                    name="keteranganPembayaran"
+                    rows="3"
+                    placeholder="Jelaskan detail pembayaran..."
+                    required
+                  ></textarea>
+                </div>
+
+                <!-- Total Pembayaran -->
+                <div class="col-md-6 mb-3">
+                  <label for="totalPembayaran" class="form-label fw-semibold">
+                    Total Pembayaran (Rp) <span class="text-danger">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="totalPembayaran" 
+                    name="totalPembayaran"
+                    placeholder="50.000.000"
+                    required
+                  />
+                </div>
+
+                <!-- Status -->
+                <div class="col-md-6 mb-3">
+                  <label for="statusPembayaran" class="form-label fw-semibold">
+                    Status <span class="text-danger">*</span>
+                  </label>
+                  <select class="form-select" id="statusPembayaran" name="statusPembayaran" required>
+                    <option value="">Pilih Status</option>
+                    <option value="lunas">Lunas</option>
+                    <option value="belum-lunas">Belum Lunas</option>
+                    <option value="menunggu-verifikasi">Menunggu Verifikasi</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="mdi mdi-close me-1"></i>Batal
+            </button>
+            <button type="button" class="btn btn-primary" id="btnSimpanKwitansi">
+              <i class="mdi mdi-content-save me-1"></i>Simpan Kwitansi
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -185,5 +329,90 @@
 
     <!-- App js -->
     <script src="assets/js/app.js"></script>
+
+    <!-- Script untuk Handle Form -->
+    <script>
+      // Fungsi untuk set filter waktu
+      function setFilter(filterName) {
+        document.getElementById('selectedFilter').textContent = filterName;
+        console.log('Filter dipilih:', filterName);
+        // Untuk integrasi dengan backend, kirim request AJAX
+      }
+
+      // Fungsi untuk search kwitansi
+      function searchKwitansi() {
+        let input = document.getElementById('searchInput');
+        let filter = input.value.toUpperCase();
+        let table = document.getElementById('tabelKwitansi');
+        let tr = table.getElementsByTagName('tr');
+
+        for (let i = 1; i < tr.length; i++) {
+          let tdNo = tr[i].getElementsByTagName('td')[1]; // Nomor Kwitansi
+          let tdKlien = tr[i].getElementsByTagName('td')[3]; // Nama Klien
+          if (tdNo || tdKlien) {
+            let txtNo = tdNo ? (tdNo.textContent || tdNo.innerText) : '';
+            let txtKlien = tdKlien ? (tdKlien.textContent || tdKlien.innerText) : '';
+            if (txtNo.toUpperCase().indexOf(filter) > -1 || txtKlien.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = '';
+            } else {
+              tr[i].style.display = 'none';
+            }
+          }
+        }
+      }
+
+      $(document).ready(function() {
+        // Format angka dengan titik pemisah ribuan
+        $('#totalPembayaran').on('keyup', function() {
+          let value = $(this).val().replace(/\./g, '');
+          if (!isNaN(value) && value !== '') {
+            $(this).val(parseInt(value).toLocaleString('id-ID'));
+          }
+        });
+
+        // Set tanggal hari ini sebagai default
+        const today = new Date().toISOString().split('T')[0];
+        $('#tanggalKwitansi').val(today);
+
+        // Handle simpan kwitansi
+        $('#btnSimpanKwitansi').on('click', function() {
+          const form = $('#formKwitansi')[0];
+          
+          if (form.checkValidity()) {
+            // Ambil data dari form
+            const formData = {
+              nomorKwitansi: $('#nomorKwitansi').val(),
+              tanggal: $('#tanggalKwitansi').val(),
+              namaKlien: $('#namaKlien').val(),
+              keterangan: $('#keteranganPembayaran').val(),
+              totalPembayaran: $('#totalPembayaran').val(),
+              status: $('#statusPembayaran').val()
+            };
+
+            // Di sini Anda bisa menambahkan AJAX request untuk menyimpan data ke server
+            console.log('Data Kwitansi:', formData);
+
+            // Tutup modal
+            $('#modalTambahKwitansi').modal('hide');
+            
+            // Reset form
+            form.reset();
+            
+            // Tampilkan notifikasi sukses (opsional)
+            alert('Kwitansi berhasil disimpan!');
+            
+            // Reload halaman atau update tabel (opsional)
+            // location.reload();
+          } else {
+            form.reportValidity();
+          }
+        });
+
+        // Reset form ketika modal ditutup
+        $('#modalTambahKwitansi').on('hidden.bs.modal', function() {
+          $('#formKwitansi')[0].reset();
+        });
+      });
+    </script>
   </body>
 </html>

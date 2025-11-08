@@ -46,6 +46,15 @@ Route::get('/invoice', function () {
 Route::get('/print', function () {
     return view('dokumen.print');
 });
+Route::get('/print-invoice', function () {
+    return view('dokumen.print-invoice');
+});
+Route::get('/print-kwitansi', function () {
+    return view('dokumen.print-kwitansi');
+});
+Route::get('/print-surat-jalan', function () {
+    return view('dokumen.print-surat-jalan');
+});
 #============================================
 #KELOLA ADMIN================================
 Route::get('/kelola-admin', function () {
