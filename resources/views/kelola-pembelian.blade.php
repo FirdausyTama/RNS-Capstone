@@ -527,23 +527,7 @@
                             <div class="section-card">
                                 <div class="section-title">Status Pesanan</div>
                                 <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label d-block mb-2">Status Pengiriman</label>
-                                        <div class="radio-group">
-                                            <div class="radio-item">
-                                                <input type="radio" id="statusDikirim" name="statusPengiriman" value="Dikirim">
-                                                <label for="statusDikirim">Dikirim</label>
-                                            </div>
-                                            <div class="radio-item">
-                                                <input type="radio" id="statusMenunggu" name="statusPengiriman" value="Menunggu" checked>
-                                                <label for="statusMenunggu">Menunggu</label>
-                                            </div>
-                                            <div class="radio-item">
-                                                <input type="radio" id="statusSiapkan" name="statusPengiriman" value="Siapkan">
-                                                <label for="statusSiapkan">Siapkan</label>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                     <div class="col-md-6">
                                         <label class="form-label d-block mb-2">Status Pembayaran</label>
                                         <div class="radio-group">

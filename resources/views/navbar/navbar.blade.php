@@ -54,30 +54,21 @@
             aria-haspopup="false"
             aria-expanded="false"
           >
-            <!-- Hapus foto profil di HP -->
+            <!-- 🌟 Foto profil tetap tampil di HP -->
             <img
               src="{{ asset('assets/images/users/user-13.jpg') }}"
               alt="user-image"
-              class="rounded-circle d-none d-lg-inline-block"
+              class="rounded-circle"
+              style="width: 35px; height: 35px; object-fit: cover;"
             />
-            <span class="pro-user-name ms-1 fw-semibold text-dark">
+            <!-- 🌟 Nama disembunyikan di HP -->
+            <span class="pro-user-name ms-1 fw-semibold text-dark d-none d-lg-inline">
               Heri Pirdaus
               <i class="mdi mdi-chevron-down"></i>
             </span>
           </a>
 
           <div class="dropdown-menu dropdown-menu-end profile-dropdown">
-            <div class="dropdown-header noti-title">
-              <h6 class="text-overflow m-0">Welcome!</h6>
-            </div>
-
-            <a href="eror-404" class="dropdown-item notify-item">
-              <i class="mdi mdi-account-circle-outline fs-16 align-middle"></i>
-              <span>My Account</span>
-            </a>
-
-            <div class="dropdown-divider"></div>
-
             <a href="#" class="dropdown-item notify-item" id="logoutBtn">
               <i class="mdi mdi-location-exit fs-16 align-middle"></i>
               <span>Logout</span>
@@ -166,8 +157,8 @@
           <div class="collapse" id="sidebarDokumen">
             <ul class="nav-second-level">
               <li><a href="/sph" class="tp-link">Surat Penawaran Harga</a></li>
-              <li><a href="/kwitansi" class="tp-link">Surat Kwitansi</a></li>
               <li><a href="/invoice" class="tp-link">Surat Invoice</a></li>
+              <li><a href="/kwitansi" class="tp-link">Surat Kwitansi</a></li>
               <li><a href="/surat-jalan" class="tp-link">Surat Jalan</a></li>
             </ul>
           </div>
@@ -184,7 +175,6 @@
           <div class="collapse" id="sidebarAuth">
             <ul class="nav-second-level">
               <li><a href="kelola-admin" class="tp-link">List Admin</a></li>
-              <li><a href="eror-404" class="tp-link">Profile</a></li>
             </ul>
           </div>
         </li>
@@ -225,6 +215,7 @@
   });
 </script>
 
+
 <!-- ========================== -->
 <!-- 🌟 RESPONSIVE LOGO CSS -->
 <!-- ========================== -->
@@ -252,7 +243,7 @@
   }
 }
 
-/* Agar topbar tetap rapi di HP */
+/* 🌟 Responsif di HP */
 @media (max-width: 991px) {
   .topbar-custom {
     position: relative;
@@ -265,8 +256,8 @@
     font-size: 14px;
   }
 
-  /* Hapus foto profil di HP */
-  .nav-user img {
+  /* 🌟 Tampilkan foto profil, sembunyikan nama */
+  .pro-user-name {
     display: none !important;
   }
 }

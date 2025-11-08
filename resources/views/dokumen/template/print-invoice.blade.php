@@ -107,12 +107,7 @@
             <div class="container-fluid">
               <div class="card shadow-sm border-0">
                 <div class="card-body">
-                  <!-- Tombol Print -->
-                  <div class="text-end no-print mb-3">
-                    <button onclick="window.print()" class="btn btn-dark">
-                      <i class="mdi mdi-printer"></i> Print
-                    </button>
-                  </div>
+                  
 
                   <!-- Kop Surat -->
                   <div class="kop-surat">
@@ -122,15 +117,11 @@
                   <!-- Isi Invoice -->
                   <div class="mb-4 d-flex justify-content-between">
                     <div>
+                      <p><strong>INVOICE</strong></p>
                       <p><strong>No. Invoice:</strong> 01/INV-RNS/X/2025</p>
                       <p><strong>Tanggal:</strong> 01 Oktober 2025</p>
                     </div>
-                    <div class="text-end">
-                      <p><strong>PT Ranay Nusantara Sejahtera</strong><br />
-                      Jl. [Alamat Perusahaan]<br />
-                      Email: info@rns.co.id<br />
-                      Telp: 0812-xxxx-xxxx</p>
-                    </div>
+                    
                   </div>
                   <div class="mb-4">
                     <p><strong>Kepada Yth:</strong><br />
@@ -171,13 +162,32 @@
                   <!-- Pembayaran -->
                   <div class="mt-4">
                     <h6 class="fw-semibold">Pembayaran Ditransfer Ke:</h6>
-                    <table class="table table-borderless" style="font-size: 15px;">
-                      <tr><td>Bank</td><td>: BCA</td></tr>
-                      <tr><td>No. Rekening</td><td>: 2450782656</td></tr>
-                      <tr><td>Atas Nama</td><td>: Heri Pirdaus</td></tr>
-                      <tr><td>Kode Bank</td><td>: 014</td></tr>
+                    <table class="table table-borderless align-middle" style="font-size: 15px; width: auto;">
+                      <tbody>
+                        <tr>
+                          <td style="width: 120px; font-weight: 500;">Bank</td>
+                          <td style="width: 10px;">:</td>
+                          <td>BCA</td>
+                        </tr>
+                        <tr>
+                          <td style="font-weight: 500;">No. Rekening</td>
+                          <td>:</td>
+                          <td>2450782656</td>
+                        </tr>
+                        <tr>
+                          <td style="font-weight: 500;">Atas Nama</td>
+                          <td>:</td>
+                          <td>Heri Pirdaus</td>
+                        </tr>
+                        <tr>
+                          <td style="font-weight: 500;">Kode Bank</td>
+                          <td>:</td>
+                          <td>014</td>
+                        </tr>
+                      </tbody>
                     </table>
                   </div>
+
 
                   <!-- Tanda Tangan -->
                   <div class="ttd">

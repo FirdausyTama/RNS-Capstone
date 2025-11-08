@@ -36,7 +36,7 @@
                             
                             <div class="text-end">
                                 <ol class="breadcrumb m-0 py-0">
-                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Halaman</a></li>
                                     <li class="breadcrumb-item active">Kelola Stok</li>
                                 </ol>
                             </div>
@@ -45,7 +45,7 @@
                         <!-- Start Main Widgets -->
                         <div class="row">
                             <!-- 🟢 Stok Aman -->
-                            <div class="col-md-6 col-lg-3">
+                            <div class="col-md-6 col-lg-4">
                                 <div class="card shadow-sm border-0">
                                     <div class="card-body">
                                         <div class="d-flex align-items-center mb-2">
@@ -54,21 +54,21 @@
                                                     <i class="mdi mdi-check-circle-outline text-white fs-5"></i>
                                                 </div>
                                             </div>
-                                            <p class="mb-0 text-dark fs-15 fw-semibold">Total Stok Aman</p>
+                                            <p class="mb-0 text-dark fs-15 fw-semibold">Total Stok Masuk</p>
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <h3 class="mb-0 fs-22 text-dark me-3">15 Produk</h3>
                                             <div class="text-center">
                                                 <span class="text-success fs-14"><i class="mdi mdi-trending-up fs-14"></i> +8.2%</span>
-                                                <p class="text-muted fs-13 mb-0">Last 7 days</p>
+                                                <p class="text-muted fs-13 mb-0">7 Hari Terakhir</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- 🟡 Stok Menipis -->
-                            <div class="col-md-6 col-lg-3">
+                            <!-- 🟡 Stok Keluar -->
+                            <div class="col-md-6 col-lg-4">
                                 <div class="card shadow-sm border-0">
                                     <div class="card-body">
                                         <div class="d-flex align-items-center mb-2">
@@ -77,36 +77,13 @@
                                                     <i class="mdi mdi-alert-outline text-white fs-5"></i>
                                                 </div>
                                             </div>
-                                            <p class="mb-0 text-dark fs-15 fw-semibold">Total Stok Menipis</p>
+                                            <p class="mb-0 text-dark fs-15 fw-semibold">Total Stok Keluar</p>
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <h3 class="mb-0 fs-22 text-dark me-3">6 Produk</h3>
                                             <div class="text-center">
                                                 <span class="text-warning fs-14"><i class="mdi mdi-trending-down fs-14"></i> -2.3%</span>
-                                                <p class="text-muted fs-13 mb-0">Last 7 days</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- 🔴 Stok Habis -->
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card shadow-sm border-0">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center mb-2">
-                                            <div class="p-2 border border-danger border-opacity-10 bg-danger-subtle rounded-2 me-2">
-                                                <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
-                                                    <i class="mdi mdi-close-circle-outline text-white fs-5"></i>
-                                                </div>
-                                            </div>
-                                            <p class="mb-0 text-dark fs-15 fw-semibold">Total Stok Habis</p>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <h3 class="mb-0 fs-22 text-dark me-3">3 Produk</h3>
-                                            <div class="text-center">
-                                                <span class="text-danger fs-14"><i class="mdi mdi-trending-up fs-14"></i> +5.1%</span>
-                                                <p class="text-muted fs-13 mb-0">Last 7 days</p>
+                                                <p class="text-muted fs-13 mb-0">7 Hari Terakhir</p>
                                             </div>
                                         </div>
                                     </div>
@@ -114,7 +91,7 @@
                             </div>
 
                             <!-- 🟣 Total Stok Keseluruhan -->
-                            <div class="col-md-6 col-lg-3">
+                            <div class="col-md-6 col-lg-4">
                                 <div class="card shadow-sm border-0">
                                     <div class="card-body">
                                         <div class="d-flex align-items-center mb-2">
@@ -123,13 +100,13 @@
                                                     <i class="mdi mdi-package-variant-closed text-white fs-5"></i>
                                                 </div>
                                             </div>
-                                            <p class="mb-0 text-dark fs-15 fw-semibold">Total Stok</p>
+                                            <p class="mb-0 text-dark fs-15 fw-semibold">Total Stok Keseluruhan</p>
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <h3 class="mb-0 fs-22 text-dark me-3">900</h3>
                                             <div class="text-center">
                                                 <span class="text-primary fs-14"><i class="mdi mdi-trending-up fs-14"></i> +10%</span>
-                                                <p class="text-muted fs-13 mb-0">Last 7 days</p>
+                                                <p class="text-muted fs-13 mb-0">7 Hari Terakhir</p>
                                             </div>
                                         </div>
                                     </div>
@@ -177,6 +154,7 @@
                                             <tr>
                                                 <th scope="col" class="text-center" style="width: 80px;">Foto</th>
                                                 <th scope="col">Nama Produk</th>
+                                                <th scope="col" class="text-center">Tanggal</th>
                                                 <th scope="col" class="text-center">Harga</th>
                                                 <th scope="col" class="text-center">Status Stok</th>
                                                 <th scope="col" class="text-center">Jumlah</th>
@@ -195,13 +173,14 @@
                                                         <small class="text-muted">Batre dengan kualitas tinggi tahan sampai 10 tahun</small>
                                                     </div>
                                                 </td>
+                                                <td class="text-center fw-semibold">10-09-2025</td>
                                                 <td class="text-center fw-semibold">Rp1.000.000</td>
                                                 <td class="text-center">
                                                     <span class="badge bg-success-subtle text-success fw-semibold px-3 py-2">Stok Aman</span>
                                                 </td>
                                                 <td class="text-center fw-semibold">45</td>
                                                 <td class="text-center">
-                                                    <button class="btn btn-sm btn-light border me-1" title="Edit">
+                                                    <button class="btn btn-sm btn-light border me-1" title="Edit" data-bs-toggle="modal" data-bs-target="#modalTambahStok">
                                                         <i class="mdi mdi-square-edit-outline text-primary"></i>
                                                     </button>
                                                     <button class="btn btn-sm btn-light border" title="Lihat">
@@ -221,13 +200,14 @@
                                                         <small class="text-muted">Mesin ronsen produksi china dengan tambahan ronsen gigi</small>
                                                     </div>
                                                 </td>
+                                                <td class="text-center fw-semibold">12-03-2025</td>
                                                 <td class="text-center fw-semibold">Rp40.000.000</td>
                                                 <td class="text-center">
                                                     <span class="badge bg-warning-subtle text-warning fw-semibold px-3 py-2">Stok Rendah</span>
                                                 </td>
                                                 <td class="text-center fw-semibold">10</td>
                                                 <td class="text-center">
-                                                    <button class="btn btn-sm btn-light border me-1" title="Edit">
+                                                    <button class="btn btn-sm btn-light border me-1" title="Edit" data-bs-toggle="modal" data-bs-target="#modalTambahStok">
                                                         <i class="mdi mdi-square-edit-outline text-primary"></i>
                                                     </button>
                                                     <button class="btn btn-sm btn-light border" title="Lihat">
@@ -247,13 +227,14 @@
                                                         <small class="text-muted">Kursi khusus dokter gigi dengan berbagai macam fitur</small>
                                                     </div>
                                                 </td>
+                                                <td class="text-center fw-semibold">09-09-2025</td>
                                                 <td class="text-center fw-semibold">Rp300.000.000</td>
                                                 <td class="text-center">
                                                     <span class="badge bg-danger-subtle text-danger fw-semibold px-3 py-2">Stok Habis</span>
                                                 </td>
                                                 <td class="text-center fw-semibold">0</td>
                                                 <td class="text-center">
-                                                    <button class="btn btn-sm btn-light border me-1" title="Edit">
+                                                    <button class="btn btn-sm btn-light border me-1" title="Edit" data-bs-toggle="modal" data-bs-target="#modalTambahStok">
                                                         <i class="mdi mdi-square-edit-outline text-primary"></i>
                                                     </button>
                                                     <button class="btn btn-sm btn-light border" title="Lihat">

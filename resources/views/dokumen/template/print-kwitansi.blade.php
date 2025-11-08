@@ -182,7 +182,7 @@
               </div>
               <div class="text-end">
                 <ol class="breadcrumb m-0 py-0">
-                  <li class="breadcrumb-item"><a href="/kwitansi">Daftar Kwitansi</a></li>
+                  <li class="breadcrumb-item"><a href="/kwitansi">Halaman</a></li>
                   <li class="breadcrumb-item active">Kwitansi Detail</li>
                 </ol>
               </div>
@@ -191,12 +191,6 @@
             <!-- Card utama -->
             <div class="card shadow-sm border-0">
               <div class="card-body">
-                <!-- Tombol print -->
-                <div class="text-end no-print mb-3">
-                  <button onclick="window.print()" class="btn btn-dark">
-                    <i class="mdi mdi-printer"></i> Print
-                  </button>
-                </div>
 
                 <!-- KWITANSI CONTENT -->
                 <div class="kw-main">

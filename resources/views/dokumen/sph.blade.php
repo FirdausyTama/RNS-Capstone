@@ -97,7 +97,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="text-center">1</td>
-                                                    <td><strong>SPH/001/RNS/2025</strong></td>
+                                                    <td><strong>01/SPH/XRAY/RNS-II/2025</strong></td>
                                                     <td class="text-center">15 Okt 2025</td>
                                                     <td>PT Medika Sejahtera</td>
                                                     <td class="text-center fw-semibold">Rp 125.000.000</td>
@@ -108,14 +108,14 @@
                                                         <button class="btn btn-sm btn-light border me-1" title="Lihat Detail">
                                                             <i class="mdi mdi-square-edit-outline text-primary"></i>
                                                         </button>
-                                                        <a href="javascript:window.print()" class="btn btn-sm btn-light border" title="Print SPH">
+                                                        <a href="print-sph" class="btn btn-sm btn-light border" title="Print SPH">
                                                             <i class="mdi mdi-printer text-dark"></i>
                                                         </a>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="text-center">2</td>
-                                                    <td><strong>SPH/002/RNS/2025</strong></td>
+                                                    <td><strong>02/SPH/XRAY/RNS-II/2025</strong></td>
                                                     <td class="text-center">18 Okt 2025</td>
                                                     <td>CV DentalTech</td>
                                                     <td class="text-center fw-semibold">Rp 58.000.000</td>
@@ -126,14 +126,14 @@
                                                         <button class="btn btn-sm btn-light border me-1" title="Lihat Detail">
                                                             <i class="mdi mdi-square-edit-outline text-primary"></i>
                                                         </button>
-                                                        <a href="javascript:window.print()" class="btn btn-sm btn-light border" title="Print SPH">
+                                                        <a href="print-sph" class="btn btn-sm btn-light border" title="Print SPH">
                                                             <i class="mdi mdi-printer text-dark"></i>
                                                         </a>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="text-center">3</td>
-                                                    <td><strong>SPH/003/RNS/2025</strong></td>
+                                                    <td><strong>03/SPH/XRAY/RNS-II/2025</strong></td>
                                                     <td class="text-center">20 Okt 2025</td>
                                                     <td>PT Sentosa Medika</td>
                                                     <td class="text-center fw-semibold">Rp 92.000.000</td>
@@ -144,7 +144,7 @@
                                                         <button class="btn btn-sm btn-light border me-1" title="Lihat Detail">
                                                             <i class="mdi mdi-square-edit-outline text-primary"></i>
                                                         </button>
-                                                        <a href="/print" class="btn btn-sm btn-light border" title="Print SPH">
+                                                        <a href="print-sph" class="btn btn-sm btn-light border" title="Print SPH">
                                                             <i class="mdi mdi-printer text-dark"></i>
                                                         </a>
                                                     </td>

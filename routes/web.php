@@ -43,17 +43,19 @@ Route::get('/kwitansi', function () {
 Route::get('/invoice', function () {
     return view('dokumen.invoice');
 });
-Route::get('/print', function () {
-    return view('dokumen.print');
+#============================================
+#PRINT TEMPLATE==============================
+Route::get('/print-sph', function () {
+    return view('dokumen.template.print-sph');
 });
 Route::get('/print-invoice', function () {
-    return view('dokumen.print-invoice');
+    return view('dokumen.template.print-invoice');
 });
 Route::get('/print-kwitansi', function () {
-    return view('dokumen.print-kwitansi');
+    return view('dokumen.template.print-kwitansi');
 });
 Route::get('/print-surat-jalan', function () {
-    return view('dokumen.print-surat-jalan');
+    return view('dokumen.template.print-surat-jalan');
 });
 #============================================
 #KELOLA ADMIN================================

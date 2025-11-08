@@ -95,7 +95,7 @@
                     <tbody>
                       <tr>
                         <td class="text-center">1</td>
-                        <td><strong>KW/001/RNS/2025</strong></td>
+                        <td><strong>01/RNS/AKUN/IX/2025</strong></td>
                         <td class="text-center">15 Okt 2025</td>
                         <td>PT Medika Sejahtera</td>
                         <td>Pembayaran termin pertama proyek alat kesehatan</td>
@@ -115,7 +115,7 @@
 
                       <tr>
                         <td class="text-center">2</td>
-                        <td><strong>KW/002/RNS/2025</strong></td>
+                        <td><strong>02/RNS/AKUN/IX/2025</strong></td>
                         <td class="text-center">18 Okt 2025</td>
                         <td>CV DentalTech</td>
                         <td>Pembayaran sebagian untuk pembelian alat laboratorium</td>
@@ -127,7 +127,7 @@
                           <button class="btn btn-sm btn-light border me-1" title="Lihat Detail">
                             <i class="mdi mdi-square-edit-outline text-primary"></i>
                           </button>
-                          <a href="javascript:window.print()" class="btn btn-sm btn-light border" title="Print Kwitansi">
+                          <a href="print-kwitansi" class="btn btn-sm btn-light border" title="Print Kwitansi">
                             <i class="mdi mdi-printer text-dark"></i>
                           </a>
                         </td>
@@ -135,7 +135,7 @@
 
                       <tr>
                         <td class="text-center">3</td>
-                        <td><strong>KW/003/RNS/2025</strong></td>
+                        <td><strong>03/RNS/AKUN/IX/2025</strong></td>
                         <td class="text-center">22 Okt 2025</td>
                         <td>PT Sentosa Medika</td>
                         <td>Pembayaran akhir pengadaan barang proyek X</td>
@@ -147,7 +147,7 @@
                           <button class="btn btn-sm btn-light border me-1" title="Lihat Detail">
                             <i class="mdi mdi-square-edit-outline text-primary"></i>
                           </button>
-                          <a href="javascript:window.print()" class="btn btn-sm btn-light border" title="Print Kwitansi">
+                          <a href="print-kwitansi" class="btn btn-sm btn-light border" title="Print Kwitansi">
                             <i class="mdi mdi-printer text-dark"></i>
                           </a>
                         </td>
@@ -251,7 +251,7 @@
                 <!-- Nama Klien -->
                 <div class="col-12 mb-3">
                   <label for="namaKlien" class="form-label fw-semibold">
-                    Nama Klien <span class="text-danger">*</span>
+                    Nama Pelanggan <span class="text-danger">*</span>
                   </label>
                   <input 
                     type="text" 
@@ -261,12 +261,38 @@
                     placeholder="Contoh: PT Medika Sejahtera"
                     required
                   />
+                </div><div class="col-12 mb-3">
+                  <label for="namaKlien" class="form-label fw-semibold">
+                    Alamat <span class="text-danger">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="namaKlien" 
+                    name="namaKlien"
+                    placeholder="Jakarta, Indonesia"
+                    required
+                  />
                 </div>
 
                 <!-- Keterangan Pembayaran -->
                 <div class="col-12 mb-3">
+                  <label for="namaKlien" class="form-label fw-semibold">
+                    Banyaknya Uang <span class="text-danger">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="namaKlien" 
+                    name="namaKlien"
+                    placeholder="Dua puluh ribu rupiah"
+                    required
+                  />
+                </div>
+
+                <div class="col-12 mb-3">
                   <label for="keteranganPembayaran" class="form-label fw-semibold">
-                    Keterangan Pembayaran <span class="text-danger">*</span>
+                    Untuk Pembayaran <span class="text-danger">*</span>
                   </label>
                   <textarea 
                     class="form-control" 
@@ -278,20 +304,38 @@
                   ></textarea>
                 </div>
 
-                <!-- Total Pembayaran -->
-                <div class="col-md-6 mb-3">
-                  <label for="totalPembayaran" class="form-label fw-semibold">
-                    Total Pembayaran (Rp) <span class="text-danger">*</span>
+                <div class="col-12 mb-3">
+                  <label for="namaKlien" class="form-label fw-semibold">
+                    Total Jumlah <span class="text-danger">*</span>
                   </label>
                   <input 
                     type="text" 
                     class="form-control" 
-                    id="totalPembayaran" 
-                    name="totalPembayaran"
-                    placeholder="50.000.000"
+                    id="namaKlien" 
+                    name="namaKlien"
+                    placeholder=""
                     required
                   />
                 </div>
+                <!-- Penandatangan -->
+                                    <div class="card border-0 shadow-sm">
+                                        <div class="card-header bg-light">
+                                            <h6 class="mb-0 fw-semibold"><i class="mdi mdi-pencil-outline me-2"></i>Penandatangan</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="form-label">Nama Penandatangan <span class="text-danger">*</span></label>
+                                                    <select class="form-select" name="penandatangan" required>
+                                                        <option value="">Pilih penandatangan...</option>
+                                                        <option value="Dewi Sulistiowati">Dewi Sulistiowati</option>
+                                                        <option value="Heri Pirdaus, S.Tr.Kes Rad (MRI)">Heri Pirdaus, S.Tr.Kes Rad (MRI)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                
 
                 <!-- Status -->
                 <div class="col-md-6 mb-3">
