@@ -348,7 +348,7 @@
                                                         <span class="badge bg-danger-subtle text-danger fw-semibold px-3 py-2">Cicilan</span>
                                                     </td>
                                                     <td class="text-center">
-                                                        <button class="btn btn-sm btn-light border me-1" title="Lihat Detail">
+                                                        <button class="btn btn-sm btn-light border me-1" onclick="window.location.href='/detail-pembelian/1'" title="Lihat Detail">
                                                             <i class="mdi mdi-square-edit-outline text-primary"></i>
                                                         </button>
                                                         <a href="javascript:window.print()" class="btn btn-sm btn-light border" title="Cetak Invoice">
@@ -366,7 +366,7 @@
                                                         <span class="badge bg-warning-subtle text-warning fw-semibold px-3 py-2">Belum Lunas</span>
                                                     </td>
                                                     <td class="text-center">
-                                                        <button class="btn btn-sm btn-light border me-1" title="Lihat Detail">
+                                                        <button class="btn btn-sm btn-light border me-1" onclick="window.location.href='/detail-pembelian/2'" title="Lihat Detail">
                                                             <i class="mdi mdi-square-edit-outline text-primary"></i>
                                                         </button>
                                                         <a href="javascript:window.print()" class="btn btn-sm btn-light border" title="Cetak Invoice">
@@ -384,7 +384,7 @@
                                                         <span class="badge bg-danger-subtle text-danger fw-semibold px-3 py-2">Cicilan</span>
                                                     </td>
                                                     <td class="text-center">
-                                                        <button class="btn btn-sm btn-light border me-1" title="Lihat Detail">
+                                                        <button class="btn btn-sm btn-light border me-1" onclick="window.location.href='/detail-pembelian/3'" title="Lihat Detail">
                                                             <i class="mdi mdi-square-edit-outline text-primary"></i>
                                                         </button>
                                                         <a href="javascript:window.print()" class="btn btn-sm btn-light border" title="Cetak Invoice">
@@ -767,7 +767,6 @@
                     tanggal: document.getElementById('tanggalPembelian').value,
                     namaCustomer: document.getElementById('namaCustomer').value,
                     noTelepon: document.getElementById('noTelepon').value,
-                    statusPengiriman: document.querySelector('input[name="statusPengiriman"]:checked').value,
                     statusPembayaran: document.querySelector('input[name="statusPembayaran"]:checked').value,
                     items: [],
                     totalKeseluruhan: document.getElementById('totalKeseluruhan').textContent

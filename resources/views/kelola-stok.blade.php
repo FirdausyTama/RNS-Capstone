@@ -9,15 +9,15 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
         <!-- App favicon -->
-        <link rel="shortcut icon" href="assets/images/favicon.ico">
+        <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
 
         <!-- App css -->
-        <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
+        <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" id="app-style" />
 
         <!-- Icons -->
-        <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
 
-        <script src="assets/js/head.js"></script>
+        <script src="{{ asset('assets/js/head.js') }}"></script>
     </head>
 
     <!-- body start -->
@@ -36,7 +36,7 @@
                             
                             <div class="text-end">
                                 <ol class="breadcrumb m-0 py-0">
-                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Halaman</a></li>
+                                    <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a></li>
                                     <li class="breadcrumb-item active">Kelola Stok</li>
                                 </ol>
                             </div>
@@ -162,7 +162,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <!-- Produk 1 -->
+                                            <!-- Produk 1: Batre Alat -->
                                             <tr>
                                                 <td class="text-center">
                                                     <img src="https://img.lazcdn.com/g/ff/kf/Se6d7760ca3654638a487d3345ea0cdb1o.jpg_960x960q80.jpg_.webp" alt="Produk" class="rounded" width="60" height="60">
@@ -183,13 +183,13 @@
                                                     <button class="btn btn-sm btn-light border me-1" title="Edit" data-bs-toggle="modal" data-bs-target="#modalTambahStok">
                                                         <i class="mdi mdi-square-edit-outline text-primary"></i>
                                                     </button>
-                                                    <button class="btn btn-sm btn-light border" title="Lihat">
+                                                    <a href="{{ url('/detail-stok/1') }}" class="btn btn-sm btn-light border" title="Lihat Detail">
                                                         <i class="mdi mdi-eye-outline text-muted"></i>
-                                                    </button>
+                                                    </a>
                                                 </td>
                                             </tr>
 
-                                            <!-- Produk 2 -->
+                                            <!-- Produk 2: Mesin Ronsen -->
                                             <tr>
                                                 <td class="text-center">
                                                     <img src="https://www.alatkedokteran.id/wp-content/uploads/2016/01/wsr-40.jpg" alt="Produk" class="rounded" width="60" height="60">
@@ -210,13 +210,13 @@
                                                     <button class="btn btn-sm btn-light border me-1" title="Edit" data-bs-toggle="modal" data-bs-target="#modalTambahStok">
                                                         <i class="mdi mdi-square-edit-outline text-primary"></i>
                                                     </button>
-                                                    <button class="btn btn-sm btn-light border" title="Lihat">
+                                                    <a href="{{ url('/detail-stok/2') }}" class="btn btn-sm btn-light border" title="Lihat Detail">
                                                         <i class="mdi mdi-eye-outline text-muted"></i>
-                                                    </button>
+                                                    </a>
                                                 </td>
                                             </tr>
 
-                                            <!-- Produk 3 -->
+                                            <!-- Produk 3: Mesin Kursi Gigi -->
                                             <tr>
                                                 <td class="text-center">
                                                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIUln6ypMWAN2rDOZjmMat-iaSmanFM4kF3w&s" alt="Produk" class="rounded" width="60" height="60">
@@ -237,9 +237,9 @@
                                                     <button class="btn btn-sm btn-light border me-1" title="Edit" data-bs-toggle="modal" data-bs-target="#modalTambahStok">
                                                         <i class="mdi mdi-square-edit-outline text-primary"></i>
                                                     </button>
-                                                    <button class="btn btn-sm btn-light border" title="Lihat">
+                                                    <a href="{{ url('/detail-stok/3') }}" class="btn btn-sm btn-light border" title="Lihat Detail">
                                                         <i class="mdi mdi-eye-outline text-muted"></i>
-                                                    </button>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -446,16 +446,16 @@
         </div>
 
         <!-- Vendor -->
-        <script src="assets/libs/jquery/jquery.min.js"></script>
-        <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="assets/libs/simplebar/simplebar.min.js"></script>
-        <script src="assets/libs/node-waves/waves.min.js"></script>
-        <script src="assets/libs/waypoints/lib/jquery.waypoints.min.js"></script>
-        <script src="assets/libs/jquery.counterup/jquery.counterup.min.js"></script>
-        <script src="assets/libs/feather-icons/feather.min.js"></script>
+        <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/waypoints/lib/jquery.waypoints.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/jquery.counterup/jquery.counterup.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
 
         <!-- App js-->
-        <script src="assets/js/app.js"></script>
+        <script src="{{ asset('assets/js/app.js') }}"></script>
         
         <!-- Custom Script -->
         <script>
@@ -476,15 +476,7 @@
             // Fungsi untuk set filter waktu
             function setFilter(filterName) {
                 document.getElementById('selectedFilter').textContent = filterName;
-                
-                // Di sini Anda bisa menambahkan logika untuk filter data
                 console.log('Filter dipilih:', filterName);
-                
-                // Contoh alert untuk menunjukkan filter aktif
-                // alert('Filter aktif: ' + filterName);
-                
-                // Untuk integrasi dengan backend, kirim request AJAX
-                // filterDataByTime(filterName);
             }
 
             // Fungsi untuk search produk

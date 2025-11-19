@@ -22,6 +22,15 @@ Route::get('/kelola-stok', function () {
     return view('kelola-stok');
 });
 
+// ✅ TAMBAHKAN ROUTE INI UNTUK DETAIL STOK
+Route::get('/detail-stok/{id}', function ($id) {
+    return view('dokumen.detail-stok');
+})->name('detail.stok');
+
+Route::get('/detail-pembelian/{id}', function ($id) {
+    return view('dokumen.detail-pembelian');
+})->name('detail.pembelian');
+
 Route::get('/riwayat-pembelian', function () {
     return view('riwayat-pembelian');
 });
