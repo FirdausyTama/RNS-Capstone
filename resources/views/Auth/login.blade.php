@@ -91,6 +91,20 @@
     a:hover {
       text-decoration: underline;
     }
+
+    .toggle-password {
+      cursor: pointer;
+      background-color: #fff;
+      border-left: none;
+    }
+
+    .input-group .form-control {
+      border-right: none;
+    }
+
+    .input-group .toggle-password:hover {
+      background-color: #f8f9fa;
+    }
   </style>
 </head>
 
@@ -118,6 +132,9 @@
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
             <input type="password" id="password" class="form-control" placeholder="Masukkan Password">
+            <span class="input-group-text toggle-password" onclick="togglePassword('password', this)">
+              <i class="bi bi-eye-slash"></i>
+            </span>
           </div>
         </div>
 
@@ -129,8 +146,6 @@
           Masuk
         </button>
 
-
-
         <div class="text-center mt-3 text-small">
           Anda belum punya akun?
           <a href="register" class="text-warning">Register Disini</a>
@@ -140,6 +155,22 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function togglePassword(inputId, iconElement) {
+      const input = document.getElementById(inputId);
+      const icon = iconElement.querySelector('i');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+      }
+    }
+  </script>
   <script src="assets/js/auth.js"></script>
 </body>
 </html>

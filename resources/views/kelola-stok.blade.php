@@ -19,6 +19,57 @@
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
 
     <script src="{{ asset('assets/js/head.js') }}"></script>
+    
+    <style>
+        .preview-image,
+        .preview-video {
+            display: none;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .preview-image.show,
+        .preview-video.show {
+            display: block;
+        }
+
+        .preview-image img {
+            max-width: 100%;
+            max-height: 150px;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .preview-video video {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 4px;
+        }
+
+        .remove-media {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            line-height: 1;
+            cursor: pointer;
+            z-index: 5;
+        }
+
+        .remove-media:hover {
+            background: #c82333;
+        }
+
+        .upload-box {
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <!-- body start -->
@@ -167,7 +218,7 @@
                                     </thead>
                                     <tbody id="stok-table-body">
                                         <tr>
-                                            <td colspan="6" class="text-center py-3 text-muted">Memuat data...</td>
+                                            <td colspan="7" class="text-center py-3 text-muted">Memuat data...</td>
                                         </tr>
                                     </tbody>
 
@@ -231,10 +282,7 @@
                                     <label for="merek" class="form-label">Merek</label>
                                     <input type="text" class="form-control" id="merek" placeholder="Nama merek">
                                 </div>
-                                <div class="col-6">
-                                    <label for="deskripsi" class="form-label">Deskripsi</label>
-                                    <textarea class="form-control" id="deskripsi" rows="3" placeholder="Deskripsikan barang Anda..."></textarea>
-                                </div>
+                                
                             </div>
                         </div>
 
@@ -245,18 +293,32 @@
                                 <!-- Upload Video -->
                                 <div class="col-md-6">
                                     <div class="border border-2 border-dashed rounded p-4 text-center upload-box" onclick="document.getElementById('uploadVideo').click()" style="cursor: pointer;">
-                                        <input type="file" id="uploadVideo" name="video" style="display: none;">
-                                        <i class="mdi mdi-video-outline fs-1 text-muted d-block mb-2"></i>
-                                        <span class="text-muted" id="videoFileName">Tambah Video</span>
+                                        <input type="file" id="uploadVideo" name="video" accept="video/mp4,video/avi,video/mov" style="display: none;" onchange="handleVideoUpload(this)">
+                                        <div id="videoPlaceholder">
+                                            <i class="mdi mdi-video-outline fs-1 text-muted d-block mb-2"></i>
+                                            <span class="text-muted" id="videoFileName">Tambah Video</span>
+                                        </div>
+                                        <div class="preview-video" id="videoPreview">
+                                            <button type="button" class="remove-media" onclick="removeVideo(event)">×</button>
+                                            <video id="videoElement" controls style="width: 100%;"></video>
+                                            <small class="text-muted d-block mt-2" id="videoFileNamePreview"></small>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Upload Foto -->
                                 <div class="col-md-6">
                                     <div class="border border-2 border-dashed rounded p-4 text-center upload-box" onclick="document.getElementById('uploadFoto').click()" style="cursor: pointer;">
-                                        <input type="file" id="uploadFoto" name="foto" style="display: none;">
-                                        <i class="mdi mdi-camera-outline fs-1 text-muted d-block mb-2"></i>
-                                        <span class="text-muted" id="fotoFileName">Tambah Foto</span>
+                                        <input type="file" id="uploadFoto" name="foto" accept="image/jpeg,image/png,image/webp" style="display: none;" onchange="handleFotoUpload(this)">
+                                        <div id="fotoPlaceholder">
+                                            <i class="mdi mdi-camera-outline fs-1 text-muted d-block mb-2"></i>
+                                            <span class="text-muted" id="fotoFileName">Tambah Foto</span>
+                                        </div>
+                                        <div class="preview-image" id="fotoPreview">
+                                            <button type="button" class="remove-media" onclick="removeFoto(event)">×</button>
+                                            <img id="fotoElement" src="" alt="Preview">
+                                            <small class="text-muted d-block mt-2" id="fotoFileNamePreview"></small>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -405,6 +467,105 @@
                 }
             }
         }
+
+        // Handle Video Upload dengan Preview
+        function handleVideoUpload(input) {
+            const file = input.files[0];
+            if (file) {
+                // Validasi ukuran (10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('Ukuran video maksimal 10MB!');
+                    input.value = '';
+                    return;
+                }
+
+                // Validasi format
+                const validFormats = ['video/mp4', 'video/avi', 'video/quicktime'];
+                if (!validFormats.includes(file.type)) {
+                    alert('Format video harus MP4, AVI, atau MOV!');
+                    input.value = '';
+                    return;
+                }
+
+                // Tampilkan preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('videoElement').src = e.target.result;
+                    document.getElementById('videoFileNamePreview').textContent = file.name;
+                    document.getElementById('videoPlaceholder').style.display = 'none';
+                    document.getElementById('videoPreview').classList.add('show');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Handle Foto Upload dengan Preview
+        function handleFotoUpload(input) {
+            const file = input.files[0];
+            if (file) {
+                // Validasi ukuran (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Ukuran foto maksimal 5MB!');
+                    input.value = '';
+                    return;
+                }
+
+                // Validasi format
+                const validFormats = ['image/jpeg', 'image/png', 'image/webp'];
+                if (!validFormats.includes(file.type)) {
+                    alert('Format foto harus JPG, PNG, atau WEBP!');
+                    input.value = '';
+                    return;
+                }
+
+                // Tampilkan preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('fotoElement').src = e.target.result;
+                    document.getElementById('fotoFileNamePreview').textContent = file.name;
+                    document.getElementById('fotoPlaceholder').style.display = 'none';
+                    document.getElementById('fotoPreview').classList.add('show');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Remove Video
+        function removeVideo(event) {
+            event.stopPropagation();
+            document.getElementById('uploadVideo').value = '';
+            document.getElementById('videoElement').src = '';
+            document.getElementById('videoFileNamePreview').textContent = '';
+            document.getElementById('videoPreview').classList.remove('show');
+            document.getElementById('videoPlaceholder').style.display = 'block';
+        }
+
+        // Remove Foto
+        function removeFoto(event) {
+            event.stopPropagation();
+            document.getElementById('uploadFoto').value = '';
+            document.getElementById('fotoElement').src = '';
+            document.getElementById('fotoFileNamePreview').textContent = '';
+            document.getElementById('fotoPreview').classList.remove('show');
+            document.getElementById('fotoPlaceholder').style.display = 'block';
+        }
+
+        // Reset form saat modal ditutup
+        document.getElementById('modalTambahStok').addEventListener('hidden.bs.modal', function () {
+            document.getElementById('formTambahStok').reset();
+            
+            // Reset video
+            document.getElementById('videoElement').src = '';
+            document.getElementById('videoFileNamePreview').textContent = '';
+            document.getElementById('videoPreview').classList.remove('show');
+            document.getElementById('videoPlaceholder').style.display = 'block';
+            
+            // Reset foto
+            document.getElementById('fotoElement').src = '';
+            document.getElementById('fotoFileNamePreview').textContent = '';
+            document.getElementById('fotoPreview').classList.remove('show');
+            document.getElementById('fotoPlaceholder').style.display = 'block';
+        });
 
         // Initialize tooltip
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
