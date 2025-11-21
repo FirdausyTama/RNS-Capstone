@@ -164,9 +164,8 @@
           </div>
         </li>
 
-        <li class="menu-title">Autentikasi</li>
-
-        <li>
+        <li data-role="owner">
+          <span class="menu-title">Autentikasi</span>
           <a href="#sidebarAuth" data-bs-toggle="collapse">
             <i data-feather="users"></i>
             <span>Kelola Admin</span>
@@ -214,7 +213,16 @@
     }
   });
 </script>
+<script>
+const role = localStorage.getItem("role");
+if (role !== "owner") {
+    document.querySelectorAll('[data-role="owner"]').forEach(el => {
+        el.style.display = "none";
+    });
+}
 
+
+</script>
 
 <!-- ========================== -->
 <!-- 🌟 RESPONSIVE LOGO CSS -->

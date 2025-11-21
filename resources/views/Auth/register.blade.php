@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -91,6 +92,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="left-side">
     <img src="{{ asset('assets/images/logo-rns-bg.png') }}" alt="Logo RNS">
@@ -106,7 +108,7 @@
           <label class="form-label">Username</label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-            <input type="text" class="form-control" placeholder="Masukkan Username">
+            <input type="text" id="name" class="form-control" placeholder="Masukkan Username">
           </div>
         </div>
 
@@ -114,7 +116,7 @@
           <label class="form-label">Email</label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-            <input type="email" class="form-control" placeholder="Masukkan Email">
+            <input type="email" id="email" class="form-control" placeholder="Masukkan Email">
           </div>
         </div>
 
@@ -122,7 +124,15 @@
           <label class="form-label">Password</label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-            <input type="password" class="form-control" placeholder="Masukkan Password">
+            <input type="password" id="password" class="form-control" placeholder="Masukkan Password">
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Konfirmasi Password</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+            <input type="password" id="password_confirmation" class="form-control" placeholder="Konfirmasi Password">
           </div>
         </div>
 
@@ -137,5 +147,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/auth.js"></script>
+
 </body>
+
 </html>
