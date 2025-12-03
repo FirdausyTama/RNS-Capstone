@@ -1,11 +1,7 @@
-<!-- ========================== -->
-<!-- 🌟 TOPBAR START -->
-<!-- ========================== -->
 <div class="topbar-custom">
   <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center position-relative">
 
-      <!-- Left Section -->
       <ul class="list-unstyled topnav-menu mb-0 d-flex align-items-center">
         <li>
           <button class="button-toggle-menu nav-link">
@@ -16,27 +12,21 @@
           <h5 class="mb-0">Good Morning, RNS</h5>
         </li>
 
-        <!-- 🌟 Logo versi HP (tengah topbar) -->
         <li class="d-block d-lg-none text-center w-100 mobile-logo">
           <img
             src="{{ asset('assets/images/hp-logo.png') }}"
             alt="Logo HP"
-            class="hp-logo"
-          />
+            class="hp-logo" />
         </li>
       </ul>
 
-      <!-- Right Section -->
       <ul class="list-unstyled topnav-menu mb-0 d-flex align-items-center">
 
-        <!-- Fullscreen -->
         <li class="d-none d-sm-flex">
           <button type="button" class="btn nav-link" data-toggle="fullscreen">
             <i data-feather="maximize" class="align-middle fullscreen noti-icon"></i>
           </button>
         </li>
-
-        <!-- Dark/Light Mode -->
         <li class="d-none d-sm-flex">
           <button type="button" class="btn nav-link" id="light-dark-mode">
             <i data-feather="moon" class="align-middle dark-mode"></i>
@@ -44,52 +34,44 @@
           </button>
         </li>
 
-        <!-- 🌟 Profile Dropdown -->
-        <li class="dropdown notification-list topbar-dropdown">
-          <a
-            class="nav-link dropdown-toggle nav-user me-0 d-flex align-items-center"
-            data-bs-toggle="dropdown"
-            href="#"
-            role="button"
-            aria-haspopup="false"
-            aria-expanded="false"
-          >
-            <!-- 🌟 Foto profil tetap tampil di HP -->
-            <img
-              src="{{ asset('assets/images/users/user-13.jpg') }}"
-              alt="user-image"
-              class="rounded-circle"
-              style="width: 35px; height: 35px; object-fit: cover;"
-            />
-            <!-- 🌟 Nama disembunyikan di HP -->
-            <span class="pro-user-name ms-1 fw-semibold text-dark d-none d-lg-inline">
-              Heri Pirdaus
-              <i class="mdi mdi-chevron-down"></i>
-            </span>
-          </a>
+<li class="dropdown notification-list topbar-dropdown">
+  <a class="nav-link dropdown-toggle nav-user me-0 d-flex align-items-center"
+     data-bs-toggle="dropdown"
+     href="#"
+     role="button"
+     aria-haspopup="false"
+     aria-expanded="false">
 
-          <div class="dropdown-menu dropdown-menu-end profile-dropdown">
-            <a href="#" class="dropdown-item notify-item" id="logoutBtn">
-              <i class="mdi mdi-location-exit fs-16 align-middle"></i>
-              <span>Logout</span>
-            </a>
-          </div>
-        </li>
+    <!-- Avatar dengan fallback -->
+    <div id="user-avatar"
+      class="rounded-circle text-center bg-primary text-white fw-bold"
+      style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+      U
+    </div>
+
+    <!-- Nama dengan fallback -->
+    <span id="user-name" class="ms-1 fw-semibold text-dark d-lg-inline">
+      User
+    </span>
+  </a>
+
+  <div class="dropdown-menu dropdown-menu-end profile-dropdown">
+    <a href="#" class="dropdown-item notify-item" id="logoutBtn">
+      <i class="mdi mdi-location-exit fs-16 align-middle"></i>
+      <span>Logout</span>
+    </a>
+  </div>
+</li>
+
       </ul>
     </div>
   </div>
 </div>
-<!-- ========================== -->
-<!-- 🌟 TOPBAR END -->
-<!-- ========================== -->
 
-<!-- ========================== -->
-<!-- 🌟 SIDEBAR START -->
-<!-- ========================== -->
 <div class="app-sidebar-menu">
   <div class="h-100" data-simplebar>
     <div id="sidebar-menu">
-      <!-- Logo -->
+
       <div class="logo-box">
         <a href="/" class="logo logo-light">
           <span class="logo-sm d-flex align-items-center">
@@ -97,8 +79,7 @@
               src="{{ asset('assets/images/logo-rns-bg.png') }}"
               alt="Logo Light"
               height="40"
-              class="me-2"
-            />
+              class="me-2" />
             <span class="fw-bold text-white fs-5"></span>
           </span>
         </a>
@@ -109,14 +90,12 @@
               src="{{ asset('assets/images/logo-rns-bg.png') }}"
               alt="Logo Dark"
               height="40"
-              class="me-2"
-            />
+              class="me-2" />
             <span class="fw-bold text-dark fs-5">OwnerPanel</span>
           </span>
         </a>
       </div>
 
-      <!-- Sidebar Menu -->
       <ul id="side-menu">
         <li class="menu-title">Menu</li>
 
@@ -181,19 +160,14 @@
     </div>
   </div>
 </div>
-<!-- ========================== -->
-<!-- 🌟 SIDEBAR END -->
-<!-- ========================== -->
 
-<!-- ========================== -->
-<!-- 🔔 LOGOUT SWEETALERT -->
-<!-- ========================== -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('assets/js/auth.js') }}"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", function() {
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
-      logoutBtn.addEventListener("click", function (e) {
+      logoutBtn.addEventListener("click", function(e) {
         e.preventDefault();
         Swal.fire({
           title: "Apakah Anda yakin ingin logout?",
@@ -214,59 +188,49 @@
   });
 </script>
 <script>
-const role = localStorage.getItem("role");
-if (role !== "owner") {
+  const role = localStorage.getItem("role");
+  if (role !== "owner") {
     document.querySelectorAll('[data-role="owner"]').forEach(el => {
-        el.style.display = "none";
+      el.style.display = "none";
     });
-}
-
-
+  }
 </script>
-
-<!-- ========================== -->
-<!-- 🌟 RESPONSIVE LOGO CSS -->
-<!-- ========================== -->
 <style>
-/* 🌟 Logo di tampilan HP */
-.mobile-logo {
-  pointer-events: none;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -45%);
-  z-index: 0;
-}
-
-.hp-logo {
-  height: 36px;
-  width: auto;
-  object-fit: contain;
-}
-
-/* Sembunyikan logo HP di layar besar */
-@media (min-width: 992px) {
   .mobile-logo {
-    display: none !important;
-  }
-}
-
-/* 🌟 Responsif di HP */
-@media (max-width: 991px) {
-  .topbar-custom {
-    position: relative;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    pointer-events: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -45%);
+    z-index: 0;
   }
 
-  .topbar-custom h5 {
-    margin-bottom: 0;
-    font-size: 14px;
+  .hp-logo {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
   }
 
-  /* 🌟 Tampilkan foto profil, sembunyikan nama */
-  .pro-user-name {
-    display: none !important;
+  @media (min-width: 992px) {
+    .mobile-logo {
+      display: none !important;
+    }
   }
-}
+
+  @media (max-width: 991px) {
+    .topbar-custom {
+      position: relative;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    .topbar-custom h5 {
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+
+    .pro-user-name {
+      display: none !important;
+    }
+  }
 </style>

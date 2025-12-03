@@ -71,7 +71,7 @@
                                             </div>
 
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h3 class="mb-0 fs-22 text-dark me-3">456</h3>
+                                                <h3 class="mb-0 fs-22 text-dark me-3" id="totalPelanggan">...</h3>
                                                 <div class="text-center">
                                                     <span class="text-primary fs-14"><i
                                                             class="mdi mdi-trending-up fs-14"></i> 12.5%</span>
@@ -104,7 +104,7 @@
                                             </div>
 
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h3 class="mb-0 fs-22 text-dark me-3">2,839</h3>
+                                                <h3 class="mb-0 fs-22 text-dark me-3" id="pembayaranTertunda">...</h3>
                                                 <div class="text-center">
                                                     <span class="text-danger fs-14 me-2"><i
                                                             class="mdi mdi-trending-down fs-14"></i> 1.5%</span>
@@ -137,7 +137,7 @@
                                             </div>
 
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h3 class="mb-0 fs-22 text-dark me-3">2,254</h3>
+                                                <h3 class="mb-0 fs-22 text-dark me-3" id="totalDokumen">...</h3>
                                                 <div class="text-center">
                                                     <span class="text-primary fs-14 me-2"><i
                                                             class="mdi mdi-trending-up fs-14"></i> 12.8%</span>
@@ -171,7 +171,7 @@
 
 
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h3 class="mb-0 fs-22 text-dark me-3">Rp920.000</h3>
+                                                <h3 class="mb-0 fs-22 text-dark me-3" id="totalPembelian">...</h3>
 
                                                 <div class="text-muted">
                                                     <span class="text-danger fs-14 me-2"><i
@@ -193,7 +193,7 @@
                         <!-- start row -->
                         <div class="row">
 
-                            <div class="col-md-12 col-xl-8">
+                            <div class="col-md-12 col-xl-12">
                                 <div class="card">
                                     <div class="card-header">
                                         <div class="d-flex align-items-center">
@@ -219,7 +219,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12 col-xl-4">
+                            <!-- <div class="col-md-12 col-xl-4">
                                 <div class="card">
                                     <div class="card-header">
                                         <div class="d-flex align-items-center">
@@ -230,52 +230,17 @@
                                     <div class="card-body">
                                         <div id="top-session" class="apex-charts"></div>
 
-                                        <div class="row mt-2">
-                                            <div class="col">
-                                                <div class="d-flex justify-content-between align-items-center p-1">
-                                                    <div>
-                                                        <i class="mdi mdi-circle fs-12 align-middle me-1 text-success"></i>
-                                                        <span class="align-middle fw-semibold">Mesin Ronsen</span>
-                                                    </div>
-                                                    <span class="fw-medium text-muted float-end"><i
-                                                            class="mdi mdi-arrow-up text-success align-middle fs-14 me-1"></i>12 Stok</span>
+                                        <div class="row mt-2" id="stockListContainer">
+                                            <div class="col text-center py-3">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
                                                 </div>
-
-                                                <div class="d-flex justify-content-between align-items-center p-1">
-                                                    <div>
-                                                        <i class="mdi mdi-circle fs-12 align-middle me-1"
-                                                            style="color: #522c8f;"></i>
-                                                        <span class="align-middle fw-semibold">Mesin Dokter gigi</span>
-                                                    </div>
-                                                    <span class="fw-medium text-muted float-end"><i
-                                                            class="mdi mdi-arrow-up text-success align-middle fs-14 me-1"></i>5 Stok</span>
-                                                </div>
-
-                                                <div class="d-flex justify-content-between align-items-center p-1">
-                                                    <div>
-                                                        <i class="mdi mdi-circle fs-12 align-middle me-1 text-warning"></i>
-                                                        <span class="align-middle fw-semibold">Panoramic Rotograph</span>
-                                                    </div>
-                                                    <span class="fw-medium text-muted float-end"><i
-                                                            class="mdi mdi-arrow-up text-success align-middle fs-14 me-1"></i>1 Stok</span>
-                                                </div>
-
-                                                 <div class="d-flex justify-content-between align-items-center p-1">
-                                                    <div>
-                                                        <i class="mdi mdi-circle fs-12 align-middle me-1"
-                                                            style="color: #ff0606;"></i>
-                                                        <span class="align-middle fw-semibold">Mesin Dokter gigi</span>
-                                                    </div>
-                                                    <span class="fw-medium text-muted float-end"><i
-                                                            class="mdi mdi-arrow-up text-success align-middle fs-14 me-1"></i>8 Stok</span>
-                                                </div>
-
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 
-                            </div>
+                            </div> -->
 
 
                         </div>
@@ -291,7 +256,7 @@
                                     </div>
 
                                     <div class="card-body">
-                                        <ul class="list-group list-group-flush list-group-no-gutters">
+                                        <ul class="list-group list-group-flush list-group-no-gutters" id="recentTransactionsList">
 
                                             <!-- List Item -->
                                             <li class="list-group-item">
@@ -500,7 +465,8 @@
         <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
 
         <!-- Widgets Init Js -->
-        <script src="assets/js/pages/crm-dashboard.init.js"></script>
+        <!-- <script src="assets/js/pages/crm-dashboard.init.js"></script> -->
+        <script src="assets/js/dashboard.js"></script>
 
         <!-- App js-->
         <script src="assets/js/app.js"></script>

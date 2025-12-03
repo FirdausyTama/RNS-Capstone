@@ -133,91 +133,144 @@
 
   <!-- App js-->
   <script src="assets/js/app.js"></script>
-  <script src="assets/js/auth.js"></script>
   <!-- Inisialisasi -->
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
-  const dataTableElement = document.querySelector("#datatable_admin");
-  let dataTable;
+      const dataTableElement = document.querySelector("#datatable_admin tbody");
+      const paginationElement = document.createElement("ul");
+      paginationElement.className = "pagination pagination-rounded justify-content-end mb-0";
+      paginationElement.id = "pagination";
+      
+      // Insert pagination after table
+      dataTableElement.closest('.card-body').appendChild(paginationElement);
 
-  function renderAdminRow(admin) {
-    const initials = admin.name
-      .split(" ")
-      .map(n => n[0])
-      .join("")
-      .substring(0, 2)
-      .toUpperCase();
+      let allAdmins = [];
+      let filteredAdmins = [];
+      let currentPage = 1;
+      const rowsPerPage = 10;
 
-    let statusLabel = "";
-    let statusClass = "";
+      function renderAdminRow(admin) {
+        const initials = admin.name
+          .split(" ")
+          .map(n => n[0])
+          .join("")
+          .substring(0, 2)
+          .toUpperCase();
 
-    if (admin.status.toLowerCase() === "active") {
-      statusLabel = "Aktif";
-      statusClass = "bg-success-subtle text-success";
-    } else if (admin.status.toLowerCase() === "pending") {
-      statusLabel = "Menunggu ACC";
-      statusClass = "bg-warning-subtle text-warning";
-    } else {
-      statusLabel = "Tidak Aktif";
-      statusClass = "bg-secondary-subtle text-muted";
-    }
+        let statusLabel = "";
+        let statusClass = "";
 
-    const lastActive = admin.updated_at ?
-      new Date(admin.updated_at).toLocaleDateString("id-ID", {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      }) : "-";
+        if (admin.status.toLowerCase() === "active") {
+          statusLabel = "Aktif";
+          statusClass = "bg-success-subtle text-success";
+        } else if (admin.status.toLowerCase() === "pending") {
+          statusLabel = "Menunggu ACC";
+          statusClass = "bg-warning-subtle text-warning";
+        } else {
+          statusLabel = "Tidak Aktif";
+          statusClass = "bg-secondary-subtle text-muted";
+        }
 
-    return `
-      <tr>
-        <td><div class="avatar-initial">${initials}</div></td>
-        <td>${admin.name}</td>
-        <td>${admin.email}</td>
-        <td><span class="badge ${statusClass}">${statusLabel}</span></td>
-        <td>${lastActive}</td>
-        <td class="text-end">
-          ${admin.status === "pending" ? `
-            <button class="btn btn-sm bg-success-subtle me-1" onclick="approveAdmin('${admin.id}')">
-              <i class="mdi mdi-check fs-14 text-success"></i>
-            </button>
-            <button class="btn btn-sm bg-danger-subtle" onclick="rejectAdmin('${admin.id}')">
-              <i class="mdi mdi-close fs-14 text-danger"></i>
-            </button>` :
-            admin.status === "active" ? `
-            <button class="btn btn-sm bg-danger-subtle" onclick="deleteAdmin('${admin.id}', '${admin.name.replace(/'/g,"\\'")}')">
-              <i class="mdi mdi-delete fs-14 text-danger"></i>
-            </button>` : "-"
-          }
-        </td>
-      </tr>
-    `;
-  }
+        const lastActive = admin.updated_at ?
+          new Date(admin.updated_at).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+          }) : "-";
 
-  async function populateAdminTable() {
-    const admins = await fetchAdmins();
-    const tbody = dataTableElement.querySelector("tbody");
-    tbody.innerHTML = admins.map(renderAdminRow).join("");
+        return `
+          <tr>
+            <td><div class="avatar-initial">${initials}</div></td>
+            <td>${admin.name}</td>
+            <td>${admin.email}</td>
+            <td><span class="badge ${statusClass}">${statusLabel}</span></td>
+            <td>${lastActive}</td>
+            <td class="text-end">
+              ${admin.status === "pending" ? `
+                <button class="btn btn-sm bg-success-subtle me-1" onclick="approveAdmin('${admin.id}', '${admin.name.replace(/'/g,"\\'")}')">
+                  <i class="mdi mdi-check fs-14 text-success"></i>
+                </button>
+                <button class="btn btn-sm bg-danger-subtle" onclick="rejectAdmin('${admin.id}', '${admin.name.replace(/'/g,"\\'")}')">
+                  <i class="mdi mdi-close fs-14 text-danger"></i>
+                </button>` :
+                admin.status === "active" ? `
+                <button class="btn btn-sm bg-danger-subtle" onclick="deleteAdmin('${admin.id}', '${admin.name.replace(/'/g,"\\'")}')">
+                  <i class="mdi mdi-delete fs-14 text-danger"></i>
+                </button>` : "-"
+              }
+            </td>
+          </tr>
+        `;
+      }
 
-    if (!dataTable) {
-      dataTable = new simpleDatatables.DataTable(dataTableElement, {
-        searchable: true,  // Aktifkan search
-        perPage: 10,       // 10 row per halaman
-        perPageSelect: [5, 10, 15, 20] // dropdown pilihan perPage
-      });
-    } else {
-      dataTable.refresh();
-    }
+      function renderTable(page = 1) {
+        currentPage = page;
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        const paginatedItems = filteredAdmins.slice(start, end);
 
-    // Search custom input
-    const searchInput = document.querySelector("#searchInput");
-    searchInput.addEventListener("input", (e) => {
-      dataTable.search(e.target.value);
+        dataTableElement.innerHTML = paginatedItems.length ? 
+          paginatedItems.map(renderAdminRow).join("") : 
+          `<tr><td colspan="6" class="text-center text-muted py-3">Tidak ada data ditemukan</td></tr>`;
+
+        setupPagination();
+      }
+
+      function setupPagination() {
+        const totalPages = Math.ceil(filteredAdmins.length / rowsPerPage);
+        paginationElement.innerHTML = "";
+
+        if (totalPages <= 1) return;
+
+        // Prev Button
+        const prevLi = document.createElement("li");
+        prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
+        prevLi.innerHTML = `<a class="page-link" href="javascript:void(0);" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>`;
+        prevLi.onclick = () => { if (currentPage > 1) renderTable(currentPage - 1); };
+        paginationElement.appendChild(prevLi);
+
+        // Page Numbers
+        for (let i = 1; i <= totalPages; i++) {
+          const li = document.createElement("li");
+          li.className = `page-item ${currentPage === i ? "active" : ""}`;
+          li.innerHTML = `<a class="page-link" href="javascript:void(0);">${i}</a>`;
+          li.onclick = () => renderTable(i);
+          paginationElement.appendChild(li);
+        }
+
+        // Next Button
+        const nextLi = document.createElement("li");
+        nextLi.className = `page-item ${currentPage === totalPages ? "disabled" : ""}`;
+        nextLi.innerHTML = `<a class="page-link" href="javascript:void(0);" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>`;
+        nextLi.onclick = () => { if (currentPage < totalPages) renderTable(currentPage + 1); };
+        paginationElement.appendChild(nextLi);
+      }
+
+      // Search Logic
+      const searchInput = document.querySelector("#searchInput");
+      if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+          const term = e.target.value.toLowerCase();
+          filteredAdmins = allAdmins.filter(admin => 
+            admin.name.toLowerCase().includes(term) || 
+            admin.email.toLowerCase().includes(term)
+          );
+          renderTable(1); // Reset to page 1 on search
+        });
+      }
+
+      async function populateAdminTable() {
+        dataTableElement.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-3">Memuat data...</td></tr>`;
+        allAdmins = await fetchAdmins();
+        filteredAdmins = [...allAdmins]; // Initialize filtered list
+        renderTable(1);
+        
+        // Expose function globally for auth.js to call
+        window.populateAdminTable = populateAdminTable;
+      }
+
+      await populateAdminTable();
     });
-  }
-
-  await populateAdminTable();
-});
 
 
   </script>

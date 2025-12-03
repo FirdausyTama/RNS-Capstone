@@ -1,23 +1,25 @@
-
 const API_URL = "http://127.0.0.1:8000/api";
 const token = localStorage.getItem("token");
-const tableBody = document.getElementById("admin-table-body");
-
-let allAdmins = [];
-let currentPage = 1;
-const rowsPerPage = 10;
 
 // ===== LOGIN =====
 async function loginUser(email, password) {
     const res = await fetch(`${API_URL}/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
         body: JSON.stringify({ email, password }),
     });
 
     const data = await res.json().catch(() => null);
-    if (!res.ok) throw { message: data?.message || "Terjadi kesalahan saat login", status: res.status };
-    if (data.user?.status?.toLowerCase() === "pending") throw { message: "Akun Anda belum disetujui oleh owner!", status: 403 };
+    if (!res.ok)
+        throw {
+            message: data?.message || "Terjadi kesalahan saat login",
+            status: res.status,
+        };
+    if (data.user?.status?.toLowerCase() === "pending")
+        throw { message: "Akun Anda belum disetujui oleh owner!", status: 403 };
 
     return data;
 }
@@ -26,22 +28,31 @@ async function loginUser(email, password) {
 async function registerUser(name, email, password, password_confirmation) {
     const res = await fetch(`${API_URL}/register`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
         body: JSON.stringify({ name, email, password, password_confirmation }),
     });
 
+    const data = await res.json().catch(() => null);
+
     if (!res.ok) {
-        const errJson = await res.json().catch(() => null);
-        console.error("Register failed:", errJson || res.statusText);
-        throw res;
+        throw {
+            status: res.status,
+            message: data?.message || "Registrasi gagal",
+        };
     }
 
-    return await res.json();
+    return data;
 }
 
+// ===== FETCH ADMINS =====
 async function fetchAdmins() {
     try {
-        const res = await fetch(`${API_URL}/admins`, { headers: { Authorization: `Bearer ${token}` } });
+        const res = await fetch(`${API_URL}/admins`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
         if (!res.ok) throw new Error("Gagal mengambil data admin");
         const data = await res.json();
         return data.data || data;
@@ -50,159 +61,242 @@ async function fetchAdmins() {
         return [];
     }
 }
-async function loadAdmins() {
-    if (!tableBody) return;
-    tableBody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-3">Memuat data...</td></tr>`;
-    allAdmins = await fetchAdmins();
-    displayAdmins();
-}
 
-function displayAdmins() {
-    if (!tableBody) return;
+// Expose fetchAdmins globally
+window.fetchAdmins = fetchAdmins;
 
-    const searchValue = document.getElementById("searchInput")?.value?.toLowerCase() || "";
-    const filtered = allAdmins.filter(a =>
-        a.name.toLowerCase().includes(searchValue) || a.email.toLowerCase().includes(searchValue)
-    );
-
-    const start = (currentPage - 1) * rowsPerPage;
-    const paginated = filtered.slice(start, start + rowsPerPage);
-
-    tableBody.innerHTML = "";
-    if (paginated.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-3">Tidak ada data</td></tr>`;
-        document.getElementById("pagination").innerHTML = "";
-        return;
-    }
-
-    paginated.forEach(a => {
-        const statusBadge =
-            a.status === "active" ? `<span class="badge bg-success-subtle text-success">Aktif</span>` :
-            a.status === "pending" ? `<span class="badge bg-warning-subtle text-warning">Menunggu ACC</span>` :
-            `<span class="badge bg-secondary-subtle text-muted">Tidak Aktif</span>`;
-
-        const initials = a.name.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase();
-
-        const actionBtns = a.status === "pending" ?
-            `<button class="btn btn-sm bg-success-subtle me-1" onclick="approveAdmin(${a.id}, '${a.name}')">
-                <i class="mdi mdi-check fs-14 text-success"></i>
-             </button>
-             <button class="btn btn-sm bg-danger-subtle" onclick="rejectAdmin(${a.id}, '${a.name}')">
-                <i class="mdi mdi-close fs-14 text-danger"></i>
-             </button>` :
-            a.status === "active" ?
-            `<button class="btn btn-sm bg-danger-subtle" onclick="rejectAdmin(${a.id}, '${a.name}')">
-                <i class="mdi mdi-delete fs-14 text-danger"></i>
-             </button>` :
-            `<span class="text-muted">-</span>`;
-
-        const lastActive = a.updated_at ? new Date(a.updated_at).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' }) : '-';
-
-        tableBody.innerHTML += `
-          <tr>
-            <td><div class="avatar-initial">${initials}</div></td>
-            <td>${a.name}</td>
-            <td>${a.email}</td>
-            <td>${statusBadge}</td>
-            <td>${lastActive}</td>
-            <td class="text-end">${actionBtns}</td>
-          </tr>`;
-    });
-
-    setupPagination(filtered.length);
-}
-
-function setupPagination(totalRows) {
-    const totalPages = Math.ceil(totalRows / rowsPerPage);
-    const pagination = document.getElementById("pagination");
-    if (!pagination) return;
-
-    pagination.innerHTML = "";
-    if (totalPages === 0) return;
-
-    pagination.innerHTML += `<li><button ${currentPage===1?'disabled':''} onclick="goToPage(${currentPage-1})">«</button></li>`;
-    for (let i = 1; i <= totalPages; i++)
-        pagination.innerHTML += `<li><button class="${i===currentPage?'active':''}" onclick="goToPage(${i})">${i}</button></li>`;
-    pagination.innerHTML += `<li><button ${currentPage===totalPages?'disabled':''} onclick="goToPage(${currentPage+1})">»</button></li>`;
-}
-
-function goToPage(p) { currentPage = p; displayAdmins(); }
-
+// ===== ADMIN ACTIONS =====
 function approveAdmin(id, name) {
-    Swal.fire({ title: `Setujui admin ${name}?`, icon:"question", showCancelButton:true, confirmButtonText:"Ya, Setujui" })
-        .then(res => {
-            if(res.isConfirmed)
-                fetch(`${API_URL}/admins/${id}/approve`, { method:"PUT", headers:{ Authorization:`Bearer ${token}` } })
-                    .then(()=> Swal.fire("Berhasil!","Admin disetujui.","success")).then(loadAdmins)
-                    .catch(()=> Swal.fire("Gagal!","Gagal menyetujui admin.","error"));
-        });
+    Swal.fire({
+        title: `Setujui admin ${name}?`,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Ya, Setujui",
+        cancelButtonText: "Batal"
+    }).then((res) => {
+        if (res.isConfirmed)
+            fetch(`${API_URL}/admins/${id}/approve`, {
+                method: "PUT",
+                headers: { Authorization: `Bearer ${token}` },
+            })
+                .then(() => {
+                    Swal.fire("Berhasil!", `Admin ${name} telah disetujui.`, "success");
+                    if (typeof window.populateAdminTable === 'function') {
+                        window.populateAdminTable(); 
+                    } else {
+                        location.reload();
+                    }
+                })
+                .catch(() =>
+                    Swal.fire("Gagal!", "Gagal menyetujui admin.", "error")
+                );
+    });
 }
 
 function rejectAdmin(id, name) {
-    Swal.fire({ title: `Tolak admin ${name}?`, icon:"warning", showCancelButton:true, confirmButtonText:"Ya, Tolak" })
-        .then(res => {
-            if(res.isConfirmed)
-                fetch(`${API_URL}/admins/${id}/reject`, { method:"DELETE", headers:{ Authorization:`Bearer ${token}` } })
-                    .then(()=> Swal.fire("Dihapus!","Admin telah dihapus.","success")).then(loadAdmins)
-                    .catch(()=> Swal.fire("Gagal!","Gagal menghapus admin.","error"));
-        });
+    Swal.fire({
+        title: `Tolak permintaan admin ${name}?`,
+        text: "Data akan dihapus permanen.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Ya, Tolak",
+        cancelButtonText: "Batal",
+        confirmButtonColor: "#d33"
+    }).then((res) => {
+        if (res.isConfirmed)
+            fetch(`${API_URL}/admins/${id}/reject`, {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` },
+            })
+                .then(() => {
+                    Swal.fire("Ditolak!", `Permintaan admin ${name} telah ditolak.`, "success");
+                    if (typeof window.populateAdminTable === 'function') {
+                        window.populateAdminTable(); 
+                    } else {
+                        location.reload();
+                    }
+                })
+                .catch(() =>
+                    Swal.fire("Gagal!", "Gagal menolak admin.", "error")
+                );
+    });
 }
 
 function deleteAdmin(id, name) {
     Swal.fire({
         title: `Hapus admin ${name}?`,
+        text: "Tindakan ini tidak dapat dibatalkan.",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Ya, Hapus"
-    }).then(res => {
-        if(res.isConfirmed) {
+        confirmButtonText: "Ya, Hapus",
+        cancelButtonText: "Batal",
+        confirmButtonColor: "#d33"
+    }).then((res) => {
+        if (res.isConfirmed) {
             fetch(`${API_URL}/admins/${id}/reject`, {
                 method: "DELETE",
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}` },
             })
-            .then(() => Swal.fire("Dihapus!", "Admin telah dihapus.", "success"))
-            .then(loadAdmins)
-            .catch(() => Swal.fire("Gagal!", "Gagal menghapus admin.", "error"));
+                .then(() => {
+                    Swal.fire("Dihapus!", `Admin ${name} telah dihapus.`, "success");
+                    if (typeof window.populateAdminTable === 'function') {
+                        window.populateAdminTable(); 
+                    } else {
+                        location.reload();
+                    }
+                })
+                .catch(() =>
+                    Swal.fire("Gagal!", "Gagal menghapus admin.", "error")
+                );
         }
     });
 }
 
-
-document.getElementById("searchInput")?.addEventListener("input", ()=>{ currentPage=1; displayAdmins(); });
-
-
+// ===== DOM CONTENT LOADED =====
 document.addEventListener("DOMContentLoaded", () => {
+    // ELEMENT ALERT
+    const alertBox = document.getElementById("alertBox");
 
-    document.querySelector(".btn-login")?.addEventListener("click", async e => {
-        e.preventDefault();
-        const email = document.getElementById("email")?.value;
-        const password = document.getElementById("password")?.value;
-        if(!email || !password) return console.warn("Email atau password kosong");
+    function showAlert(type, message) {
+        if (!alertBox) return;
+        alertBox.innerHTML = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+    }
 
-        try {
-            const data = await loginUser(email, password);
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("user", JSON.stringify(data.user));
-            localStorage.setItem("role", data.user.role);
-            window.location.href = "/dashboard";
-        } catch(err) { console.error("Login error:", err); }
-    });
+    // ===== LOGIN BUTTON =====
+    document
+        .querySelector(".btn-login")
+        ?.addEventListener("click", async (e) => {
+            e.preventDefault();
 
-    document.querySelector(".btn-register")?.addEventListener("click", async e => {
-        e.preventDefault();
-        const name = document.getElementById("name")?.value;
-        const email = document.getElementById("email")?.value;
-        const password = document.getElementById("password")?.value;
-        const password_confirmation = document.getElementById("password_confirmation")?.value;
-        if(!name||!email||!password||!password_confirmation) return console.warn("Semua field wajib diisi");
-        if(password !== password_confirmation) return console.warn("Password dan konfirmasi tidak sama");
+            const email = document.getElementById("email")?.value;
+            const password = document.getElementById("password")?.value;
 
-        try {
-            const data = await registerUser(name,email,password,password_confirmation);
-            console.log("Register berhasil:", data);
-            window.location.href = "/";
-        } catch(err) { console.error("Register error:", err); }
-    });
+            alertBox.innerHTML = ""; // reset alert
 
-    if(tableBody) loadAdmins();
+            if (!email || !password) {
+                showAlert("danger", "Email dan password wajib diisi.");
+                return;
+            }
+
+            try {
+                const data = await loginUser(email, password);
+
+                if (data.user?.status?.toLowerCase() === "pending") {
+                    showAlert(
+                        "warning",
+                        "Akun Anda belum disetujui oleh owner!"
+                    );
+                    return;
+                }
+
+                showAlert("success", "Login berhasil!");
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("user", JSON.stringify(data.user));
+                localStorage.setItem("role", data.user.role);
+                localStorage.setItem("user_name", data.user.name);
+                localStorage.setItem("user_role", data.user.role);
+
+                setTimeout(() => {
+                    window.location.href = "/dashboard";
+                }, 1500);
+            } catch (err) {
+                if (err.status === 401) {
+                    showAlert("danger", "Email atau password salah!");
+                    return;
+                }
+                if (err.status === 403) {
+                    showAlert(
+                        "warning",
+                        err.message || "Akun belum disetujui!"
+                    );
+                    return;
+                }
+                showAlert(
+                    "danger",
+                    err.message || "Terjadi kesalahan saat login."
+                );
+            }
+        });
+
+    // ===== REGISTER BUTTON =====
+    document
+        .querySelector(".btn-register")
+        ?.addEventListener("click", async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById("name")?.value;
+            const email = document.getElementById("email")?.value;
+            const password = document.getElementById("password")?.value;
+            const password_confirmation = document.getElementById(
+                "password_confirmation"
+            )?.value;
+
+            alertBox.innerHTML = "";
+
+            if (!name || !email || !password || !password_confirmation) {
+                showAlert("danger", "Semua field wajib diisi.");
+                return;
+            }
+
+            if (password !== password_confirmation) {
+                showAlert("danger", "Silakan masukkan password yang sama.");
+                return;
+            }
+
+            try {
+                const res = await registerUser(
+                    name,
+                    email,
+                    password,
+                    password_confirmation
+                );
+
+                showAlert("success", "Register berhasil!");
+                setTimeout(() => (window.location.href = "/"), 1500);
+            } catch (err) {
+                const errorStatus = err.status || err?.statusCode;
+                if (errorStatus === 422) {
+                    showAlert(
+                        "danger",
+                        "Email sudah terdaftar, silahkan ganti email!"
+                    );
+                    return;
+                }
+                showAlert("danger", "Registrasi gagal, silahkan coba lagi!");
+            }
+        });
+
+    // ===== USER AVATAR & ROLE CHECK =====
+    setTimeout(() => {
+        const nameEl = document.getElementById("user-name");
+        const avatarEl = document.getElementById("user-avatar");
+
+        const userStr = localStorage.getItem("user");
+        
+        if (userStr) {
+            const user = JSON.parse(userStr);
+
+            const userName = user.name || "User";
+            const userRole = user.role || "admin";
+
+            if (nameEl) nameEl.textContent = userName;
+            if (avatarEl) {
+                const initials = userName
+                    .split(" ")
+                    .map((n) => n[0].toUpperCase())
+                    .join("")
+                    .substring(0, 2);
+                avatarEl.textContent = initials || "U";
+            }
+
+            if (userRole !== "owner") {
+                document.querySelectorAll('[data-role="owner"]').forEach(el => el.style.display = "none");
+            }
+        }
+    }, 100);
 });
