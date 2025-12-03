@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>Riwayat | RNS - Ranay Nusantara Sejathera</title>
+        <title>Riwayat Pembelian | RNS - Ranay Nusantara Sejathera</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc."/>
         <meta name="author" content="Zoyothemes"/>
@@ -18,17 +18,32 @@
         <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
 
         <script src="assets/js/head.js"></script>
+
+        <style>
+            /* Responsive */
+            @media (max-width: 768px) {
+                .floating-btn {
+                    width: 50px;
+                    height: 50px;
+                    bottom: 20px;
+                    right: 20px;
+                }
+
+                .floating-btn i {
+                    font-size: 24px;
+                }
+            }
+        </style>
     </head>
 
-    <!-- body start -->
     <body data-menu-color="light" data-sidebar="default">
         @include('navbar.navbar')
-        <!-- Begin page -->
+        
         <div id="app-layout">
             <div class="content-page">
                 <div class="content">
-                    <!-- Start Content-->
                     <div class="container-fluid">
+
                         <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
                             <div class="flex-grow-1">
                                 <h4 class="fs-18 fw-semibold m-0">Riwayat Pembelian</h4>
@@ -48,7 +63,7 @@
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <div>
                                             <h5 class="fw-semibold mb-1">Riwayat Pembelian</h5>
-                                            <p class="text-muted mb-0">Lihat dan kelola riwayat pembelian produk dari supplier</p>
+                                            <p class="text-muted mb-0">Lihat riwayat pembelian yang sudah lunas</p>
                                         </div>
                                         
                                         <!-- Filter & Search -->
@@ -85,96 +100,35 @@
                                                     <th scope="col" class="text-center" style="width: 60px;">No</th>
                                                     <th scope="col">Nomor Transaksi</th>
                                                     <th scope="col" class="text-center">Tanggal</th>
-                                                    <th scope="col">Supplier</th>
+                                                    <th scope="col">Customer</th>
                                                     <th scope="col" class="text-center">Total Pembelian</th>
                                                     <th scope="col" class="text-center">Status Pembayaran</th>
-                                                    <th scope="col" class="text-center" style="width: 100px;">Aksi</th>
+                                                    <th scope="col" class="text-center" >Aksi</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <!-- Transaksi 1 -->
-                                                <tr>
-                                                    <td class="text-center">1</td>
-                                                    <td><strong>TRX-2025-001</strong></td>
-                                                    <td class="text-center">17 Feb 2025</td>
-                                                    <td>PT Medika Sejahtera</td>
-                                                    <td class="text-center fw-semibold">Rp 65.000.000</td>
-                                                    <td class="text-center">
-                                                        <span class="badge bg-success-subtle text-success fw-semibold px-3 py-2">Lunas</span>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <button class="btn btn-sm btn-light border me-1" title="Lihat Detail">
-                                                            <i class="mdi mdi-eye-outline text-primary"></i>
-                                                        </button>
-                                                        <a href="javascript:window.print()" class="btn btn-sm btn-light border" title="Cetak Invoice">
-                                                            <i class="mdi mdi-printer text-dark"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-
-                                                <!-- Transaksi 2 -->
-                                                <tr>
-                                                    <td class="text-center">2</td>
-                                                    <td><strong>TRX-2025-002</strong></td>
-                                                    <td class="text-center">21 Feb 2025</td>
-                                                    <td>CV DentalTech</td>
-                                                    <td class="text-center fw-semibold">Rp 42.500.000</td>
-                                                    <td class="text-center">
-                                                        <span class="badge bg-success-subtle text-success fw-semibold px-3 py-2">Lunas</span>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <button class="btn btn-sm btn-light border me-1" title="Lihat Detail">
-                                                            <i class="mdi mdi-eye-outline text-primary"></i>
-                                                        </button>
-                                                        <a href="javascript:window.print()" class="btn btn-sm btn-light border" title="Cetak Invoice">
-                                                            <i class="mdi mdi-printer text-dark"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-
-                                                <!-- Transaksi 3 -->
-                                                <tr>
-                                                    <td class="text-center">3</td>
-                                                    <td><strong>TRX-2025-003</strong></td>
-                                                    <td class="text-center">28 Feb 2025</td>
-                                                    <td>PT Sentosa Medika</td>
-                                                    <td class="text-center fw-semibold">Rp 89.000.000</td>
-                                                    <td class="text-center">
-                                                        <span class="badge bg-success-subtle text-success fw-semibold px-3 py-2">Lunas</span>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <button class="btn btn-sm btn-light border me-1" title="Lihat Detail">
-                                                            <i class="mdi mdi-eye-outline text-primary"></i>
-                                                        </button>
-                                                        <a href="javascript:window.print()" class="btn btn-sm btn-light border" title="Cetak Invoice">
-                                                            <i class="mdi mdi-printer text-dark"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
+                                            <tbody id="stok-table-body">
+                                        <tr>
+                                            <td colspan="6" class="text-center py-3 text-muted">Memuat data...</td>
+                                        </tr>
+                                    </tbody>
                                         </table>
                                     </div>
 
-                                    <!-- Pagination -->
                                     <div class="d-flex justify-content-between align-items-center mt-3">
-                                        <small class="text-muted">Menampilkan 1–3 dari 50 transaksi</small>
+                                        <small class="text-muted" id="paginationInfo">Menampilkan 0–0 dari 0 transaksi</small>
                                         <nav>
-                                            <ul class="pagination pagination-sm mb-0">
-                                                <li class="page-item"><a class="page-link" href="#">‹</a></li>
-                                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">›</a></li>
+                                            <ul class="pagination pagination-sm mb-0" id="paginationList">
+                                                <!-- Pagination generated by JS -->
                                             </ul>
                                         </nav>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div> <!-- container-fluid -->
-                </div> <!-- content -->
+                        
+                    </div>
+                </div>
 
-                <!-- Footer Start -->
                 <footer class="footer">
                     <div class="container-fluid">
                         <div class="row">
@@ -184,10 +138,121 @@
                         </div>
                     </div>
                 </footer>
-                <!-- end Footer -->
             </div>
         </div>
-        <!-- END wrapper -->
+
+        <!-- Modal Detail Pembelian -->
+        <div class="modal fade" id="detailPembelianModal" tabindex="-1" aria-labelledby="detailPembelianLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg">
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <h5 class="modal-title fw-bold" id="detailPembelianLabel">Detail Pembelian</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <!-- Header Info -->
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div>
+                                <h6 class="text-muted mb-1">Nomor Transaksi</h6>
+                                <h4 class="fw-bold text-primary mb-0" id="detailNoOrder">Loading...</h4>
+                            </div>
+                            <div class="text-end">
+                                <h6 class="text-muted mb-1">Tanggal</h6>
+                                <p class="fw-semibold mb-0" id="detailTanggal">-</p>
+                            </div>
+                        </div>
+
+                        <!-- Customer & Status -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded-3 h-100">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="mdi mdi-account-circle text-primary fs-4 me-2"></i>
+                                        <h6 class="fw-semibold mb-0">Informasi Customer</h6>
+                                    </div>
+                                    <hr class="my-2">
+                                    <p class="mb-1"><span class="text-muted">Nama:</span> <span class="fw-medium" id="detailNama">-</span></p>
+                                    <p class="mb-1"><span class="text-muted">Telepon:</span> <span class="fw-medium" id="detailTelepon">-</span></p>
+                                    <p class="mb-0"><span class="text-muted">Alamat:</span> <span class="fw-medium" id="detailAlamat">-</span></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded-3 h-100">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="mdi mdi-credit-card-outline text-success fs-4 me-2"></i>
+                                        <h6 class="fw-semibold mb-0">Status & Pengiriman</h6>
+                                    </div>
+                                    <hr class="my-2">
+                                    <div class="mb-2">
+                                        <small class="text-muted d-block">Pembayaran:</small>
+                                        <div id="detailStatusBadge">
+                                            <span class="badge bg-secondary">Loading...</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Pengiriman:</small>
+                                        <span class="fw-medium" id="detailStatusPengiriman">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cicilan Info (Hidden by default) -->
+                        <div id="detailCicilanContainer" class="row g-3 mb-4 d-none">
+                            <div class="col-12">
+                                <div class="p-3 bg-warning-subtle rounded-3 border border-warning">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="mdi mdi-cash-clock text-warning fs-4 me-2"></i>
+                                        <h6 class="fw-semibold mb-0 text-warning-emphasis">Informasi Cicilan</h6>
+                                    </div>
+                                    <hr class="my-2 border-warning">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="mb-0"><span class="text-muted">Total Terbayar:</span> <span class="fw-bold text-success" id="detailTotalCicilan">Rp 0</span></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-0"><span class="text-muted">Sisa Tagihan:</span> <span class="fw-bold text-danger" id="detailSisaCicilan">Rp 0</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Items Table -->
+                        <h6 class="fw-semibold mb-3">Daftar Barang</h6>
+                        <div class="table-responsive border rounded-3 mb-4">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="ps-3">Nama Barang</th>
+                                        <th class="text-center" style="width: 100px;">Jumlah</th>
+                                        <th class="text-end" style="width: 150px;">Harga Satuan</th>
+                                        <th class="text-end pe-3" style="width: 150px;">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="detailItemsBody">
+                                    <!-- Items will be populated here -->
+                                </tbody>
+                                <tfoot class="bg-light border-top">
+                                    <tr>
+                                        <td colspan="3" class="text-end fw-bold py-3">Grand Total</td>
+                                        <td class="text-end fw-bold text-primary fs-5 pe-3 py-3" id="detailGrandTotal">Rp 0</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <!-- Footer Actions -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Tutup</button>
+                            <button type="button" class="btn btn-primary" onclick="window.print()">
+                                <i class="mdi mdi-printer me-1"></i> Cetak
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Vendor -->
         <script src="assets/libs/jquery/jquery.min.js"></script>
@@ -197,43 +262,15 @@
         <script src="assets/libs/waypoints/lib/jquery.waypoints.min.js"></script>
         <script src="assets/libs/jquery.counterup/jquery.counterup.min.js"></script>
         <script src="assets/libs/feather-icons/feather.min.js"></script>
-
-        <!-- App js-->
         <script src="assets/js/app.js"></script>
-        
-        <!-- Custom Script -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <!-- Custom Script for Riwayat -->
+        <script src="{{ asset('assets/js/pembelian.js') }}"></script>
         <script>
-            // Fungsi untuk set filter waktu
-            function setFilter(filterName) {
-                document.getElementById('selectedFilter').textContent = filterName;
-                console.log('Filter dipilih:', filterName);
-                
-                // Untuk integrasi dengan backend, kirim request AJAX
-                // filterDataByTime(filterName);
-            }
-
-            // Fungsi untuk search transaksi
-            function searchTransaction() {
-                let input = document.getElementById('searchInput');
-                let filter = input.value.toUpperCase();
-                let table = document.getElementById('transactionTable');
-                let tr = table.getElementsByTagName('tr');
-
-                // Loop melalui semua baris tabel, sembunyikan yang tidak cocok
-                for (let i = 1; i < tr.length; i++) {
-                    let tdNo = tr[i].getElementsByTagName('td')[1]; // Nomor transaksi
-                    let tdSupplier = tr[i].getElementsByTagName('td')[3]; // Supplier
-                    if (tdNo || tdSupplier) {
-                        let txtNo = tdNo ? (tdNo.textContent || tdNo.innerText) : '';
-                        let txtSupplier = tdSupplier ? (tdSupplier.textContent || tdSupplier.innerText) : '';
-                        if (txtNo.toUpperCase().indexOf(filter) > -1 || txtSupplier.toUpperCase().indexOf(filter) > -1) {
-                            tr[i].style.display = '';
-                        } else {
-                            tr[i].style.display = 'none';
-                        }
-                    }
-                }
-            }
+            document.addEventListener("DOMContentLoaded", function () {
+                loadPembelian('lunas');
+            });
         </script>
     </body>
 </html>

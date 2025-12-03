@@ -62,10 +62,11 @@
               style="width: 35px; height: 35px; object-fit: cover;"
             />
             <!-- 🌟 Nama disembunyikan di HP -->
-            <span class="pro-user-name ms-1 fw-semibold text-dark d-none d-lg-inline">
-              Heri Pirdaus
-              <i class="mdi mdi-chevron-down"></i>
+            <span id="navbar-username" class="pro-user-name ms-1 fw-semibold text-dark d-none d-lg-inline">
+                {username}
+                <i class="mdi mdi-chevron-down"></i>
             </span>
+
           </a>
 
           <div class="dropdown-menu dropdown-menu-end profile-dropdown">

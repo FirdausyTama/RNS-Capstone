@@ -50,207 +50,6 @@
                 font-size: 28px;
             }
 
-            /* Modal Custom Styles */
-            .modal-header {
-                background: #fff;
-                border-bottom: 1px solid #e9ecef;
-                padding: 16px 24px;
-            }
-
-            .modal-title {
-                font-size: 16px;
-                font-weight: 600;
-                color: #212529;
-                display: flex;
-                align-items: center;
-            }
-
-            .modal-title i {
-                color: #ffc107;
-                margin-right: 8px;
-                font-size: 20px;
-            }
-
-            .modal-body {
-                padding: 24px;
-                background: #f8f9fa;
-            }
-
-            /* Section Styles */
-            .section-card {
-                background: #fff;
-                border-radius: 8px;
-                padding: 20px;
-                margin-bottom: 16px;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            }
-
-            .section-title {
-                font-size: 14px;
-                font-weight: 600;
-                color: #495057;
-                margin-bottom: 16px;
-                padding-bottom: 8px;
-                border-bottom: 1px solid #e9ecef;
-            }
-
-            /* Form Styles */
-            .form-label {
-                font-size: 12px;
-                font-weight: 500;
-                color: #6c757d;
-                margin-bottom: 6px;
-            }
-
-            .form-control, .form-select {
-                font-size: 13px;
-                border: 1px solid #ced4da;
-                border-radius: 6px;
-                padding: 8px 12px;
-                height: auto;
-            }
-
-            .form-control:focus, .form-select:focus {
-                border-color: #0d6efd;
-                box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
-            }
-
-            .form-control:read-only {
-                background-color: #e9ecef;
-            }
-
-            /* Item Row Styles */
-            .items-container {
-                background: #fff;
-                border-radius: 8px;
-                padding: 20px;
-                margin-bottom: 16px;
-            }
-
-            .item-row {
-                background: #f8f9fa;
-                border: 1px solid #e9ecef;
-                border-radius: 6px;
-                padding: 16px;
-                margin-bottom: 12px;
-            }
-
-            .item-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 12px;
-            }
-
-            .item-label {
-                font-size: 12px;
-                font-weight: 500;
-                color: #6c757d;
-                margin-bottom: 4px;
-            }
-
-            /* Button Styles */
-            .btn-add-item {
-                background: #0d6efd;
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
-                font-size: 13px;
-                font-weight: 500;
-                transition: all 0.3s ease;
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
-            }
-
-            .btn-add-item:hover {
-                background: #0b5ed7;
-            }
-
-            .btn-remove-item {
-                background: #dc3545;
-                color: white;
-                border: none;
-                width: 32px;
-                height: 32px;
-                border-radius: 4px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                padding: 0;
-            }
-
-            .btn-remove-item:hover {
-                background: #bb2d3b;
-            }
-
-            /* Total Section */
-            .total-section {
-                background: #fff;
-                border-radius: 8px;
-                padding: 16px 20px;
-                margin-bottom: 16px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            }
-
-            .total-label {
-                font-size: 14px;
-                font-weight: 600;
-                color: #495057;
-            }
-
-            .total-value {
-                font-size: 18px;
-                font-weight: 700;
-                color: #0d6efd;
-            }
-
-            /* Radio Styles */
-            .radio-group {
-                display: flex;
-                gap: 16px;
-                flex-wrap: wrap;
-            }
-
-            .radio-item {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-            }
-
-            .radio-item input[type="radio"] {
-                margin: 0;
-                cursor: pointer;
-            }
-
-            .radio-item label {
-                margin: 0;
-                font-size: 13px;
-                font-weight: 500;
-                color: #495057;
-                cursor: pointer;
-            }
-
-            /* Modal Footer */
-            .modal-footer {
-                padding: 16px 24px;
-                border-top: 1px solid #e9ecef;
-                background: #fff;
-            }
-
-            .modal-footer .btn {
-                padding: 8px 20px;
-                font-size: 13px;
-                font-weight: 500;
-                border-radius: 6px;
-            }
-
             /* Responsive */
             @media (max-width: 768px) {
                 .floating-btn {
@@ -294,7 +93,7 @@
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <div>
                                             <h5 class="fw-semibold mb-1">Kelola Pembelian</h5>
-                                            <p class="text-muted mb-0">Lihat dan kelola riwayat pembelian produk dari supplier</p>
+                                            <p class="text-muted mb-0">Lihat dan kelola riwayat pembelian produk dari customer</p>
                                         </div>
                                         
                                         <!-- Filter & Search -->
@@ -331,80 +130,25 @@
                                                     <th scope="col" class="text-center" style="width: 60px;">No</th>
                                                     <th scope="col">Nomor Transaksi</th>
                                                     <th scope="col" class="text-center">Tanggal</th>
-                                                    <th scope="col">Supplier</th>
+                                                    <th scope="col">Customer</th>
                                                     <th scope="col" class="text-center">Total Pembelian</th>
                                                     <th scope="col" class="text-center">Status Pembayaran</th>
-                                                    <th scope="col" class="text-center" style="width: 100px;">Aksi</th>
+                                                    <th scope="col" class="text-center" >Aksi</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="text-center">1</td>
-                                                    <td><strong>TRX-2025-001</strong></td>
-                                                    <td class="text-center">17 Feb 2025</td>
-                                                    <td>PT Medika Sejahtera</td>
-                                                    <td class="text-center fw-semibold">Rp 65.000.000</td>
-                                                    <td class="text-center">
-                                                        <span class="badge bg-danger-subtle text-danger fw-semibold px-3 py-2">Cicilan</span>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <button class="btn btn-sm btn-light border me-1" onclick="window.location.href='/detail-pembelian/1'" title="Lihat Detail">
-                                                            <i class="mdi mdi-square-edit-outline text-primary"></i>
-                                                        </button>
-                                                        <a href="javascript:window.print()" class="btn btn-sm btn-light border" title="Cetak Invoice">
-                                                            <i class="mdi mdi-eye-outline text-dark"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2</td>
-                                                    <td><strong>TRX-2025-002</strong></td>
-                                                    <td class="text-center">21 Feb 2025</td>
-                                                    <td>CV DentalTech</td>
-                                                    <td class="text-center fw-semibold">Rp 42.500.000</td>
-                                                    <td class="text-center">
-                                                        <span class="badge bg-warning-subtle text-warning fw-semibold px-3 py-2">Belum Lunas</span>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <button class="btn btn-sm btn-light border me-1" onclick="window.location.href='/detail-pembelian/2'" title="Lihat Detail">
-                                                            <i class="mdi mdi-square-edit-outline text-primary"></i>
-                                                        </button>
-                                                        <a href="javascript:window.print()" class="btn btn-sm btn-light border" title="Cetak Invoice">
-                                                            <i class="mdi mdi-eye-outline text-dark"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">3</td>
-                                                    <td><strong>TRX-2025-003</strong></td>
-                                                    <td class="text-center">28 Feb 2025</td>
-                                                    <td>PT Sentosa Medika</td>
-                                                    <td class="text-center fw-semibold">Rp 89.000.000</td>
-                                                    <td class="text-center">
-                                                        <span class="badge bg-danger-subtle text-danger fw-semibold px-3 py-2">Cicilan</span>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <button class="btn btn-sm btn-light border me-1" onclick="window.location.href='/detail-pembelian/3'" title="Lihat Detail">
-                                                            <i class="mdi mdi-square-edit-outline text-primary"></i>
-                                                        </button>
-                                                        <a href="javascript:window.print()" class="btn btn-sm btn-light border" title="Cetak Invoice">
-                                                            <i class="mdi mdi-eye-outline text-dark"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
+                                            <tbody id="stok-table-body">
+                                        <tr>
+                                            <td colspan="6" class="text-center py-3 text-muted">Memuat data...</td>
+                                        </tr>
+                                    </tbody>
                                         </table>
                                     </div>
 
                                     <div class="d-flex justify-content-between align-items-center mt-3">
-                                        <small class="text-muted">Menampilkan 1–3 dari 50 transaksi</small>
+                                        <small class="text-muted" id="paginationInfo">Menampilkan 0–0 dari 0 transaksi</small>
                                         <nav>
-                                            <ul class="pagination pagination-sm mb-0">
-                                                <li class="page-item"><a class="page-link" href="#">‹</a></li>
-                                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">›</a></li>
+                                            <ul class="pagination pagination-sm mb-0" id="paginationList">
+                                                <!-- Pagination generated by JS -->
                                             </ul>
                                         </nav>
                                     </div>
@@ -432,130 +176,116 @@
             <i class="mdi mdi-plus"></i>
         </button>
 
-        <!-- Modal Input Pembelian -->
-        <div class="modal fade" id="inputPembelianModal" tabindex="-1" aria-labelledby="inputPembelianModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="inputPembelianModalLabel">
-                            <i class="mdi mdi-clipboard-text"></i>Input Pembelian
-                        </h5>
+        @include('tambah-pembelian')
+
+        <!-- Modal Detail Pembelian -->
+        <div class="modal fade" id="detailPembelianModal" tabindex="-1" aria-labelledby="detailPembelianLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg">
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <h5 class="modal-title fw-bold" id="detailPembelianLabel">Detail Pembelian</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form id="formPembelian">
-                            <!-- Informasi Pesanan -->
-                            <div class="section-card">
-                                <div class="section-title">Informasi Pesanan</div>
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="noOrder" class="form-label">No. Order</label>
-                                        <input type="text" class="form-control" id="noOrder" placeholder="ORJ-2025-001" value="ORJ-2025-001" readonly>
+                    <div class="modal-body p-4">
+                        <!-- Header Info -->
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div>
+                                <h6 class="text-muted mb-1">Nomor Transaksi</h6>
+                                <h4 class="fw-bold text-primary mb-0" id="detailNoOrder">Loading...</h4>
+                            </div>
+                            <div class="text-end">
+                                <h6 class="text-muted mb-1">Tanggal</h6>
+                                <p class="fw-semibold mb-0" id="detailTanggal">-</p>
+                            </div>
+                        </div>
+
+                        <!-- Customer & Status -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded-3 h-100">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="mdi mdi-account-circle text-primary fs-4 me-2"></i>
+                                        <h6 class="fw-semibold mb-0">Informasi Customer</h6>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label for="tanggalPembelian" class="form-label">Tanggal Pembelian</label>
-                                        <input type="date" class="form-control" id="tanggalPembelian" required>
+                                    <hr class="my-2">
+                                    <p class="mb-1"><span class="text-muted">Nama:</span> <span class="fw-medium" id="detailNama">-</span></p>
+                                    <p class="mb-1"><span class="text-muted">Telepon:</span> <span class="fw-medium" id="detailTelepon">-</span></p>
+                                    <p class="mb-0"><span class="text-muted">Alamat:</span> <span class="fw-medium" id="detailAlamat">-</span></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded-3 h-100">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="mdi mdi-credit-card-outline text-success fs-4 me-2"></i>
+                                        <h6 class="fw-semibold mb-0">Status & Pengiriman</h6>
+                                    </div>
+                                    <hr class="my-2">
+                                    <div class="mb-2">
+                                        <small class="text-muted d-block">Pembayaran:</small>
+                                        <div id="detailStatusBadge">
+                                            <span class="badge bg-secondary">Loading...</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Pengiriman:</small>
+                                        <span class="fw-medium" id="detailStatusPengiriman">-</span>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Data Customer -->
-                            <div class="section-card">
-                                <div class="section-title">Data Customer</div>
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="namaCustomer" class="form-label">Nama Customer</label>
-                                        <input type="text" class="form-control" id="namaCustomer" placeholder="Masukkan nama customer" required>
+                        <!-- Cicilan Info (Hidden by default) -->
+                        <div id="detailCicilanContainer" class="row g-3 mb-4 d-none">
+                            <div class="col-12">
+                                <div class="p-3 bg-warning-subtle rounded-3 border border-warning">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="mdi mdi-cash-clock text-warning fs-4 me-2"></i>
+                                        <h6 class="fw-semibold mb-0 text-warning-emphasis">Informasi Cicilan</h6>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label for="noTelepon" class="form-label">No. Telepon</label>
-                                        <input type="tel" class="form-control" id="noTelepon" placeholder="08xx-xxxx-xxxx" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Pilih Barang -->
-                            <div class="items-container">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <div class="section-title mb-0">Pilih Barang</div>
-                                    <button type="button" class="btn-add-item" id="btnTambahBarang">
-                                        <i class="mdi mdi-plus"></i>Tambah Barang
-                                    </button>
-                                </div>
-                                <div id="containerBarang">
-                                    <!-- Item pertama -->
-                                    <div class="item-row" data-item="1">
-                                        <div class="row g-2 align-items-end">
-                                            <div class="col-md-4">
-                                                <div class="item-label">Nama Barang</div>
-                                                <select class="form-select select-barang" required>
-                                                    <option value="">Pilih barang...</option>
-                                                    <option value="1" data-harga="1000000">Betre Alat</option>
-                                                    <option value="2" data-harga="40000000">Mesin Ronsen</option>
-                                                    <option value="3" data-harga="300000000">Mesin Kursi Gigi</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="item-label">Harga Satuan</div>
-                                                <input type="text" class="form-control harga-satuan" placeholder="Rp 0" readonly>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="item-label">Jumlah</div>
-                                                <input type="number" class="form-control jumlah-barang" placeholder="1" min="1" value="1" required>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="item-label">Total</div>
-                                                <input type="text" class="form-control total-item" placeholder="Rp 0" readonly>
-                                            </div>
-                                            <div class="col-md-1 text-center">
-                                                <button type="button" class="btn-remove-item" onclick="hapusItem(this)" style="display:none;">
-                                                    <i class="mdi mdi-delete"></i>
-                                                </button>
-                                            </div>
+                                    <hr class="my-2 border-warning">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="mb-0"><span class="text-muted">Total Terbayar:</span> <span class="fw-bold text-success" id="detailTotalCicilan">Rp 0</span></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-0"><span class="text-muted">Sisa Tagihan:</span> <span class="fw-bold text-danger" id="detailSisaCicilan">Rp 0</span></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Total Keseluruhan -->
-                            <div class="total-section">
-                                <span class="total-label">Total Keseluruhan:</span>
-                                <span class="total-value" id="totalKeseluruhan">Rp 0</span>
-                            </div>
+                        <!-- Items Table -->
+                        <h6 class="fw-semibold mb-3">Daftar Barang</h6>
+                        <div class="table-responsive border rounded-3 mb-4">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="ps-3">Nama Barang</th>
+                                        <th class="text-center" style="width: 100px;">Jumlah</th>
+                                        <th class="text-end" style="width: 150px;">Harga Satuan</th>
+                                        <th class="text-end pe-3" style="width: 150px;">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="detailItemsBody">
+                                    <!-- Items will be populated here -->
+                                </tbody>
+                                <tfoot class="bg-light border-top">
+                                    <tr>
+                                        <td colspan="3" class="text-end fw-bold py-3">Grand Total</td>
+                                        <td class="text-end fw-bold text-primary fs-5 pe-3 py-3" id="detailGrandTotal">Rp 0</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
 
-                            <!-- Status Pesanan -->
-                            <div class="section-card">
-                                <div class="section-title">Status Pesanan</div>
-                                <div class="row g-3">
-                                    
-                                    <div class="col-md-6">
-                                        <label class="form-label d-block mb-2">Status Pembayaran</label>
-                                        <div class="radio-group">
-                                            <div class="radio-item">
-                                                <input type="radio" id="statusLunas" name="statusPembayaran" value="Lunas">
-                                                <label for="statusLunas">Lunas</label>
-                                            </div>
-                                            <div class="radio-item">
-                                                <input type="radio" id="statusCicil" name="statusPembayaran" value="Cicil" checked>
-                                                <label for="statusCicil">Cicil</label>
-                                            </div>
-                                            <div class="radio-item">
-                                                <input type="radio" id="statusBelumLunas" name="statusPembayaran" value="Belum Lunas">
-                                                <label for="statusBelumLunas">Belum Lunas</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="mdi mdi-close me-1"></i>Batal
-                        </button>
-                        <button type="button" class="btn btn-primary" onclick="simpanPesanan()">
-                            <i class="mdi mdi-check me-1"></i>Simpan Pesanan
-                        </button>
+                        <!-- Footer Actions -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Tutup</button>
+                            <button type="button" class="btn btn-primary" onclick="window.print()">
+                                <i class="mdi mdi-printer me-1"></i> Cetak
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -570,270 +300,13 @@
         <script src="assets/libs/jquery.counterup/jquery.counterup.min.js"></script>
         <script src="assets/libs/feather-icons/feather.min.js"></script>
         <script src="assets/js/app.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+        
+        <script src="{{ asset('assets/js/pembelian.js') }}"></script>
         <script>
-            let itemCounter = 1;
-
-            // Format Rupiah
-            function formatRupiah(angka) {
-                return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-            }
-
-            // Fungsi untuk set filter waktu
-            function setFilter(filterName) {
-                document.getElementById('selectedFilter').textContent = filterName;
-                console.log('Filter dipilih:', filterName);
-                // Untuk integrasi dengan backend, kirim request AJAX
-            }
-
-            // Fungsi untuk search transaksi
-            function searchTransaction() {
-                let input = document.getElementById('searchInput');
-                let filter = input.value.toUpperCase();
-                let table = document.getElementById('transactionTable');
-                let tr = table.getElementsByTagName('tr');
-
-                for (let i = 1; i < tr.length; i++) {
-                    let tdNo = tr[i].getElementsByTagName('td')[1]; // Nomor transaksi
-                    let tdSupplier = tr[i].getElementsByTagName('td')[3]; // Supplier
-                    if (tdNo || tdSupplier) {
-                        let txtNo = tdNo ? (tdNo.textContent || tdNo.innerText) : '';
-                        let txtSupplier = tdSupplier ? (tdSupplier.textContent || tdSupplier.innerText) : '';
-                        if (txtNo.toUpperCase().indexOf(filter) > -1 || txtSupplier.toUpperCase().indexOf(filter) > -1) {
-                            tr[i].style.display = '';
-                        } else {
-                            tr[i].style.display = 'none';
-                        }
-                    }
-                }
-            }
-
-            // Set tanggal hari ini saat modal dibuka
-            document.getElementById('inputPembelianModal').addEventListener('shown.bs.modal', function () {
-                if (!document.getElementById('tanggalPembelian').value) {
-                    const today = new Date().toISOString().split('T')[0];
-                    document.getElementById('tanggalPembelian').value = today;
-                }
-            });
-
-            // Event delegation untuk select barang
-            document.getElementById('containerBarang').addEventListener('change', function(e) {
-                if (e.target.classList.contains('select-barang')) {
-                    updateHargaBarang(e.target);
-                }
-            });
-
-            // Event delegation untuk jumlah barang
-            document.getElementById('containerBarang').addEventListener('input', function(e) {
-                if (e.target.classList.contains('jumlah-barang')) {
-                    hitungTotalItem(e.target);
-                }
-            });
-
-            // Update harga saat pilih barang
-            function updateHargaBarang(select) {
-                const row = select.closest('.item-row');
-                const selectedOption = select.options[select.selectedIndex];
-                const harga = selectedOption.getAttribute('data-harga') || 0;
-                const hargaSatuan = row.querySelector('.harga-satuan');
-                const jumlah = row.querySelector('.jumlah-barang');
-                const totalItem = row.querySelector('.total-item');
-                
-                hargaSatuan.value = formatRupiah(parseInt(harga));
-                
-                const total = parseInt(harga) * parseInt(jumlah.value || 1);
-                totalItem.value = formatRupiah(total);
-                
-                hitungTotalKeseluruhan();
-            }
-
-            // Hitung total per item
-            function hitungTotalItem(input) {
-                const row = input.closest('.item-row');
-                const select = row.querySelector('.select-barang');
-                const selectedOption = select.options[select.selectedIndex];
-                const harga = parseInt(selectedOption.getAttribute('data-harga') || 0);
-                const jumlah = parseInt(input.value) || 0;
-                const totalItem = row.querySelector('.total-item');
-                
-                const total = harga * jumlah;
-                totalItem.value = formatRupiah(total);
-                
-                hitungTotalKeseluruhan();
-            }
-
-            // Hitung total keseluruhan
-            function hitungTotalKeseluruhan() {
-                let totalSemua = 0;
-                document.querySelectorAll('.item-row').forEach(row => {
-                    const select = row.querySelector('.select-barang');
-                    const selectedOption = select.options[select.selectedIndex];
-                    const jumlah = parseInt(row.querySelector('.jumlah-barang').value) || 0;
-                    const harga = parseInt(selectedOption.getAttribute('data-harga') || 0);
-                    totalSemua += harga * jumlah;
-                });
-                document.getElementById('totalKeseluruhan').textContent = formatRupiah(totalSemua);
-            }
-
-            // Tambah barang baru
-            document.getElementById('btnTambahBarang').addEventListener('click', function() {
-                itemCounter++;
-                const container = document.getElementById('containerBarang');
-                const newItem = document.createElement('div');
-                newItem.className = 'item-row';
-                newItem.setAttribute('data-item', itemCounter);
-                newItem.innerHTML = `
-                    <div class="row g-2 align-items-end">
-                        <div class="col-md-4">
-                            <div class="item-label">Nama Barang</div>
-                            <select class="form-select select-barang" required>
-                                <option value="">Pilih barang...</option>
-                                <option value="1" data-harga="1000000">Betre Alat</option>
-                                <option value="2" data-harga="40000000">Mesin Ronsen</option>
-                                <option value="3" data-harga="300000000">Mesin Kursi Gigi</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="item-label">Harga Satuan</div>
-                            <input type="text" class="form-control harga-satuan" placeholder="Rp 0" readonly>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="item-label">Jumlah</div>
-                            <input type="number" class="form-control jumlah-barang" placeholder="1" min="1" value="1" required>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="item-label">Total</div>
-                            <input type="text" class="form-control total-item" placeholder="Rp 0" readonly>
-                        </div>
-                        <div class="col-md-1 text-center">
-                            <button type="button" class="btn-remove-item" onclick="hapusItem(this)">
-                                <i class="mdi mdi-delete"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(newItem);
-                updateRemoveButtons();
-            });
-
-            // Update tampilan tombol hapus
-            function updateRemoveButtons() {
-                const items = document.querySelectorAll('.item-row');
-                items.forEach(item => {
-                    const btnHapus = item.querySelector('.btn-remove-item');
-                    if (items.length > 1) {
-                        btnHapus.style.display = 'flex';
-                    } else {
-                        btnHapus.style.display = 'none';
-                    }
-                });
-            }
-
-            // Hapus item
-            function hapusItem(button) {
-                const item = button.closest('.item-row');
-                item.remove();
-                hitungTotalKeseluruhan();
-                updateRemoveButtons();
-            }
-
-            // Simpan pesanan
-            function simpanPesanan() {
-                const form = document.getElementById('formPembelian');
-                
-                // Validasi form
-                if (!form.checkValidity()) {
-                    form.reportValidity();
-                    return;
-                }
-
-                // Validasi minimal 1 barang dipilih
-                const barangDipilih = document.querySelectorAll('.select-barang');
-                let adaBarang = false;
-                barangDipilih.forEach(select => {
-                    if (select.value) {
-                        adaBarang = true;
-                    }
-                });
-
-                if (!adaBarang) {
-                    alert('Pilih minimal 1 barang!');
-                    return;
-                }
-
-                // Ambil data form
-                const data = {
-                    noOrder: document.getElementById('noOrder').value,
-                    tanggal: document.getElementById('tanggalPembelian').value,
-                    namaCustomer: document.getElementById('namaCustomer').value,
-                    noTelepon: document.getElementById('noTelepon').value,
-                    statusPembayaran: document.querySelector('input[name="statusPembayaran"]:checked').value,
-                    items: [],
-                    totalKeseluruhan: document.getElementById('totalKeseluruhan').textContent
-                };
-
-                // Ambil data barang
-                document.querySelectorAll('.item-row').forEach(row => {
-                    const select = row.querySelector('.select-barang');
-                    if (select.value) {
-                        const selectedOption = select.options[select.selectedIndex];
-                        data.items.push({
-                            id: select.value,
-                            nama: selectedOption.text,
-                            harga: selectedOption.getAttribute('data-harga'),
-                            jumlah: row.querySelector('.jumlah-barang').value,
-                            total: row.querySelector('.total-item').value
-                        });
-                    }
-                });
-
-                // Log data (dalam implementasi sebenarnya, kirim ke server)
-                console.log('Data Pesanan:', data);
-                
-                // Tampilkan notifikasi sukses
-                alert('Pesanan berhasil disimpan!');
-                
-                // Tutup modal
-                const modal = bootstrap.Modal.getInstance(document.getElementById('inputPembelianModal'));
-                modal.hide();
-                
-                // Reset form
-                resetForm();
-            }
-
-            // Reset form
-            function resetForm() {
-                document.getElementById('formPembelian').reset();
-                
-                // Reset container barang ke 1 item
-                const container = document.getElementById('containerBarang');
-                const items = container.querySelectorAll('.item-row');
-                items.forEach((item, index) => {
-                    if (index > 0) {
-                        item.remove();
-                    }
-                });
-                
-                // Reset item pertama
-                const firstItem = container.querySelector('.item-row');
-                firstItem.querySelector('.select-barang').value = '';
-                firstItem.querySelector('.harga-satuan').value = '';
-                firstItem.querySelector('.jumlah-barang').value = '1';
-                firstItem.querySelector('.total-item').value = '';
-                
-                // Reset total
-                document.getElementById('totalKeseluruhan').textContent = 'Rp 0';
-                
-                // Reset counter
-                itemCounter = 1;
-                
-                // Update tombol hapus
-                updateRemoveButtons();
-            }
-
-            // Reset form saat modal ditutup
-            document.getElementById('inputPembelianModal').addEventListener('hidden.bs.modal', function () {
-                // Tidak reset otomatis, biarkan user yang memutuskan
+            document.addEventListener("DOMContentLoaded", function () {
+                loadPembelian(null, 'lunas');
             });
         </script>
     </body>
