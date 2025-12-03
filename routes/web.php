@@ -27,7 +27,9 @@ Route::get('/detail-stok/{id}', function ($id) {
     return view('dokumen.detail-stok');
 })->name('detail.stok');
 
-
+Route::get('/detail-pembelian/{id}', function ($id) {
+    return view('dokumen.detail-pembelian');
+})->name('detail.pembelian');
 
 Route::get('/riwayat-pembelian', function () {
     return view('riwayat-pembelian');
@@ -36,10 +38,6 @@ Route::get('/riwayat-pembelian', function () {
 Route::get('/kelola-pembelian', function () {
     return view('kelola-pembelian');
 });
-
-Route::get('/detail-pembelian/{id}', function ($id) {
-    return view('detail-pembelian');
-})->name('detail.pembelian');
 
 #DOKUMEN====================================
 Route::get('/sph', function () {
@@ -76,3 +74,7 @@ Route::get('/kelola-admin', function () {
 Route::get('/eror-404', function () {
     return view('eror-404');
 });
+
+Route::get('/stok/detail-stok/{id}', function() {
+    return view('stok.detail-stok');
+})->name('stok.detail');
