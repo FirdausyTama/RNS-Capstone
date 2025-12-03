@@ -69,42 +69,15 @@ async function loadStok() {
 
         const data = await res.json();
         allStok = data.data || [];
-
-    } catch (err) {
-        console.warn("Gagal memuat data stok (Backend belum siap). Menggunakan data dummy untuk demo pagination.");
-        
-        // GENERATE DUMMY DATA FOR DEMO
-        allStok = [];
-        for (let i = 1; i <= 35; i++) {
-            allStok.push({
-                id: i,
-                nama_barang: `Produk Contoh ${i}`,
-                kode_sku: `SKU-${1000 + i}`,
-                merek: `Merek ${String.fromCharCode(65 + (i % 5))}`,
-                deskripsi: `Deskripsi untuk produk contoh nomor ${i}`,
-                tgl_masuk: new Date().toISOString(),
-                harga: 10000 * i,
-                jumlah: i % 10 === 0 ? 0 : i * 2,
-                satuan: 'Pcs',
-                panjang: 10 + i,
-                lebar: 5 + i,
-                tinggi: 2 + i,
-                berat: 500 + (i * 10),
-                foto: null,
-                video: null
-            });
-        }
-    }
-
-    // Render Table with Data (Real or Dummy)
+    } catch (err) { }
     filteredStok = [...allStok];
     renderTable(1);
     updateSummary(allStok);
     
-    // Show pagination container
     const paginationContainer = document.getElementById("pagination-container");
     if (paginationContainer) {
-        paginationContainer.style.display = allStok.length > 0 ? "flex" : "none";
+        paginationContainer.style.display =
+            allStok.length > 0 ? "flex" : "none";
     }
 }
 
@@ -145,21 +118,33 @@ function renderTable(page = 1) {
         <tr>
             <td class="text-center"><img src="${foto}" class="rounded" width="60" height="60" style="object-fit: cover;"></td>
             <td>
-                <h6 class="fw-semibold mb-1 text-dark">${item.nama_barang || "-"}</h6>
+                <h6 class="fw-semibold mb-1 text-dark">${
+                    item.nama_barang || "-"
+                }</h6>
                 <small class="text-muted">${item.deskripsi || ""}</small>
             </td>
             <td class="text-center">${formatTanggal(item.tgl_masuk)}</td>
-            <td class="text-center fw-semibold">Rp${hargaNumber.toLocaleString("id-ID")}</td>
+            <td class="text-center fw-semibold">Rp${hargaNumber.toLocaleString(
+                "id-ID"
+            )}</td>
             <td class="text-center">${badge}</td>
-            <td class="text-center fw-semibold">${jumlahNumber} ${item.satuan || ''}</td>
+            <td class="text-center fw-semibold">${jumlahNumber} ${
+            item.satuan || ""
+        }</td>
             <td class="text-center">
-                <button class="btn btn-sm btn-light border me-1" onclick="openEditModal(${item.id})" title="Edit">
+                <button class="btn btn-sm btn-light border me-1" onclick="openEditModal(${
+                    item.id
+                })" title="Edit">
                     <i class="mdi mdi-square-edit-outline text-primary"></i>
                 </button>
-                <button class="btn btn-sm btn-light border me-1" onclick="window.location.href='/stok/detail-stok/${item.id}'" title="Detail">
+                <button class="btn btn-sm btn-light border me-1" onclick="window.location.href='/stok/detail-stok/${
+                    item.id
+                }'" title="Detail">
                     <i class="mdi mdi-eye-outline text-muted"></i>
                 </button>
-                <button class="btn btn-sm btn-light border" onclick="deleteStok(${item.id})" title="Hapus">
+                <button class="btn btn-sm btn-light border" onclick="deleteStok(${
+                    item.id
+                })" title="Hapus">
                     <i class="mdi mdi-delete-outline text-danger"></i>
                 </button>
             </td>
@@ -173,14 +158,15 @@ function renderTable(page = 1) {
 function setupPagination() {
     const paginationControls = document.getElementById("pagination-controls");
     const paginationInfo = document.getElementById("pagination-info");
-    
+
     if (!paginationControls || !paginationInfo) return;
 
     const totalItems = filteredStok.length;
     const totalPages = Math.ceil(totalItems / rowsPerPage);
-    
+
     // Update Info Text
-    const startItem = totalItems === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
+    const startItem =
+        totalItems === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
     const endItem = Math.min(currentPage * rowsPerPage, totalItems);
     paginationInfo.innerText = `Menampilkan ${startItem}-${endItem} dari ${totalItems} transaksi`;
 
@@ -192,7 +178,9 @@ function setupPagination() {
     const prevLi = document.createElement("li");
     prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
     prevLi.innerHTML = `<a class="page-link" href="javascript:void(0);" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>`;
-    prevLi.onclick = () => { if (currentPage > 1) renderTable(currentPage - 1); };
+    prevLi.onclick = () => {
+        if (currentPage > 1) renderTable(currentPage - 1);
+    };
     paginationControls.appendChild(prevLi);
 
     // Page Numbers
@@ -206,9 +194,13 @@ function setupPagination() {
 
     // Next Button
     const nextLi = document.createElement("li");
-    nextLi.className = `page-item ${currentPage === totalPages ? "disabled" : ""}`;
+    nextLi.className = `page-item ${
+        currentPage === totalPages ? "disabled" : ""
+    }`;
     nextLi.innerHTML = `<a class="page-link" href="javascript:void(0);" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>`;
-    nextLi.onclick = () => { if (currentPage < totalPages) renderTable(currentPage + 1); };
+    nextLi.onclick = () => {
+        if (currentPage < totalPages) renderTable(currentPage + 1);
+    };
     paginationControls.appendChild(nextLi);
 }
 
@@ -216,24 +208,28 @@ function setupPagination() {
 function searchProduct() {
     const input = document.getElementById("searchInput");
     const term = input.value.toLowerCase();
-    
-    filteredStok = allStok.filter(item => 
-        (item.nama_barang && item.nama_barang.toLowerCase().includes(term)) ||
-        (item.kode_sku && item.kode_sku.toLowerCase().includes(term)) ||
-        (item.merek && item.merek.toLowerCase().includes(term))
+
+    filteredStok = allStok.filter(
+        (item) =>
+            (item.nama_barang &&
+                item.nama_barang.toLowerCase().includes(term)) ||
+            (item.kode_sku && item.kode_sku.toLowerCase().includes(term)) ||
+            (item.merek && item.merek.toLowerCase().includes(term))
     );
-    
+
     renderTable(1); // Reset to page 1
 }
 // ==================== OPEN DETAIL MODAL ====================
 function openDetailModal(id) {
     // Ambil port dari URL saat ini
-    const currentPort = window.location.port || '8001';
+    const currentPort = window.location.port || "8001";
     const apiUrl = `http://127.0.0.1:${currentPort}/api/stoks/${id}`;
-    
-    const modal = new bootstrap.Modal(document.getElementById("detailStokModal"));
+
+    const modal = new bootstrap.Modal(
+        document.getElementById("detailStokModal")
+    );
     const contentDiv = document.getElementById("detailStokContent");
-    
+
     // Show loading
     contentDiv.innerHTML = `
         <div class="text-center py-5">
@@ -243,53 +239,53 @@ function openDetailModal(id) {
             <p class="text-muted mt-3">Memuat detail produk...</p>
         </div>
     `;
-    
+
     modal.show();
-    
+
     // Fetch detail data
     const token = localStorage.getItem("token");
-    
+
     fetch(apiUrl, {
         headers: {
-            "Authorization": "Bearer " + token,
-            "Accept": "application/json"
-        }
+            Authorization: "Bearer " + token,
+            Accept: "application/json",
+        },
     })
-    .then(res => {
-        if (!res.ok) throw new Error('Gagal memuat data');
-        return res.json();
-    })
-    .then(response => {
-        if (response.data) {
-            renderDetailStokModal(response.data, id);
-        } else {
-            throw new Error('Data tidak ditemukan');
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        contentDiv.innerHTML = `
+        .then((res) => {
+            if (!res.ok) throw new Error("Gagal memuat data");
+            return res.json();
+        })
+        .then((response) => {
+            if (response.data) {
+                renderDetailStokModal(response.data, id);
+            } else {
+                throw new Error("Data tidak ditemukan");
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            contentDiv.innerHTML = `
             <div class="alert alert-danger">
                 <i class="mdi mdi-alert"></i> Terjadi kesalahan: ${err.message}
             </div>
         `;
-    });
+        });
 }
 
 // ==================== RENDER DETAIL MODAL ====================
 function renderDetailStokModal(data, id) {
-    const currentPort = window.location.port || '8001';
+    const currentPort = window.location.port || "8001";
     const storageBaseUrl = `http://127.0.0.1:${currentPort}/storage`;
     const contentDiv = document.getElementById("detailStokContent");
-    
+
     // Tentukan apakah ada media
     const hasFoto = data.foto ? true : false;
     const hasVideo = data.video ? true : false;
     const hasMedia = hasFoto || hasVideo;
-    
-    const fotoUrl = data.foto ? `${storageBaseUrl}/${data.foto}` : '';
-    const videoUrl = data.video ? `${storageBaseUrl}/${data.video}` : '';
-    
+
+    const fotoUrl = data.foto ? `${storageBaseUrl}/${data.foto}` : "";
+    const videoUrl = data.video ? `${storageBaseUrl}/${data.video}` : "";
+
     contentDiv.innerHTML = `
         <div class="row">
             <!-- Kiri: Informasi Produk -->
@@ -302,26 +298,36 @@ function renderDetailStokModal(data, id) {
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <small class="text-muted">Nama Barang</small>
-                                <div class="fw-semibold">${data.nama_barang || '-'}</div>
+                                <div class="fw-semibold">${
+                                    data.nama_barang || "-"
+                                }</div>
                             </div>
                             <div class="col-md-6">
                                 <small class="text-muted">Kode SKU</small>
-                                <div class="fw-semibold">${data.kode_sku || '-'}</div>
+                                <div class="fw-semibold">${
+                                    data.kode_sku || "-"
+                                }</div>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <small class="text-muted">Merek</small>
-                                <div class="fw-semibold">${data.merek || '-'}</div>
+                                <div class="fw-semibold">${
+                                    data.merek || "-"
+                                }</div>
                             </div>
                             <div class="col-md-6">
                                 <small class="text-muted">Tanggal Masuk</small>
-                                <div class="fw-semibold">${formatTanggal(data.tgl_masuk)}</div>
+                                <div class="fw-semibold">${formatTanggal(
+                                    data.tgl_masuk
+                                )}</div>
                             </div>
                         </div>
                         <div class="mb-3">
                             <small class="text-muted">Deskripsi</small>
-                            <div class="fw-semibold">${data.deskripsi || '-'}</div>
+                            <div class="fw-semibold">${
+                                data.deskripsi || "-"
+                            }</div>
                         </div>
 
                         <hr>
@@ -331,21 +337,29 @@ function renderDetailStokModal(data, id) {
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <small class="text-muted">Harga Jual</small>
-                                <div class="fw-semibold text-primary fs-5">${formatRupiah(data.harga || 0)}</div>
+                                <div class="fw-semibold text-primary fs-5">${formatRupiah(
+                                    data.harga || 0
+                                )}</div>
                             </div>
                             <div class="col-md-6">
                                 <small class="text-muted">Satuan</small>
-                                <div class="fw-semibold">${data.satuan || 'Pcs'}</div>
+                                <div class="fw-semibold">${
+                                    data.satuan || "Pcs"
+                                }</div>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <small class="text-muted">Jumlah</small>
-                                <div class="fw-semibold">${data.jumlah || 0} ${data.satuan || 'Pcs'}</div>
+                                <div class="fw-semibold">${data.jumlah || 0} ${
+        data.satuan || "Pcs"
+    }</div>
                             </div>
                             <div class="col-md-6">
                                 <small class="text-muted">Stok Tersedia</small>
-                                <div class="fw-semibold">${data.jumlah || 0} ${data.satuan || 'Pcs'}</div>
+                                <div class="fw-semibold">${data.jumlah || 0} ${
+        data.satuan || "Pcs"
+    }</div>
                             </div>
                         </div>
                         <div class="mb-3">
@@ -360,19 +374,27 @@ function renderDetailStokModal(data, id) {
                         <div class="row mb-2">
                             <div class="col-md-3">
                                 <small class="text-muted">Panjang</small>
-                                <div class="fw-semibold">${data.panjang || '-'} cm</div>
+                                <div class="fw-semibold">${
+                                    data.panjang || "-"
+                                } cm</div>
                             </div>
                             <div class="col-md-3">
                                 <small class="text-muted">Lebar</small>
-                                <div class="fw-semibold">${data.lebar || '-'} cm</div>
+                                <div class="fw-semibold">${
+                                    data.lebar || "-"
+                                } cm</div>
                             </div>
                             <div class="col-md-3">
                                 <small class="text-muted">Tinggi</small>
-                                <div class="fw-semibold">${data.tinggi || '-'} cm</div>
+                                <div class="fw-semibold">${
+                                    data.tinggi || "-"
+                                } cm</div>
                             </div>
                             <div class="col-md-3">
                                 <small class="text-muted">Berat</small>
-                                <div class="fw-semibold">${data.berat || '-'} gr</div>
+                                <div class="fw-semibold">${
+                                    data.berat || "-"
+                                } gr</div>
                             </div>
                         </div>
                     </div>
@@ -387,14 +409,20 @@ function renderDetailStokModal(data, id) {
                             <i class="mdi mdi-image-multiple text-warning"></i> Media Produk
                         </h5>
                         <div class="media-gallery" style="display:flex; flex-direction:column; gap:1.5rem;">
-                            ${hasFoto ? `
+                            ${
+                                hasFoto
+                                    ? `
                             <div class="media-item">
                                 <small class="text-muted d-block mb-2">Foto Produk</small>
                                 <img src="${fotoUrl}" class="product-image" alt="Foto Produk" style="width:100%; max-height:300px; object-fit:cover; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
                             </div>
-                            ` : ''}
+                            `
+                                    : ""
+                            }
                             
-                            ${hasVideo ? `
+                            ${
+                                hasVideo
+                                    ? `
                             <div class="media-item">
                                 <small class="text-muted d-block mb-2">Video Produk</small>
                                 <video controls class="product-video" style="width:100%; max-height:300px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
@@ -402,16 +430,22 @@ function renderDetailStokModal(data, id) {
                                     Browser Anda tidak mendukung video.
                                 </video>
                             </div>
-                            ` : ''}
+                            `
+                                    : ""
+                            }
                             
-                            ${!hasMedia ? `
+                            ${
+                                !hasMedia
+                                    ? `
                             <div class="media-item text-center">
                                 <div class="border border-2 border-dashed rounded p-5 text-muted" style="background:#f8f9fa;">
                                     <i class="mdi mdi-image-off fs-1 d-block mb-2"></i>
                                     <div>Tidak ada media</div>
                                 </div>
                             </div>
-                            ` : ''}
+                            `
+                                    : ""
+                            }
                         </div>
                     </div>
                 </div>
@@ -440,50 +474,50 @@ function renderDetailStokModal(data, id) {
 }
 
 // Helper functions
-function formatRupiah(angka) { 
-    return 'Rp ' + Number(angka).toLocaleString('id-ID'); 
+function formatRupiah(angka) {
+    return "Rp " + Number(angka).toLocaleString("id-ID");
 }
 
 function formatRupiahInput(input) {
-    let value = input.value.replace(/[^,\d]/g, '').toString();
-    let split = value.split(',');
+    let value = input.value.replace(/[^,\d]/g, "").toString();
+    let split = value.split(",");
     let sisa = split[0].length % 3;
     let rupiah = split[0].substr(0, sisa);
     let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
     if (ribuan) {
-        let separator = sisa ? '.' : '';
-        rupiah += separator + ribuan.join('.');
+        let separator = sisa ? "." : "";
+        rupiah += separator + ribuan.join(".");
     }
 
-    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+    rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
     input.value = rupiah;
 }
 
-function formatTanggal(tanggal) { 
-    if (!tanggal) return '-';
-    return new Date(tanggal).toLocaleDateString('id-ID', {
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric'
-    }); 
+function formatTanggal(tanggal) {
+    if (!tanggal) return "-";
+    return new Date(tanggal).toLocaleDateString("id-ID", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
 }
 
 function getStatusBadge(jumlah) {
     jumlah = Number(jumlah) || 0;
-    if (jumlah >= 5) 
+    if (jumlah >= 5)
         return '<span class="badge bg-success-subtle text-success fw-semibold px-3 py-2">Stok Aman</span>';
-    if (jumlah > 0) 
+    if (jumlah > 0)
         return '<span class="badge bg-warning-subtle text-warning fw-semibold px-3 py-2">Stok Menipis</span>';
     return '<span class="badge bg-danger-subtle text-danger fw-semibold px-3 py-2">Stok Habis</span>';
 }
 
 // Fungsi untuk edit dari modal
 function editStokFromModal(id) {
-    const modalEl = document.getElementById('detailStokModal');
+    const modalEl = document.getElementById("detailStokModal");
     const modal = bootstrap.Modal.getInstance(modalEl);
     if (modal) modal.hide();
-    
+
     setTimeout(() => {
         openEditModal(id);
     }, 300);
@@ -491,10 +525,10 @@ function editStokFromModal(id) {
 
 // Fungsi untuk hapus dari modal
 function deleteStokFromModal(id) {
-    const modalEl = document.getElementById('detailStokModal');
+    const modalEl = document.getElementById("detailStokModal");
     const modal = bootstrap.Modal.getInstance(modalEl);
     if (modal) modal.hide();
-    
+
     setTimeout(() => {
         deleteStok(id);
     }, 300);
@@ -541,8 +575,6 @@ function decreaseQty() {
         input.value = parseInt(input.value) - 1;
     }
 }
-
-
 
 function handleVideoUpload(input) {
     const file = input.files[0];
@@ -640,7 +672,8 @@ function handleEditVideoUpload(input) {
         reader.onload = function (e) {
             document.getElementById("editVideoElement").src = e.target.result;
             document.getElementById("editVideoName").textContent = file.name;
-            document.getElementById("editVideoPlaceholder").style.display = "none";
+            document.getElementById("editVideoPlaceholder").style.display =
+                "none";
             document.getElementById("editVideoPreview").style.display = "block";
         };
         reader.readAsDataURL(file);
@@ -667,7 +700,8 @@ function handleEditFotoUpload(input) {
         reader.onload = function (e) {
             document.getElementById("editFotoElement").src = e.target.result;
             document.getElementById("editFotoName").textContent = file.name;
-            document.getElementById("editFotoPlaceholder").style.display = "none";
+            document.getElementById("editFotoPlaceholder").style.display =
+                "none";
             document.getElementById("editFotoPreview").style.display = "block";
         };
         reader.readAsDataURL(file);
@@ -832,16 +866,17 @@ async function openEditModal(id) {
         document.getElementById("editId").value = data.data.id || "";
         document.getElementById("editNamaBarang").value =
             data.data.nama_barang || "";
-        
+
         // Format harga dengan ribuan
         let harga = data.data.harga || "";
         if (harga) {
             harga = harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
         document.getElementById("editHargaJual").value = harga;
-        
+
         document.getElementById("editJumlah").value = data.data.jumlah || "";
-        document.getElementById("editTglMasuk").value = data.data.tgl_masuk || "";
+        document.getElementById("editTglMasuk").value =
+            data.data.tgl_masuk || "";
         document.getElementById("editSatuan").value = data.data.satuan || "";
 
         // Populate missing fields
@@ -896,15 +931,15 @@ async function submitUpdateStok() {
         "nama_barang",
         document.getElementById("editNamaBarang").value
     );
-    
+
     // Hapus titik sebelum kirim ke server
     let harga = document.getElementById("editHargaJual").value;
     harga = harga.replace(/\./g, "");
     formData.append("harga", harga);
-    
+
     formData.append("jumlah", document.getElementById("editJumlah").value);
     formData.append("tgl_masuk", document.getElementById("editTglMasuk").value);
-    formData.append("user_id", 1);
+    formData.append("user_id", 2);
 
     formData.append("kode_sku", document.getElementById("editKodeSKU").value);
     formData.append("merek", document.getElementById("editMerek").value);
@@ -985,7 +1020,7 @@ function submitTambahStok() {
     const formData = new FormData();
 
     formData.append("nama_barang", document.getElementById("namaBarang").value);
-    
+
     // Hapus titik sebelum kirim ke server
     let harga = document.getElementById("hargaJual").value;
     harga = harga.replace(/\./g, "");
@@ -997,7 +1032,22 @@ function submitTambahStok() {
         document.getElementById("tgl_masuk").value ||
             new Date().toISOString().split("T")[0]
     );
-    formData.append("user_id", 1);
+    formData.append("user_id", 2);
+
+    formData.append(
+        "kode_sku",
+        document.getElementById("kodeSKU")?.value || ""
+    );
+    formData.append("merek", document.getElementById("merek")?.value || "");
+    formData.append("satuan", document.getElementById("satuan")?.value || "");
+    formData.append(
+        "deskripsi",
+        document.getElementById("deskripsi")?.value || ""
+    );
+    formData.append("panjang", document.getElementById("panjang")?.value || "");
+    formData.append("lebar", document.getElementById("lebar")?.value || "");
+    formData.append("tinggi", document.getElementById("tinggi")?.value || "");
+    formData.append("berat", document.getElementById("berat")?.value || "");
 
     const foto = document.getElementById("uploadFoto").files[0];
     if (foto) formData.append("foto", foto);
@@ -1041,7 +1091,6 @@ function submitTambahStok() {
         });
 }
 
-
 function formatDateToYYYYMMDD(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -1078,16 +1127,28 @@ function setFilter(filterName) {
     // Note: This might conflict if we want to combine search + date filter.
     // For now, let's assume date filter resets search or works on allStok.
     // Ideally, we should chain filters, but let's keep it simple as per request.
-    
+
     switch (filterName) {
         case "Hari Ini":
-            startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+            startDate = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate()
+            );
+            endDate = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate() + 1
+            );
             break;
         case "Minggu Ini":
             const day = now.getDay() || 7; // Get current day number, converting Sun (0) to 7
-            if(day !== 1) now.setHours(-24 * (day - 1)); // Set to Monday of this week
-            startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            if (day !== 1) now.setHours(-24 * (day - 1)); // Set to Monday of this week
+            startDate = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate()
+            );
             endDate = new Date(startDate);
             endDate.setDate(startDate.getDate() + 7);
             break;
@@ -1104,7 +1165,7 @@ function setFilter(filterName) {
     if (!startDate || !endDate) {
         filteredStok = [...allStok];
     } else {
-        filteredStok = allStok.filter(item => {
+        filteredStok = allStok.filter((item) => {
             if (!item.tgl_masuk) return false;
             const itemDate = new Date(item.tgl_masuk);
             return itemDate >= startDate && itemDate < endDate;
