@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function() {
     loadStok();
 });
@@ -10,7 +9,6 @@ function getToken() {
     if (!token) console.error("Token tidak ditemukan!");
     return token;
 }
-
 
 function loadStok() {
     const token = getToken();
@@ -38,7 +36,6 @@ function loadStok() {
         body.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Gagal memuat data stok!</td></tr>`;
     });
 }
-
 
 function renderStok(data) {
     const body = document.getElementById("stok-table-body");
@@ -87,56 +84,21 @@ function renderStok(data) {
         </td>
     </tr>
 `;
-
     });
 }
 
-
-async function getStokDetail(id) {
-    try {
-        const response = await fetch(`/stoks/${id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        console.log('Detail Stok:', data);
-        
-        return data; 
-        
-    } catch (error) {
-        console.error('Gagal mengambil detail stok:', error);
-    }
+// ✅ PERBAIKAN: Fungsi untuk redirect ke halaman detail
+function getStokDetail(id) {
+    // Redirect ke halaman detail stok dengan parameter ID
+    window.location.href = `/detail-stok/${id}`;
 }
 
-async function updateStok(id, updatedStokData) {
-    try {
-        const response = await fetch(`/stoks/${id}`, {
-            method: 'PUT', 
-            headers: {
-                'Content-Type': 'application/json',
-                
-            },
-            body: JSON.stringify(updatedStokData),
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const result = await response.json();
-        alert('Stok berhasil diperbarui!');
-        console.log('Hasil Update:', result);
-        
-    } catch (error) {
-        console.error('Gagal memperbarui stok:', error);
-    }
+// ✅ PERBAIKAN: Fungsi untuk redirect ke halaman edit
+function updateStok(id) {
+    // Redirect ke halaman edit stok
+    // Anda bisa membuat halaman edit terpisah
+    alert('Fitur edit untuk ID: ' + id);
+    // window.location.href = `/edit-stok/${id}`;
 }
 
 function deleteStok(id) {

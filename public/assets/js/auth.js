@@ -78,8 +78,8 @@ function displayAdmins() {
     paginated.forEach(a => {
         const statusBadge =
             a.status === "active" ? `<span class="badge bg-success-subtle text-success">Aktif</span>` :
-            a.status === "pending" ? `<span class="badge bg-warning-subtle text-warning">Menunggu ACC</span>` :
-            `<span class="badge bg-secondary-subtle text-muted">Tidak Aktif</span>`;
+                a.status === "pending" ? `<span class="badge bg-warning-subtle text-warning">Menunggu ACC</span>` :
+                    `<span class="badge bg-secondary-subtle text-muted">Tidak Aktif</span>`;
 
         const initials = a.name.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase();
 
@@ -91,12 +91,12 @@ function displayAdmins() {
                 <i class="mdi mdi-close fs-14 text-danger"></i>
              </button>` :
             a.status === "active" ?
-            `<button class="btn btn-sm bg-danger-subtle" onclick="rejectAdmin(${a.id}, '${a.name}')">
+                `<button class="btn btn-sm bg-danger-subtle" onclick="rejectAdmin(${a.id}, '${a.name}')">
                 <i class="mdi mdi-delete fs-14 text-danger"></i>
              </button>` :
-            `<span class="text-muted">-</span>`;
+                `<span class="text-muted">-</span>`;
 
-        const lastActive = a.updated_at ? new Date(a.updated_at).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' }) : '-';
+        const lastActive = a.updated_at ? new Date(a.updated_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-';
 
         tableBody.innerHTML += `
           <tr>
@@ -120,31 +120,31 @@ function setupPagination(totalRows) {
     pagination.innerHTML = "";
     if (totalPages === 0) return;
 
-    pagination.innerHTML += `<li><button ${currentPage===1?'disabled':''} onclick="goToPage(${currentPage-1})">«</button></li>`;
+    pagination.innerHTML += `<li><button ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">«</button></li>`;
     for (let i = 1; i <= totalPages; i++)
-        pagination.innerHTML += `<li><button class="${i===currentPage?'active':''}" onclick="goToPage(${i})">${i}</button></li>`;
-    pagination.innerHTML += `<li><button ${currentPage===totalPages?'disabled':''} onclick="goToPage(${currentPage+1})">»</button></li>`;
+        pagination.innerHTML += `<li><button class="${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button></li>`;
+    pagination.innerHTML += `<li><button ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">»</button></li>`;
 }
 
 function goToPage(p) { currentPage = p; displayAdmins(); }
 
 function approveAdmin(id, name) {
-    Swal.fire({ title: `Setujui admin ${name}?`, icon:"question", showCancelButton:true, confirmButtonText:"Ya, Setujui" })
+    Swal.fire({ title: `Setujui admin ${name}?`, icon: "question", showCancelButton: true, confirmButtonText: "Ya, Setujui" })
         .then(res => {
-            if(res.isConfirmed)
-                fetch(`${API_URL}/admins/${id}/approve`, { method:"PUT", headers:{ Authorization:`Bearer ${token}` } })
-                    .then(()=> Swal.fire("Berhasil!","Admin disetujui.","success")).then(loadAdmins)
-                    .catch(()=> Swal.fire("Gagal!","Gagal menyetujui admin.","error"));
+            if (res.isConfirmed)
+                fetch(`${API_URL}/admins/${id}/approve`, { method: "PUT", headers: { Authorization: `Bearer ${token}` } })
+                    .then(() => Swal.fire("Berhasil!", "Admin disetujui.", "success")).then(loadAdmins)
+                    .catch(() => Swal.fire("Gagal!", "Gagal menyetujui admin.", "error"));
         });
 }
 
 function rejectAdmin(id, name) {
-    Swal.fire({ title: `Tolak admin ${name}?`, icon:"warning", showCancelButton:true, confirmButtonText:"Ya, Tolak" })
+    Swal.fire({ title: `Tolak admin ${name}?`, icon: "warning", showCancelButton: true, confirmButtonText: "Ya, Tolak" })
         .then(res => {
-            if(res.isConfirmed)
-                fetch(`${API_URL}/admins/${id}/reject`, { method:"DELETE", headers:{ Authorization:`Bearer ${token}` } })
-                    .then(()=> Swal.fire("Dihapus!","Admin telah dihapus.","success")).then(loadAdmins)
-                    .catch(()=> Swal.fire("Gagal!","Gagal menghapus admin.","error"));
+            if (res.isConfirmed)
+                fetch(`${API_URL}/admins/${id}/reject`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } })
+                    .then(() => Swal.fire("Dihapus!", "Admin telah dihapus.", "success")).then(loadAdmins)
+                    .catch(() => Swal.fire("Gagal!", "Gagal menghapus admin.", "error"));
         });
 }
 
@@ -155,20 +155,20 @@ function deleteAdmin(id, name) {
         showCancelButton: true,
         confirmButtonText: "Ya, Hapus"
     }).then(res => {
-        if(res.isConfirmed) {
+        if (res.isConfirmed) {
             fetch(`${API_URL}/admins/${id}/reject`, {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}` }
             })
-            .then(() => Swal.fire("Dihapus!", "Admin telah dihapus.", "success"))
-            .then(loadAdmins)
-            .catch(() => Swal.fire("Gagal!", "Gagal menghapus admin.", "error"));
+                .then(() => Swal.fire("Dihapus!", "Admin telah dihapus.", "success"))
+                .then(loadAdmins)
+                .catch(() => Swal.fire("Gagal!", "Gagal menghapus admin.", "error"));
         }
     });
 }
 
 
-document.getElementById("searchInput")?.addEventListener("input", ()=>{ currentPage=1; displayAdmins(); });
+document.getElementById("searchInput")?.addEventListener("input", () => { currentPage = 1; displayAdmins(); });
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -177,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         const email = document.getElementById("email")?.value;
         const password = document.getElementById("password")?.value;
-        if(!email || !password) return console.warn("Email atau password kosong");
+        if (!email || !password) return console.warn("Email atau password kosong");
 
         try {
             const data = await loginUser(email, password);
@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("user", JSON.stringify(data.user));
             localStorage.setItem("role", data.user.role);
             window.location.href = "/dashboard";
-        } catch(err) { console.error("Login error:", err); }
+        } catch (err) { console.error("Login error:", err); }
     });
 
     document.querySelector(".btn-register")?.addEventListener("click", async e => {
@@ -194,15 +194,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const email = document.getElementById("email")?.value;
         const password = document.getElementById("password")?.value;
         const password_confirmation = document.getElementById("password_confirmation")?.value;
-        if(!name||!email||!password||!password_confirmation) return console.warn("Semua field wajib diisi");
-        if(password !== password_confirmation) return console.warn("Password dan konfirmasi tidak sama");
+        if (!name || !email || !password || !password_confirmation) return console.warn("Semua field wajib diisi");
+        if (password !== password_confirmation) return console.warn("Password dan konfirmasi tidak sama");
 
         try {
-            const data = await registerUser(name,email,password,password_confirmation);
+            const data = await registerUser(name, email, password, password_confirmation);
             console.log("Register berhasil:", data);
             window.location.href = "/";
-        } catch(err) { console.error("Register error:", err); }
+        } catch (err) { console.error("Register error:", err); }
     });
 
-    if(tableBody) loadAdmins();
+    if (tableBody) loadAdmins();
 });

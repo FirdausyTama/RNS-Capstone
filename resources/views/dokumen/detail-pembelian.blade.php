@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8" />
+    <title>Detail Pembelian | RNS - Ranay Nusantara Sejathera</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Pembelian | RNS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" rel="stylesheet">
+    <meta name="description" content="Detail Transaksi Pembelian" />
+    <meta name="author" content="Zoyothemes" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
+
+    <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" id="app-style" />
+
+    <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+
+    <script src="{{ asset('assets/js/head.js') }}"></script>
+
     <style>
         body {
             background: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .content-page {
-            padding: 0 20px 20px;
         }
         .card {
             border: none;
@@ -34,59 +41,43 @@
         }
     </style>
 </head>
+
 <body data-menu-color="light" data-sidebar="default">
-    <!-- Navbar akan diinclude dari navbar.navbar -->
-    
+    @include('navbar.navbar') 
     <div id="app-layout">
         <div class="content-page">
             <div class="content">
                 <div class="container-fluid">
-                    <!-- Breadcrumb -->
                     <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
                         <div class="flex-grow-1">
-                            <div class="d-flex align-items-center gap-3">
-                                <!-- Tombol Back -->
-                                <a href="#" onclick="history.back()" class="btn btn-light border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;" title="Kembali">
-                                    <i class="mdi mdi-arrow-left fs-5"></i>
-                                </a>
-                                <div>
-                                    <h4 class="fs-18 fw-semibold m-0">Detail Pembelian</h4>
-                                    <small class="text-muted">Informasi lengkap transaksi pembelian</small>
-                                </div>
-                            </div>
+                            <h4 class="fs-18 fw-semibold m-0">Detail Pembelian</h4>
                         </div>
                         <div class="text-end">
                             <ol class="breadcrumb m-0 py-0">
-                                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="#">Kelola Pembelian</a></li>
+                                <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ url('/kelola-pembelian') }}">Kelola Pembelian</a></li>
                                 <li class="breadcrumb-item active">Detail Pembelian</li>
                             </ol>
                         </div>
                     </div>
 
+                    <div class="mb-3">
+                        <a href="{{ url('/kelola-pembelian') }}" class="btn btn-light">
+                            <i class="mdi mdi-arrow-left me-1"></i> Kembali
+                        </a>
+                    </div>
+
                     <div class="row">
-                        <!-- Kolom Kiri -->
                         <div class="col-lg-5">
-                            <!-- Card Info Transaksi -->
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-3">
-                                        <div>
-                                            <span class="badge bg-primary bg-opacity-10 text-primary mb-2">TRX-2025-001</span>
-                                            <h5 class="fw-bold mb-1">Transaksi Pembelian</h5>
-                                            <small class="text-muted">17 Februari 2025</small>
-                                        </div>
-                                        <span class="badge bg-warning text-white px-3 py-2">Cicilan</span>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="fw-semibold mb-0">Informasi Pesanan</h6>
+                                        <span class="badge bg-success text-white px-3 py-2">Dikirim</span> 
                                     </div>
-                                    <hr>
                                     <div class="mb-0">
-                                        <h6 class="fw-semibold mb-3">Informasi Pesanan</h6>
                                         <table class="table table-sm mb-0">
                                             <tbody>
-                                                <tr>
-                                                    <td class="text-muted border-0 ps-0" style="width: 45%;">No. Order</td>
-                                                    <td class="fw-semibold border-0">ORJ-2025-001</td>
-                                                </tr>
                                                 <tr>
                                                     <td class="text-muted border-0 ps-0">Nomor Transaksi</td>
                                                     <td class="fw-semibold border-0">TRX-2025-001</td>
@@ -107,30 +98,23 @@
                                 </div>
                             </div>
 
-                            <!-- Card Customer -->
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <h6 class="fw-semibold mb-3">Data Customer</h6>
                                     <div class="d-flex align-items-center mb-3">
                                         <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                                            <i class="mdi mdi-account text-primary fs-4"></i>
-                                        </div>
+                                            <i class="mdi mdi-account text-primary fs-4"></i> </div>
                                         <div>
                                             <h6 class="mb-0 fw-semibold">Dr. Ahmad Hidayat</h6>
-                                            <small class="text-muted">Customer</small>
-                                        </div>
+                                            <small class="text-muted">0812-3456-7890</small> </div>
                                     </div>
                                     <div class="border-top pt-3">
                                         <div class="d-flex align-items-center mb-2">
-                                            <i class="mdi mdi-phone text-muted me-2"></i>
-                                            <small class="text-muted">No. Telepon</small>
-                                        </div>
-                                        <p class="fw-semibold mb-0">0812-3456-7890</p>
-                                    </div>
+                                            <i class="mdi mdi-map-marker-outline text-muted me-2"></i> <small class="text-muted">Alamat Customer</small> </div>
+                                        <p class="fw-semibold mb-0">Jl. Kesehatan No. 45, Yogyakarta</p> </div>
                                 </div>
                             </div>
 
-                            <!-- Card Ringkasan -->
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <h6 class="fw-semibold mb-3">Ringkasan Pembayaran</h6>
@@ -160,9 +144,7 @@
                             </div>
                         </div>
 
-                        <!-- Kolom Kanan -->
                         <div class="col-lg-7">
-                            <!-- Card Detail Barang -->
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -229,7 +211,6 @@
                                 </div>
                             </div>
 
-                            <!-- Card Riwayat -->
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <h6 class="fw-semibold mb-3">Riwayat Pembayaran</h6>
@@ -288,38 +269,20 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Card Actions -->
-                            <div class="card shadow-sm border-0">
-                                <div class="card-body">
-                                    <div class="d-flex gap-2 flex-wrap">
-                                        <a href="#" onclick="history.back()" class="btn btn-outline-secondary">
-                                            <i class="mdi mdi-arrow-left me-1"></i>Kembali
-                                        </a>
-                                        <button class="btn btn-primary flex-grow-1" onclick="alert('Edit Transaksi')">
-                                            <i class="mdi mdi-square-edit-outline me-1"></i>Edit Transaksi
-                                        </button>
-                                        <button class="btn btn-outline-secondary" onclick="window.print()">
-                                            <i class="mdi mdi-printer-outline"></i>
-                                        </button>
-                                        <button class="btn btn-outline-secondary" onclick="alert('Share')">
-                                            <i class="mdi mdi-share-variant-outline"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
 
                 </div>
-            </div>
-
-            <!-- Footer -->
+            </div> 
+            
             <footer class="footer">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col fs-13 text-muted text-center">
-                            &copy; <script>document.write(new Date().getFullYear())</script> - Made with <span class="mdi mdi-heart text-danger"></span> by <a href="#!" class="text-reset fw-semibold">TI UMY 22</a> 
+                            &copy; <script>
+                                document.write(new Date().getFullYear())
+                            </script> - Made with <span class="mdi mdi-heart text-danger"></span> by <a href="#!" class="text-reset fw-semibold">TI UMY 22</a>
                         </div>
                     </div>
                 </div>
@@ -327,6 +290,15 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/waypoints/lib/jquery.waypoints.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/jquery.counterup/jquery.counterup.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
+
+    <script src="{{ asset('assets/js/app.js') }}"></script>
+    
 </body>
 </html>

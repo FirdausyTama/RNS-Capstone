@@ -9,19 +9,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="assets/images/favicon.ico" />
+    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" />
 
     <!-- App css -->
-    <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
+    <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" id="app-style" />
 
     <!-- Icons -->
-    <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
 
-    <script src="assets/js/head.js"></script>
+    <script src="{{ asset('assets/js/head.js') }}"></script>
 
     <style>
-      body {
-      }
+
 
       /* Header: Logo lengkap */
       .kw-header {
@@ -205,10 +204,8 @@
                     <div class="kw-left">
                       <b>KWITANSI TO</b>
                       <div class="address">
-                        <strong>RS Fatimah Serang</strong><br />
-                        Jalan Raya Serang - Cilegon km. 3,5 Drangong<br />
-                        Kel. Drangong, Kec. Taktakan, Kota Serang,<br />
-                        Banten 42162
+                        <strong id="printNamaPenerima">Loading...</strong><br />
+                        <span id="printAlamatPenerima">Loading...</span>
                       </div>
                     </div>
 
@@ -217,12 +214,12 @@
                         <tr>
                           <td style="width:45%;"><strong>Tanggal</strong></td>
                           <td>:</td>
-                          <td style="text-align:right;">11/09/2025</td>
+                          <td style="text-align:right;" id="printTanggal">Loading...</td>
                         </tr>
                         <tr>
                           <td><strong>No Kwitansi</strong></td>
                           <td>:</td>
-                          <td style="text-align:right;">02/RNS/AKUN/IX/2025</td>
+                          <td style="text-align:right;" id="printNomor">Loading...</td>
                         </tr>
                       </table>
                     </div>
@@ -237,25 +234,25 @@
                     <tr>
                       <td style="width:22%;">Received From / Sudah Terima Dari</td>
                       <td style="width:2%;">:</td>
-                      <td><div class="kw-field"><strong>RS FATIMAH SERANG</strong></div></td>
+                      <td><div class="kw-field"><strong id="printTerimaDari">Loading...</strong></div></td>
                     </tr>
 
                     <tr>
                       <td>Amount in Words / Banyaknya Uang</td>
                       <td>:</td>
-                      <td><div class="kw-field"><em>Enam Belas Juta Seratus Enam Puluh Enam Ribu Enam Ratus Enam Puluh Enam Koma Tujuh Rupiah</em></div></td>
+                      <td><div class="kw-field"><em id="printTerbilang">Loading...</em></div></td>
                     </tr>
 
                     <tr>
                       <td>For Payment of / Untuk Pembayaran</td>
                       <td>:</td>
-                      <td><div class="kw-field">Angsuran Ke-11 Pembelian CR FUJI Prima T2</div></td>
+                      <td><div class="kw-field" id="printKeterangan">Loading...</div></td>
                     </tr>
 
                     <tr>
                       <td style="vertical-align:middle;">Total / Jumlah</td>
                       <td style="vertical-align:middle;">:</td>
-                      <td><div class="kw-total">Rp. 16.166.666,7,-</div></td>
+                      <td><div class="kw-total" id="printTotal">Loading...</div></td>
                     </tr>
                   </table>
                   <!-- Blok tanda tangan -->
@@ -305,13 +302,16 @@
     </div>
 
     <!-- Vendor -->
-    <script src="assets/libs/jquery/jquery.min.js"></script>
-    <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/libs/simplebar/simplebar.min.js"></script>
-    <script src="assets/libs/node-waves/waves.min.js"></script>
-    <script src="assets/libs/feather-icons/feather.min.js"></script>
+    <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
 
     <!-- App js -->
-    <script src="assets/js/app.js"></script>
+    <script src="{{ asset('assets/js/app.js') }}"></script>
+
+    <!-- External JS -->
+    <script src="{{ asset('assets/js/print-kwitansi.js') }}"></script>
   </body>
 </html>

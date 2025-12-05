@@ -2,67 +2,103 @@
 <html lang="id">
   <head>
     <meta charset="utf-8" />
-    <title>Surat Jalan | RNS - Ranay Nusantara Sejahtera</title>
+    <title>Cetak Surat Jalan | RNS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Format Surat Jalan RNS" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="assets/images/favicon.ico" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" />
 
-    <!-- App CSS -->
-    <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
-    <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <!-- App css -->
+    <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" id="app-style" />
+
+    <!-- Icons -->
+    <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+
+    <script src="{{ asset('assets/js/head.js') }}"></script>
 
     <style>
-
-      /* Header / Kop Surat */
-      .kop-surat {
-        text-align: center;
-        margin-bottom: 25px;
+      body {
       }
 
-      .kop-surat img {
+      /* Header: Logo lengkap */
+      .sj-header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .sj-header img {
         width: 100%;
-        max-height: 150px;
+        max-height: 160px;
         object-fit: contain;
       }
 
-      /* Informasi Penerima */
-      .info-table {
-        width: 100%;
-        font-size: 14px;
-        margin-bottom: 15px;
+      /* Area utama surat jalan */
+      .sj-main {
+        margin-top: 10px;
       }
 
-      .info-table td {
-        padding: 3px 6px;
-        vertical-align: top;
-      }
-
-      .info-table td:first-child {
-        width: 160px;
-        font-weight: bold;
-      }
-
-      /* Judul Surat Jalan */
-      .title-container {
+      /* Dua kolom atas */
+      .sj-row {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin: 15px 0 8px 0;
+        align-items: flex-start;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
       }
 
-      .title-container h4 {
-        flex-grow: 1;
+      .sj-left {
+        flex: 1 1 60%;
+        background: #dbeaff;
+        border: 1px solid #000;
+        padding: 10px;
+      }
+
+      .sj-left b {
+        display: block;
+        background: #bcd9ff;
         text-align: center;
         font-weight: bold;
-        margin: 0;
+        border-bottom: 1px solid #000;
+        padding: 4px 0;
+        margin-bottom: 6px;
       }
 
-      .title-container .tanggal {
-        font-size: 14px;
-        white-space: nowrap;
+      .sj-left .address {
+        font-size: 13px;
+        line-height: 1.4;
+        color: #000;
+      }
+
+      .sj-right {
+        flex: 0 0 32%;
+        border: 1px solid #000;
+        background: #fff;
+        padding: 6px 10px;
+      }
+
+      .sj-right table {
+        width: 100%;
+        font-size: 13px;
+      }
+
+      .sj-right td {
+        padding: 3px 4px;
+      }
+
+      /* Judul */
+      .sj-subtitle {
+        text-align: center;
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 2px;
+      }
+
+      .sj-title {
+        text-align: center;
+        letter-spacing: 8px;
+        font-size: 13px;
+        margin-bottom: 14px;
       }
 
       /* Tabel Barang */
@@ -70,57 +106,32 @@
         width: 100%;
         border-collapse: collapse;
         margin-top: 10px;
-        font-size: 14px;
+        font-size: 13px;
       }
-
-      .sj-table th,
-      .sj-table td {
+      .sj-table th, .sj-table td {
         border: 1px solid #000;
         padding: 8px;
       }
-
       .sj-table th {
-        background-color: #eef7ff;
+        background-color: #f0f0f0;
         text-align: center;
       }
 
-      .sj-table td:nth-child(2) {
-        text-align: left;
-      }
-
-      .sj-table td {
-        text-align: center;
-      }
-
-      /* Tanda tangan */
-      .sign-section {
+      /* Signature */
+      .sj-sign {
+        margin-top: 40px;
         display: flex;
         justify-content: space-between;
-        margin-top: 50px;
-        font-size: 14px;
-      }
-
-      .sign-box {
-        width: 45%;
-        text-align: center;
-      }
-
-      .sign-box img {
-        height: 70px;
-        margin: 8px 0;
-      }
-
-      /* Footer note */
-      .footer-note {
-        border-top: 1px solid #ccc;
-        margin-top: 50px;
-        padding-top: 6px;
-        text-align: center;
         font-size: 13px;
-        color: #444;
+      }
+      .sj-sign-box {
+        text-align: center;
+        width: 200px;
+      }
+      .sj-sign-space {
+        height: 80px;
       }
 
-      /* Tombol print */
       @media print {
         .no-print,
         .btn,
@@ -153,12 +164,12 @@
             <!-- Header halaman -->
             <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
               <div class="flex-grow-1">
-                <h4 class="fs-18 fw-semibold m-0">Surat Jalan</h4>
+                <h4 class="fs-18 fw-semibold m-0">Detail Surat Jalan</h4>
               </div>
               <div class="text-end">
                 <ol class="breadcrumb m-0 py-0">
                   <li class="breadcrumb-item"><a href="/surat-jalan">Halaman</a></li>
-                  <li class="breadcrumb-item active">Detail Surat Jalan</li>
+                  <li class="breadcrumb-item active">Surat Jalan Detail</li>
                 </ol>
               </div>
             </div>
@@ -167,78 +178,86 @@
             <div class="card shadow-sm border-0">
               <div class="card-body">
 
-                <!-- Kop Surat -->
-                <div class="kop-surat">
-                  <img src="{{ asset('assets/images/kopsurat.png') }}" alt="Kop Surat RNS" />
-                </div>
+                <!-- SURAT JALAN CONTENT -->
+                <div class="sj-main">
 
-                <!-- Info Penerima -->
-                <table class="info-table">
-                  <tr>
-                    <td>KEPADA YTH</td>
-                    <td>: RS KENCANA SERANG</td>
-                  </tr>
-                  <tr>
-                    <td>ALAMAT</td>
-                    <td>: JL. JENDRAL AHMAD YANI NO.21-23, SUMURPECUNG SERANG, CIMUNCANG, KEC.SERANG – BANTEN 42117</td>
-                  </tr>
-                  <tr>
-                    <td>TELP. COSTUMER</td>
-                    <td>: (0254) 211554</td>
-                  </tr>
-                  <tr>
-                    <td>KETERANGAN</td>
-                    <td>: PENGECEKAN ALAT</td>
-                  </tr>
-                </table>
-
-                <!-- Judul -->
-                <div class="title-container">
-                  <h4>SURAT JALAN</h4>
-                  <div class="tanggal">Tanggal : 03/10/2024</div>
-                </div>
-
-                <!-- Tabel Barang -->
-                <table class="sj-table">
-                  <thead>
-                    <tr>
-                      <th style="width: 40px;">NO</th>
-                      <th>NAMA BARANG / JASA</th>
-                      <th style="width: 60px;">QTY</th>
-                      <th style="width: 80px;">JUMLAH</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>1.</td>
-                      <td>Pengecekan Alat Xray Mobile GE Optima XR200AMX</td>
-                      <td>1</td>
-                      <td>1</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <!-- Tanda Tangan -->
-                <div class="sign-section">
-                  <div class="sign-box">
-                    <p><strong>CUSTOMER / PIHAK RS</strong></p>
-                    <br /><br />
-                    <img src="" alt="Tanda Tangan" />
-                    <p><u>RS KENCANA SERANG</u></p>
+                  <!-- Kop Surat -->
+                  <div class="sj-header">
+                    <img src="{{ asset('assets/images/kopsurat.png') }}" alt="Kop Surat RNS" />
                   </div>
-                  <div class="sign-box">
-                    <p><strong>ENGINEER</strong></p>
-                    <br /><br />
-                    <img src="" alt="Tanda Tangan" />
-                    <p><u>MUHAMMAD ARYA</u></p>
+
+                  <!-- Kotak kiri-kanan -->
+                  <div class="sj-row">
+                    <div class="sj-left">
+                      <b>KEPADA YTH.</b>
+                      <div class="address">
+                        <strong id="printNamaPenerima">Loading...</strong><br />
+                        <span id="printAlamatPenerima">Loading...</span><br>
+                        <span id="printTelpPenerima">Loading...</span>
+                      </div>
+                    </div>
+
+                    <div class="sj-right">
+                      <table>
+                        <tr>
+                          <td style="width:45%;"><strong>Tanggal</strong></td>
+                          <td>:</td>
+                          <td style="text-align:right;" id="printTanggal">Loading...</td>
+                        </tr>
+                        <tr>
+                          <td><strong>No. SJ</strong></td>
+                          <td>:</td>
+                          <td style="text-align:right;" id="printNomor">Loading...</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Pengirim</strong></td>
+                          <td>:</td>
+                          <td style="text-align:right;" id="printNamaPengirim">Loading...</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- Judul -->
+                  <div class="sj-subtitle">SURAT JALAN</div>
+                  <div class="sj-title">DELIVERY ORDER</div>
+
+                  <!-- Tabel Barang -->
+                  <table class="sj-table">
+                    <thead>
+                      <tr>
+                        <th width="5%">No</th>
+                        <th>Nama Barang / Jasa</th>
+                        <th width="10%">Qty</th>
+                        <th>Keterangan</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="text-center">1</td>
+                        <td id="printNamaBarang">Loading...</td>
+                        <td class="text-center" id="printQty">Loading...</td>
+                        <td id="printKeterangan">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <!-- Blok tanda tangan -->
+                  <div class="sj-sign">
+                    <div class="sj-sign-box">
+                      <p>Penerima,</p>
+                      <div class="sj-sign-space"></div>
+                      <p>( .................................... )</p>
+                    </div>
+                    <div class="sj-sign-box">
+                      <p>Hormat Kami,</p>
+                      <p><strong>PT. Ranay Nusantara Sejahtera</strong></p>
+                      <img src="{{ asset('assets/images/ttdsurat.png') }}" alt="Tanda Tangan" style="height: 80px; margin: 10px 0;">
+                      <p><strong>Heri Pirdaus, S.Tr.Kes Rad (MRI)</strong></p>
+                    </div>
                   </div>
                 </div>
-
-                <!-- Footer note -->
-                <div class="footer-note">
-                  Terima kasih telah mempercayakan layanan kepada
-                  <strong>PT Ranay Nusantara Sejahtera</strong>
-                </div>
+                <!-- /sj-main -->
 
               </div>
             </div>
@@ -259,11 +278,11 @@
           </div>
         </footer>
 
-        <!-- Tombol Print -->
+        <!-- Tombol Print Mengambang -->
         <div class="content position-relative">
           <button
             type="button"
-            class="btn btn-primary rounded-circle shadow-lg no-print"
+            class="btn btn-primary rounded-circle shadow-lg"
             style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;"
             data-bs-toggle="tooltip"
             data-bs-placement="top"
@@ -276,14 +295,17 @@
       </div>
     </div>
 
-    <!-- Vendor JS -->
-    <script src="assets/libs/jquery/jquery.min.js"></script>
-    <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/libs/simplebar/simplebar.min.js"></script>
-    <script src="assets/libs/node-waves/waves.min.js"></script>
-    <script src="assets/libs/feather-icons/feather.min.js"></script>
+    <!-- Vendor -->
+    <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
 
-    <!-- App JS -->
-    <script src="assets/js/app.js"></script>
+    <!-- App js -->
+    <script src="{{ asset('assets/js/app.js') }}"></script>
+
+    <!-- External JS -->
+    <script src="{{ asset('assets/js/print-surat-jalan.js') }}"></script>
   </body>
 </html>
