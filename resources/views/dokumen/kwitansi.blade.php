@@ -19,6 +19,7 @@
     <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
 
     <script src="assets/js/head.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
 
   <body data-menu-color="light" data-sidebar="default">
@@ -89,7 +90,6 @@
                         <th>Nama Klien</th>
                         <th>Keterangan Pembayaran</th>
                         <th class="text-center">Total Pembayaran</th>
-                        <th class="text-center">Status</th>
                         <th class="text-center" style="width: 100px;">Aksi</th>
                       </tr>
                     </thead>
@@ -100,14 +100,10 @@
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mt-3">
-                  <small class="text-muted">Menampilkan 1–3 dari 50 kwitansi</small>
+                  <small class="text-muted" id="paginationInfo"></small>
                   <nav>
-                    <ul class="pagination pagination-sm mb-0">
-                      <li class="page-item"><a class="page-link" href="#">‹</a></li>
-                      <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item"><a class="page-link" href="#">2</a></li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
-                      <li class="page-item"><a class="page-link" href="#">›</a></li>
+                    <ul class="pagination pagination-sm mb-0" id="paginationContainer">
+                      <!-- Pagination will be loaded via JS -->
                     </ul>
                   </nav>
                 </div>
@@ -264,18 +260,7 @@
                   />
                 </div>
 
-                <!-- Status -->
-                <div class="col-md-6 mb-3">
-                  <label for="statusPembayaran" class="form-label fw-semibold">
-                    Status <span class="text-danger">*</span>
-                  </label>
-                  <select class="form-select" id="statusPembayaran" name="status" required>
-                    <option value="">Pilih Status</option>
-                    <option value="Lunas">Lunas</option>
-                    <option value="Belum Lunas">Belum Lunas</option>
-                    <option value="Menunggu Verifikasi">Menunggu Verifikasi</option>
-                  </select>
-                </div>
+
 
                 <!-- Penandatangan -->
                 <div class="col-12 mb-3">
@@ -323,7 +308,7 @@
     <script src="assets/js/app.js"></script>
 
     <!-- Script untuk Handle Form -->
-    <script src="{{ asset('assets/js/kwitansi.js') }}"></script>
+    <script src="{{ asset('assets/js/kwitansi.js') }}?v={{ time() }}"></script>
     <script>
       $(document).ready(function() {
         // Format angka dengan titik pemisah ribuan

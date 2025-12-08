@@ -73,42 +73,40 @@ function loadDetailKwitansi(id) {
 }
 
 function renderDetailKwitansi(data) {
+    // Detect Signer from Keterangan (Workaround)
+    let signer = data.penandatangan;
+    let cleanKeterangan = data.keterangan || "";
+
+    if (cleanKeterangan.includes('[SIG:Dewi]')) {
+        signer = "Dewi Sulistiowati";
+        cleanKeterangan = cleanKeterangan.replace(' [SIG:Dewi]', '').replace('[SIG:Dewi]', '');
+    }
+
     // Populate View
     setText("nomor_kwitansi", data.nomor_kwitansi);
     setText("tanggal", formatDate(data.tanggal));
     setText("nama_penerima", data.nama_penerima);
     setText("alamat_penerima", data.alamat_penerima);
-    setText("keterangan", data.keterangan);
-    setText("total_pembayaran", formatRupiah(data.total_pembayaran));
     setText("total_bilangan", data.total_bilangan);
+    setText("keterangan", cleanKeterangan); // Show clean text
     setText("created_at", data.created_at ? new Date(data.created_at).toLocaleString('id-ID') : '-');
 
-    // Status Badge
-    const statusEl = document.getElementById("status");
-    if (statusEl) {
-        let statusHtml = '';
-        const status = (data.status || "").toLowerCase();
-        if (status === 'lunas') {
-            statusHtml = '<span class="badge bg-success-subtle text-success fw-semibold px-3 py-2">Lunas</span>';
-        } else if (status === 'belum lunas') {
-            statusHtml = '<span class="badge bg-warning-subtle text-warning fw-semibold px-3 py-2">Belum Lunas</span>';
-        } else if (status === 'belum diterima') {
-            statusHtml = '<span class="badge bg-danger-subtle text-danger fw-semibold px-3 py-2">Belum Diterima</span>';
-        } else {
-            statusHtml = `<span class="badge bg-secondary-subtle text-secondary fw-semibold px-3 py-2">${data.status || '-'}</span>`;
-        }
-        statusEl.innerHTML = statusHtml;
-    }
+    const total = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(data.total_pembayaran);
+    setText("total_pembayaran", total);
 
     // Populate Edit Form
     setVal("editNomorKwitansi", data.nomor_kwitansi);
-    setVal("editTanggal", data.tanggal);
+
+    // Ensure date is in YYYY-MM-DD format for input type="date"
+    const dateValue = data.tanggal ? new Date(data.tanggal).toISOString().split('T')[0] : '';
+    setVal("editTanggal", dateValue);
+
     setVal("editNamaPenerima", data.nama_penerima);
     setVal("editAlamat", data.alamat_penerima);
     setVal("editTotalBilangan", data.total_bilangan);
-    setVal("editKeterangan", data.keterangan);
+    setVal("editKeterangan", cleanKeterangan); // Set clean text in form
     setVal("editTotalPembayaran", parseInt(data.total_pembayaran));
-    setVal("editStatus", data.status);
+    setVal("editPenandatangan", signer || "Heri Pirdaus, S.Tr.Kes Rad (MRI)");
 }
 
 function updateKwitansi(id, formData) {
@@ -131,6 +129,19 @@ function updateKwitansi(id, formData) {
         data[key] = value;
     });
 
+    // WORKAROUND: Append signer to keterangan
+    // First remove any existing tags
+    let ket = data.keterangan || '';
+    ket = ket.replace(' [SIG:Dewi]', '').replace('[SIG:Dewi]', '');
+    ket = ket.replace(' [SIG:Heri]', '').replace('[SIG:Heri]', '');
+
+    if (data.penandatangan && data.penandatangan.includes('Dewi')) {
+        ket += ' [SIG:Dewi]';
+    } else if (data.penandatangan && data.penandatangan.includes('Heri')) {
+        ket += ' [SIG:Heri]';
+    }
+    data.keterangan = ket;
+
     // Clean up currency
     if (data.total_pembayaran) {
         data.total_pembayaran = data.total_pembayaran.toString().replace(/\./g, '');
@@ -151,7 +162,13 @@ function updateKwitansi(id, formData) {
         })
         .then(res => {
             console.log("Update Success:", res);
-            alert("Kwitansi berhasil diupdate!");
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: 'Kwitansi berhasil diupdate!',
+                timer: 1500,
+                showConfirmButton: false
+            });
 
             // Close modal
             const modalEl = document.getElementById('modalEditKwitansi');
@@ -162,7 +179,11 @@ function updateKwitansi(id, formData) {
         })
         .catch(err => {
             console.error("Error:", err);
-            alert("Gagal mengupdate Kwitansi");
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: 'Gagal mengupdate Kwitansi'
+            });
         });
 }
 

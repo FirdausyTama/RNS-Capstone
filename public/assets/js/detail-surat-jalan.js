@@ -66,23 +66,54 @@ function loadDetailSuratJalan(id) {
 }
 
 function renderDetailSuratJalan(data) {
+    // Detect Signer from Keterangan (Workaround)
+    let signer = data.penandatangan;
+    let cleanKeterangan = data.keterangan || "";
+
+    // Clean existing tags
+    if (cleanKeterangan.includes('[SIG:Dewi]')) {
+        signer = "Dewi Sulistiowati";
+        cleanKeterangan = cleanKeterangan.replace(' [SIG:Dewi]', '').replace('[SIG:Dewi]', '');
+    } else if (cleanKeterangan.includes('[SIG:Heri]')) {
+        signer = "Heri Firdaus, S.Tr.Kes Rad (MRI)";
+        cleanKeterangan = cleanKeterangan.replace(' [SIG:Heri]', '').replace('[SIG:Heri]', '');
+    }
+
     // Populate View
-    setText("detailNomor", data.nomor_surat_jalan);
     setText("detailTanggal", formatDate(data.tanggal));
     setText("detailNamaPengirim", data.nama_pengirim);
     setText("detailNamaPenerima", data.nama_penerima);
     setText("detailAlamatPenerima", data.alamat_penerima);
     setText("detailTelpPenerima", data.telp_penerima);
+    setText("detailKeterangan", cleanKeterangan);
+
     setText("detailNamaBarang", data.nama_barang_jasa);
     setText("detailQty", data.qty);
-    setText("detailKeterangan", data.keterangan);
+    setText("detailJumlah", data.qty); // Match Print Layout (Qty in both columns)
 
-    const jumlah = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(data.jumlah || 0);
-    setText("detailJumlah", jumlah);
+    // detailNamaPenerimaSign removed in new layout
+
+    // Signature Logic
+    const signatureImg = document.getElementById('detailSignature');
+
+    // Check if signer contains "Dewi" (case insensitive)
+    if (signer && signer.toLowerCase().includes('dewi')) {
+        signatureImg.src = '/assets/images/ttd dewi.jpeg';
+    } else if (signer && signer.toLowerCase().includes('heri')) {
+        signatureImg.src = '/assets/images/ttd heri.png';
+    } else if (signer && signer.toLowerCase().includes('arya')) {
+        signatureImg.src = '/assets/images/ttd arya.png';
+    } else {
+        // Default to Arya
+        signatureImg.src = '/assets/images/ttd arya.png';
+    }
+
+    setText("detailSignerName", signer || "MUHAMMAD ARYA");
 
     // Populate Edit Form
     setVal("editNomor", data.nomor_surat_jalan);
-    setVal("editTanggal", data.tanggal);
+    const dateValue = data.tanggal ? new Date(data.tanggal).toISOString().split('T')[0] : '';
+    setVal("editTanggal", dateValue);
     setVal("editNamaPengirim", data.nama_pengirim);
     setVal("editNamaPenerima", data.nama_penerima);
     setVal("editAlamatPenerima", data.alamat_penerima);
@@ -90,7 +121,8 @@ function renderDetailSuratJalan(data) {
     setVal("editNamaBarang", data.nama_barang_jasa);
     setVal("editQty", data.qty);
     setVal("editJumlah", data.jumlah);
-    setVal("editKeterangan", data.keterangan);
+    setVal("editKeterangan", cleanKeterangan); // Set clean text
+    setVal("editPenandatangan", signer || "MUHAMMAD ARYA"); // Default to Arya in Edit too
 }
 
 function updateSuratJalan(id, formData) {
@@ -108,6 +140,19 @@ function updateSuratJalan(id, formData) {
         data[key] = value;
     });
 
+    // WORKAROUND: Append signer to keterangan
+    // First remove any existing tags to avoid duplication
+    let ket = data.keterangan || '';
+    ket = ket.replace(' [SIG:Dewi]', '').replace('[SIG:Dewi]', '');
+    ket = ket.replace(' [SIG:Heri]', '').replace('[SIG:Heri]', '');
+
+    if (data.penandatangan && data.penandatangan.includes('Dewi')) {
+        ket += ' [SIG:Dewi]';
+    } else if (data.penandatangan && data.penandatangan.includes('Heri')) {
+        ket += ' [SIG:Heri]';
+    }
+    data.keterangan = ket;
+
     fetch(`${API_SURAT_JALAN}/${id}`, {
         method: "PUT",
         headers: headers,
@@ -123,7 +168,13 @@ function updateSuratJalan(id, formData) {
         })
         .then(res => {
             console.log("Update Success:", res);
-            alert("Surat Jalan berhasil diupdate!");
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: 'Surat Jalan berhasil diupdate!',
+                timer: 1500,
+                showConfirmButton: false
+            });
 
             // Close modal
             const modalEl = document.getElementById('modalEditSuratJalan');
@@ -134,7 +185,11 @@ function updateSuratJalan(id, formData) {
         })
         .catch(err => {
             console.error("Error:", err);
-            alert("Gagal mengupdate Surat Jalan");
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: 'Gagal mengupdate Surat Jalan'
+            });
         });
 }
 

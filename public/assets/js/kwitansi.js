@@ -16,17 +16,91 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+// Global state
+let allData = [];
+let filteredData = [];
+let currentPage = 1;
+let itemsPerPage = 5;
+let currentFilter = 'Semua Waktu';
+let currentSearch = '';
+
+function setFilter(filter) {
+    currentFilter = filter;
+    document.getElementById('selectedFilter').innerText = filter;
+    currentPage = 1;
+    applyFilterAndRender();
+}
+
+function searchKwitansi() {
+    currentSearch = document.getElementById('searchInput').value;
+    currentPage = 1;
+    applyFilterAndRender();
+}
+
+function applyFilterAndRender() {
+    // Filter data
+    filteredData = allData.filter(item => {
+        // 1. Time Filter
+        let passTime = true;
+        const itemDate = new Date(item.tanggal);
+        const today = new Date();
+
+        if (currentFilter === 'Hari Ini') {
+            passTime = isSameDay(itemDate, today);
+        } else if (currentFilter === 'Minggu Ini') {
+            passTime = isSameWeek(itemDate, today);
+        } else if (currentFilter === 'Bulan Ini') {
+            passTime = isSameMonth(itemDate, today);
+        }
+
+        // 2. Search Filter
+        let passSearch = true;
+        if (currentSearch) {
+            const searchLower = currentSearch.toLowerCase();
+            const no = (item.nomor_kwitansi || '').toLowerCase();
+            const nama = (item.nama_penerima || '').toLowerCase();
+            const ket = (item.keterangan || '').toLowerCase();
+            passSearch = no.includes(searchLower) || nama.includes(searchLower) || ket.includes(searchLower);
+        }
+
+        return passTime && passSearch;
+    });
+
+    // Render current page
+    renderCurrentPage();
+}
+
+function renderCurrentPage() {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageData = filteredData.slice(start, end);
+
+    renderKwitansi(pageData, start + 1);
+    renderPagination();
+}
+
+// Helper dates
+function isSameDay(d1, d2) {
+    return d1.getFullYear() === d2.getFullYear() &&
+        d1.getMonth() === d2.getMonth() &&
+        d1.getDate() === d2.getDate();
+}
+
+function isSameMonth(d1, d2) {
+    return d1.getFullYear() === d2.getFullYear() &&
+        d1.getMonth() === d2.getMonth();
+}
+
+function isSameWeek(d1, d2) {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const diffDays = Math.round(Math.abs((d1 - d2) / oneDay));
+    return diffDays <= 7; // Rough approximation, can be improved
+}
+
 const API_KWITANSI = "http://127.0.0.1:8000/api/kwitansi";
 
 function getToken() {
-    // In a real app, you might store this in localStorage or cookie. 
-    // For this Laravel app, if we are using Sanctum/Passport with web routes, 
-    // we might rely on the session cookie or a meta tag.
-    // However, the user example used localStorage.getItem("token").
-    // I will stick to the user's pattern but also check for a meta tag if needed later.
-    const token = localStorage.getItem("token");
-    // if (!token) console.error("Token tidak ditemukan!");
-    return token;
+    return localStorage.getItem("token");
 }
 
 function formatDate(dateString) {
@@ -44,9 +118,6 @@ function formatRupiah(angka) {
 }
 
 function loadKwitansi() {
-    // Note: If the API is protected by Sanctum and we are on the same domain, 
-    // we might not need the Bearer token if axios/fetch sends cookies. 
-    // But following the user's example which explicitly uses a token.
     const token = getToken();
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
@@ -60,73 +131,66 @@ function loadKwitansi() {
         headers["X-CSRF-TOKEN"] = csrfToken;
     }
 
-    fetch(API_KWITANSI, {
+    // Try to fetch ALL data by passing a large per_page
+    // If API ignores it, we work with what we get
+    const params = new URLSearchParams();
+    params.append('per_page', 1000);
+
+    fetch(`${API_KWITANSI}?${params.toString()}`, {
         method: "GET",
         headers: headers
     })
         .then(async res => {
             if (!res.ok) {
                 const text = await res.text();
-                console.error("RESPON ERROR:", text);
                 throw new Error("Gagal memuat data Kwitansi");
             }
             return res.json();
         })
         .then(res => {
             console.log("Response dari API:", res);
-            // Assuming the API returns { data: [...] } or just [...]
-            // Adjust based on actual API response structure. 
-            // Laravel Resource collections usually return { data: [...] }
-            const data = res.data || res;
-            renderKwitansi(data);
+            // Handle if response is { data: [...] } or just [...]
+            let data = [];
+            if (Array.isArray(res)) {
+                data = res;
+            } else if (res.data && Array.isArray(res.data)) {
+                data = res.data;
+            }
+
+            allData = data;
+            // Initial render
+            applyFilterAndRender();
         })
         .catch(err => {
             console.error("Error:", err);
             const body = document.querySelector("#tabelKwitansi tbody");
-            if (body) body.innerHTML = `<tr><td colspan="8" class="text-center text-danger">Gagal memuat data Kwitansi!</td></tr>`;
+            if (body) body.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Gagal memuat data Kwitansi!</td></tr>`;
         });
 }
 
-function renderKwitansi(data) {
+function renderKwitansi(data, startNo = 1) {
     const body = document.querySelector("#tabelKwitansi tbody");
     if (!body) return;
 
     body.innerHTML = "";
 
     if (!data || data.length === 0) {
-        body.innerHTML = `<tr><td colspan="8" class="text-center py-3 text-muted">Tidak ada data Kwitansi.</td></tr>`;
+        body.innerHTML = `<tr><td colspan="7" class="text-center py-3 text-muted">Tidak ada data Kwitansi.</td></tr>`;
         return;
     }
 
-    let no = 1;
+    let no = startNo;
 
     data.forEach(item => {
-        let badge = "";
-        const status = (item.status || "").toLowerCase();
-
-        if (status === "lunas")
-            badge = `<span class="badge bg-success-subtle text-success fw-semibold px-3 py-2">Lunas</span>`;
-        else if (status === "belum lunas")
-            badge = `<span class="badge bg-warning-subtle text-warning fw-semibold px-3 py-2">Belum Lunas</span>`;
-        else if (status === "menunggu verifikasi")
-            badge = `<span class="badge bg-danger-subtle text-danger fw-semibold px-3 py-2">Menunggu Verifikasi</span>`;
-        else if (status === "belum diterima")
-            badge = `<span class="badge bg-danger-subtle text-danger fw-semibold px-3 py-2">Belum Diterima</span>`;
-        else
-            badge = `<span class="badge bg-secondary-subtle text-secondary fw-semibold px-3 py-2">${item.status || "-"}</span>`;
-
         body.innerHTML += `
         <tr>
             <td class="text-center">${no++}</td>
             <td><strong>${item.nomor_kwitansi || "-"}</strong></td>
             <td class="text-center">${formatDate(item.tanggal)}</td>
             <td>${item.nama_penerima || "-"}</td>
-            <td>${item.keterangan || "-"}</td>
+            <td>${(item.keterangan || "-").replace(' [SIG:Dewi]', '').replace('[SIG:Dewi]', '')}</td>
             <td class="text-center fw-semibold">
                 ${formatRupiah(item.total_pembayaran || 0)}
-            </td>
-            <td class="text-center">
-                ${badge}
             </td>
             <td class="text-center">
                 <div class="d-flex justify-content-center gap-1">
@@ -144,10 +208,70 @@ function renderKwitansi(data) {
         </tr>
         `;
     });
+}
 
-    // Update pagination info if needed (static for now based on user code)
-    const info = document.querySelector(".text-muted.small");
-    if (info) info.innerText = `Menampilkan ${data.length} kwitansi`;
+function renderPagination() {
+    const container = document.getElementById('paginationContainer');
+    const info = document.getElementById("paginationInfo");
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    const totalItems = filteredData.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const startItem = (currentPage - 1) * itemsPerPage + 1;
+    const endItem = Math.min(startItem + itemsPerPage - 1, totalItems);
+
+    if (info) {
+        if (totalItems === 0) {
+            info.innerText = `Menampilkan 0 kwitansi`;
+        } else {
+            info.innerText = `Menampilkan ${startItem}–${endItem} dari ${totalItems} kwitansi`;
+        }
+    }
+
+    if (totalPages <= 1) return;
+
+    // Previous
+    const prevDisabled = currentPage === 1 ? 'disabled' : '';
+    container.innerHTML += `
+        <li class="page-item ${prevDisabled}">
+            <a class="page-link" href="#" onclick="event.preventDefault(); changePage(${currentPage - 1})" aria-label="Previous">
+                <i class="mdi mdi-chevron-left"></i>
+            </a>
+        </li>
+    `;
+
+    // Pages
+    for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+            const active = i === currentPage ? 'active' : '';
+            container.innerHTML += `
+                <li class="page-item ${active}">
+                    <a class="page-link" href="#" onclick="event.preventDefault(); changePage(${i})">${i}</a>
+                </li>
+            `;
+        } else if (i === currentPage - 2 || i === currentPage + 2) {
+            container.innerHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        }
+    }
+
+    // Next
+    const nextDisabled = currentPage === totalPages ? 'disabled' : '';
+    container.innerHTML += `
+        <li class="page-item ${nextDisabled}">
+            <a class="page-link" href="#" onclick="event.preventDefault(); changePage(${currentPage + 1})" aria-label="Next">
+                <i class="mdi mdi-chevron-right"></i>
+            </a>
+        </li>
+    `;
+}
+
+function changePage(page) {
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    if (page < 1 || page > totalPages) return;
+    currentPage = page;
+    renderCurrentPage();
 }
 
 function submitFormKwitansi(formData) {
@@ -170,12 +294,15 @@ function submitFormKwitansi(formData) {
         data[key] = value;
     });
 
-    // Clean up currency format for total_pembayaran
+    // WORKAROUND: Append signer to keterangan if backend doesn't support penandatangan
+    if (data.penandatangan && data.penandatangan.includes('Dewi')) {
+        data.keterangan = (data.keterangan || '') + ' [SIG:Dewi]';
+    }
+
     if (data.total_pembayaran) {
         data.total_pembayaran = data.total_pembayaran.replace(/\./g, '');
     }
-
-    console.log("Data yang akan dikirim:", data);
+    delete data.status;
 
     fetch(API_KWITANSI, {
         method: "POST",
@@ -185,96 +312,92 @@ function submitFormKwitansi(formData) {
         .then(async res => {
             if (!res.ok) {
                 const text = await res.text();
-                console.error("RESPON ERROR:", text);
-                // Try to parse JSON error if possible
                 try {
                     const json = JSON.parse(text);
-                    if (json.message) {
-                        throw new Error(json.message);
-                    }
+                    if (json.message) throw new Error(json.message);
                 } catch (e) { }
                 throw new Error("Gagal menyimpan Kwitansi: " + text.substring(0, 100));
             }
             return res.json();
         })
         .then(res => {
-            console.log("Kwitansi berhasil disimpan:", res);
-            alert("Kwitansi berhasil disimpan!");
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: 'Kwitansi berhasil disimpan!',
+                timer: 1500,
+                showConfirmButton: false
+            });
 
-            // Close modal
             const modalEl = document.getElementById('modalTambahKwitansi');
             const modal = bootstrap.Modal.getInstance(modalEl);
             if (modal) modal.hide();
 
-            // Reset form
             document.getElementById("formKwitansi").reset();
-
-            loadKwitansi(); // Reload data
+            loadKwitansi();
         })
         .catch(err => {
             console.error("Error:", err);
-            alert("Gagal menyimpan Kwitansi! " + err.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: 'Gagal menyimpan Kwitansi! ' + err.message
+            });
         });
 }
 
 function deleteKwitansi(id) {
-    if (!confirm("Apakah Anda yakin ingin menghapus Kwitansi ini?")) {
-        return;
-    }
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Data kwitansi akan dihapus permanen!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const token = getToken();
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-    const token = getToken();
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-
-    const headers = {
-        "Accept": "application/json"
-    };
-    if (token) {
-        headers["Authorization"] = "Bearer " + token;
-    }
-    if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken;
-    }
-
-    fetch(`${API_KWITANSI}/${id}`, {
-        method: "DELETE",
-        headers: headers
-    })
-        .then(async res => {
-            if (!res.ok) {
-                const text = await res.text();
-                console.error("RESPON ERROR:", text);
-                throw new Error("Gagal menghapus Kwitansi");
+            const headers = {
+                "Accept": "application/json"
+            };
+            if (token) {
+                headers["Authorization"] = "Bearer " + token;
             }
-            return res.json();
-        })
-        .then(res => {
-            console.log("Kwitansi berhasil dihapus:", res);
-            alert("Kwitansi berhasil dihapus!");
-            loadKwitansi(); // Reload data
-        })
-        .catch(err => {
-            console.error("Error:", err);
-            alert("Gagal menghapus Kwitansi!");
-        });
-}
-
-function searchKwitansi() {
-    let input = document.getElementById('searchInput');
-    let filter = input.value.toUpperCase();
-    let table = document.getElementById('tabelKwitansi');
-    let tr = table.getElementsByTagName('tr');
-
-    for (let i = 1; i < tr.length; i++) {
-        let tdNo = tr[i].getElementsByTagName('td')[1]; // Nomor Kwitansi
-        let tdKlien = tr[i].getElementsByTagName('td')[3]; // Nama Klien
-        if (tdNo || tdKlien) {
-            let txtNo = tdNo ? (tdNo.textContent || tdNo.innerText) : '';
-            let txtKlien = tdKlien ? (tdKlien.textContent || tdKlien.innerText) : '';
-            if (txtNo.toUpperCase().indexOf(filter) > -1 || txtKlien.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = '';
-            } else {
-                tr[i].style.display = 'none';
+            if (csrfToken) {
+                headers["X-CSRF-TOKEN"] = csrfToken;
             }
+
+            fetch(`${API_KWITANSI}/${id}`, {
+                method: "DELETE",
+                headers: headers
+            })
+                .then(async res => {
+                    if (!res.ok) {
+                        const text = await res.text();
+                        throw new Error("Gagal menghapus Kwitansi");
+                    }
+                    return res.json();
+                })
+                .then(res => {
+                    Swal.fire(
+                        'Terhapus!',
+                        'Data kwitansi berhasil dihapus.',
+                        'success'
+                    );
+                    loadKwitansi();
+                })
+                .catch(err => {
+                    console.error("Error:", err);
+                    Swal.fire(
+                        'Gagal!',
+                        'Terjadi kesalahan saat menghapus data.',
+                        'error'
+                    );
+                });
         }
-    }
+    });
 }

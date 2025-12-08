@@ -20,6 +20,7 @@
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
 
     <script src="{{ asset('assets/js/head.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         .info-label {
@@ -94,10 +95,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="mb-3">
-                                        <div class="info-label">Status</div>
-                                        <div id="status">Loading...</div>
-                                    </div>
+
 
                                     <div class="mb-3">
                                         <div class="info-label">Untuk Pembayaran</div>
@@ -184,7 +182,7 @@
                   <label for="editNomorKwitansi" class="form-label fw-semibold">
                     Nomor Kwitansi <span class="text-danger">*</span>
                   </label>
-                  <input type="text" class="form-control" id="editNomorKwitansi" name="nomor_kwitansi" required />
+                  <input type="text" class="form-control" id="editNomorKwitansi" name="nomor_kwitansi" required readonly />
                 </div>
                 <div class="col-md-6 mb-3">
                   <label for="editTanggal" class="form-label fw-semibold">
@@ -222,16 +220,17 @@
                   </label>
                   <input type="text" class="form-control" id="editTotalPembayaran" name="total_pembayaran" required />
                 </div>
-                <div class="col-md-6 mb-3">
-                  <label for="editStatus" class="form-label fw-semibold">
-                    Status <span class="text-danger">*</span>
+                <div class="col-12 mb-3">
+                  <label for="editPenandatangan" class="form-label fw-semibold">
+                    Nama Penandatangan <span class="text-danger">*</span>
                   </label>
-                  <select class="form-select" id="editStatus" name="status" required>
-                    <option value="Lunas">Lunas</option>
-                    <option value="Belum Lunas">Belum Lunas</option>
-                    <option value="Menunggu Verifikasi">Menunggu Verifikasi</option>
+                  <select class="form-select" id="editPenandatangan" name="penandatangan" required>
+                    <option value="">Pilih penandatangan...</option>
+                    <option value="Dewi Sulistiowati">Dewi Sulistiowati</option>
+                    <option value="Heri Pirdaus, S.Tr.Kes Rad (MRI)">Heri Pirdaus, S.Tr.Kes Rad (MRI)</option>
                   </select>
                 </div>
+
               </div>
             </form>
           </div>

@@ -50,15 +50,44 @@ function renderPrintSuratJalan(data) {
     setText("printAlamatPenerima", data.alamat_penerima);
     setText("printTelpPenerima", data.telp_penerima);
     setText("printTanggal", formatDate(data.tanggal));
-    setText("printNamaPengirim", data.nama_pengirim);
-    setText("printNomor", data.nomor_surat_jalan);
 
+    // New Layout Fields
     setText("printNamaBarang", data.nama_barang_jasa);
     setText("printQty", data.qty);
-    setText("printKeterangan", data.keterangan);
+    setText("printJumlah", data.qty); // Qty and Jumlah are the same in this context
+    setText("printNamaPenerimaSign", data.nama_penerima);
+
+    // Detect Signer from Keterangan (Workaround)
+    let signer = data.penandatangan;
+    let cleanKeterangan = data.keterangan || "";
+
+    if (cleanKeterangan.includes('[SIG:Dewi]')) {
+        signer = "Dewi Sulistiowati";
+        cleanKeterangan = cleanKeterangan.replace(' [SIG:Dewi]', '').replace('[SIG:Dewi]', '');
+    }
+
+    setText("printKeterangan", cleanKeterangan);
+
+    // Signature Logic
+    const signatureImg = document.getElementById('printSignature');
+    const signerName = document.getElementById('printSignerName');
+
+    // Check if signer contains "Dewi" (case insensitive)
+    if (signer && signer.toLowerCase().includes('dewi')) {
+        signatureImg.src = '/assets/images/ttd dewi.jpeg';
+    } else if (signer && signer.toLowerCase().includes('arya')) {
+        signatureImg.src = '/assets/images/ttd arya.png';
+    } else if (signer && signer.toLowerCase().includes('heri')) {
+        signatureImg.src = '/assets/images/ttd heri.png';
+    } else {
+        // Default to Arya if not specified (as requested)
+        signatureImg.src = '/assets/images/ttd arya.png';
+    }
+
+    setText("printSignerName", signer || "MUHAMMAD ARYA");
 
     // Auto print
-    // setTimeout(() => window.print(), 1000);
+    setTimeout(() => window.print(), 1000);
 }
 
 function setText(id, value) {

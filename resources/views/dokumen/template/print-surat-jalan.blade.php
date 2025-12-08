@@ -21,134 +21,56 @@
       body {
       }
 
-      /* Header: Logo lengkap */
-      .sj-header {
-        text-align: center;
-        margin-bottom: 20px;
-      }
-      .sj-header img {
-        width: 100%;
-        max-height: 160px;
-        object-fit: contain;
-      }
-
-      /* Area utama surat jalan */
-      .sj-main {
-        margin-top: 10px;
-      }
-
-      /* Dua kolom atas */
-      .sj-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 20px;
-        flex-wrap: wrap;
-        margin-bottom: 16px;
-      }
-
-      .sj-left {
-        flex: 1 1 60%;
-        background: #dbeaff;
-        border: 1px solid #000;
-        padding: 10px;
-      }
-
-      .sj-left b {
-        display: block;
-        background: #bcd9ff;
-        text-align: center;
-        font-weight: bold;
-        border-bottom: 1px solid #000;
-        padding: 4px 0;
-        margin-bottom: 6px;
-      }
-
-      .sj-left .address {
-        font-size: 13px;
-        line-height: 1.4;
-        color: #000;
-      }
-
-      .sj-right {
-        flex: 0 0 32%;
-        border: 1px solid #000;
-        background: #fff;
-        padding: 6px 10px;
-      }
-
-      .sj-right table {
-        width: 100%;
-        font-size: 13px;
-      }
-
-      .sj-right td {
-        padding: 3px 4px;
-      }
-
-      /* Judul */
-      .sj-subtitle {
-        text-align: center;
-        font-weight: bold;
-        font-size: 16px;
-        margin-bottom: 2px;
-      }
-
-      .sj-title {
-        text-align: center;
-        letter-spacing: 8px;
-        font-size: 13px;
-        margin-bottom: 14px;
-      }
-
-      /* Tabel Barang */
-      .sj-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-        font-size: 13px;
-      }
-      .sj-table th, .sj-table td {
-        border: 1px solid #000;
-        padding: 8px;
-      }
-      .sj-table th {
-        background-color: #f0f0f0;
-        text-align: center;
-      }
-
-      /* Signature */
-      .sj-sign {
-        margin-top: 40px;
-        display: flex;
-        justify-content: space-between;
-        font-size: 13px;
-      }
-      .sj-sign-box {
-        text-align: center;
-        width: 200px;
-      }
-      .sj-sign-space {
-        height: 80px;
-      }
-
       @media print {
+        @page {
+          size: A4 portrait;
+          margin: 0;
+        }
+
+        .bg-light {
+            background-color: #f8f9fa !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
         .no-print,
         .btn,
+        .footer,
         [data-bs-toggle="tooltip"],
-        .content.position-relative {
+        .content.position-relative,
+        .navbar-custom,
+        .left-side-menu {
           display: none !important;
           visibility: hidden !important;
         }
 
-        body {
-          margin: 0;
-          background: white;
+        body, html {
+          margin: 0 !important;
+          padding: 0 !important;
+          height: 100% !important;
+          width: 100% !important;
+          background: white !important;
+          -webkit-print-color-adjust: exact;
+        }
+        
+        /* Reset Layout Containers */
+        #app-layout, .content-page, .content, .container-fluid, .card, .card-body {
+            margin: 0 !important;
+            padding: 0 !important;
+            height: auto !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            display: block !important;
         }
 
         .card {
           border: none !important;
           box-shadow: none !important;
+        }
+        
+        /* Override Bootstrap utility */
+        .p-5 {
+            padding: 0 !important;
         }
       }
     </style>
@@ -176,87 +98,92 @@
 
             <!-- Card utama -->
             <div class="card shadow-sm border-0">
-              <div class="card-body">
-
-                <!-- SURAT JALAN CONTENT -->
-                <div class="sj-main">
+              <div class="card-body p-5">
 
                   <!-- Kop Surat -->
-                  <div class="sj-header">
-                    <img src="{{ asset('assets/images/kopsurat.png') }}" alt="Kop Surat RNS" />
+                  <div class="text-center border-bottom border-3 border-dark pb-3 mb-4">
+                    <img src="{{ asset('assets/images/kopsurat.png') }}" alt="Logo RNS" style="width: 100%; max-height: 150px; object-fit: contain;">
                   </div>
 
-                  <!-- Kotak kiri-kanan -->
-                  <div class="sj-row">
-                    <div class="sj-left">
-                      <b>KEPADA YTH.</b>
-                      <div class="address">
-                        <strong id="printNamaPenerima">Loading...</strong><br />
-                        <span id="printAlamatPenerima">Loading...</span><br>
-                        <span id="printTelpPenerima">Loading...</span>
-                      </div>
-                    </div>
-
-                    <div class="sj-right">
-                      <table>
+                  <!-- Info Penerima & Keterangan -->
+                  <div class="mb-4" style="font-size: 14px; color: #000;">
+                    <table style="width: 100%; border: none;">
                         <tr>
-                          <td style="width:45%;"><strong>Tanggal</strong></td>
-                          <td>:</td>
-                          <td style="text-align:right;" id="printTanggal">Loading...</td>
+                            <td style="width: 150px; font-weight: bold;">KEPADA YTH</td>
+                            <td style="width: 10px;">:</td>
+                            <td id="printNamaPenerima">Loading...</td>
                         </tr>
                         <tr>
-                          <td><strong>No. SJ</strong></td>
-                          <td>:</td>
-                          <td style="text-align:right;" id="printNomor">Loading...</td>
+                            <td style="font-weight: bold;">ALAMAT</td>
+                            <td>:</td>
+                            <td id="printAlamatPenerima">Loading...</td>
                         </tr>
                         <tr>
-                          <td><strong>Pengirim</strong></td>
-                          <td>:</td>
-                          <td style="text-align:right;" id="printNamaPengirim">Loading...</td>
+                            <td style="font-weight: bold;">TELP.COSTUMER</td>
+                            <td>:</td>
+                            <td id="printTelpPenerima">Loading...</td>
                         </tr>
-                      </table>
-                    </div>
+                        <tr>
+                            <td style="font-weight: bold;">KETERANGAN</td>
+                            <td>:</td>
+                            <td id="printKeterangan">Loading...</td>
+                        </tr>
+                    </table>
                   </div>
 
-                  <!-- Judul -->
-                  <div class="sj-subtitle">SURAT JALAN</div>
-                  <div class="sj-title">DELIVERY ORDER</div>
-
-                  <!-- Tabel Barang -->
-                  <table class="sj-table">
-                    <thead>
-                      <tr>
-                        <th width="5%">No</th>
-                        <th>Nama Barang / Jasa</th>
-                        <th width="10%">Qty</th>
-                        <th>Keterangan</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td class="text-center">1</td>
-                        <td id="printNamaBarang">Loading...</td>
-                        <td class="text-center" id="printQty">Loading...</td>
-                        <td id="printKeterangan">Loading...</td>
-                      </tr>
-                    </tbody>
+                  <!-- Judul & Tanggal -->
+                  <table style="width: 100%; margin-bottom: 10px; border: none;">
+                    <tr>
+                        <td style="width: 30%;"></td>
+                        <td style="width: 40%; text-align: center;">
+                            <h4 class="fw-bold text-uppercase m-0" style="letter-spacing: 2px; color: #000; font-size: 20px;">SURAT JALAN</h4>
+                        </td>
+                        <td style="width: 30%; text-align: right; font-size: 14px; color: #000; vertical-align: bottom;">
+                            Tanggal : <span id="printTanggal">Loading...</span>
+                        </td>
+                    </tr>
                   </table>
 
-                  <!-- Blok tanda tangan -->
-                  <div class="sj-sign">
-                    <div class="sj-sign-box">
-                      <p>Penerima,</p>
-                      <div class="sj-sign-space"></div>
-                      <p>( .................................... )</p>
-                    </div>
-                    <div class="sj-sign-box">
-                      <p>Hormat Kami,</p>
-                      <p><strong>PT. Ranay Nusantara Sejahtera</strong></p>
-                      <img src="{{ asset('assets/images/ttdsurat.png') }}" alt="Tanda Tangan" style="height: 80px; margin: 10px 0;">
-                      <p><strong>Heri Pirdaus, S.Tr.Kes Rad (MRI)</strong></p>
-                    </div>
+                  <!-- Tabel Barang -->
+                  <div class="table-responsive">
+                    <table class="table table-bordered border-dark mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="text-center" style="width: 5%;">NO</th>
+                                <th>NAMA BARANG / JASA</th>
+                                <th class="text-center" style="width: 15%;">JUMLAH BARANG</th>
+                                <th class="text-center" style="width: 15%;">JUMLAH</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">1.</td>
+                                <td id="printNamaBarang">Loading...</td>
+                                <td class="text-center" id="printQty">Loading...</td>
+                                <td class="text-center" id="printJumlah">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                   </div>
-                </div>
+
+                  <!-- Footer / Tanda Tangan -->
+                  <table style="width: 100%; margin-top: 50px; border: none;">
+                    <tr>
+                        <td style="width: 40%; text-align: center; vertical-align: top;">
+                            <p class="mb-0 fw-medium">COSTUMER / PIHAK RS</p>
+                            <div style="height: 80px;"></div>
+                            <p class="fw-bold m-0" id="printNamaPenerimaSign">RS KENCANA SERANG</p>
+                        </td>
+                        <td style="width: 20%;"></td>
+                        <td style="width: 40%; text-align: center; vertical-align: top;">
+                            <p class="mb-0 fw-medium">ENGINEER</p>
+                            <div style="height: 80px; display: flex; align-items: center; justify-content: center;">
+                                <img id="printSignature" src="" alt="Tanda Tangan" style="max-height: 80px; max-width: 100%; object-fit: contain;">
+                            </div>
+                            <p class="fw-bold m-0 text-uppercase" id="printSignerName">Loading...</p>
+                        </td>
+                    </tr>
+                  </table>
                 <!-- /sj-main -->
 
               </div>

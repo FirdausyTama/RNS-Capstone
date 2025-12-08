@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Get ID from URL
+    // Get ID from URL (assuming path is /print-kwitansi/{id})
     const pathArray = window.location.pathname.split('/');
     const id = pathArray[pathArray.length - 1];
 
     if (id && !isNaN(id)) {
-        loadPrintKwitansi(id);
+        loadPrintData(id);
     } else {
         alert("ID Kwitansi tidak valid");
     }
@@ -16,8 +16,23 @@ function getToken() {
     return localStorage.getItem("token");
 }
 
-function loadPrintKwitansi(id) {
+function formatRupiah(angka) {
+    return 'Rp ' + Number(angka).toLocaleString('id-ID') + ',-';
+}
+
+function formatDate(dateString) {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    // Format: DD/MM/YYYY
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
+function loadPrintData(id) {
     const token = getToken();
+
     const headers = {
         "Accept": "application/json"
     };
@@ -29,49 +44,61 @@ function loadPrintKwitansi(id) {
         method: "GET",
         headers: headers
     })
-        .then(async res => {
-            if (!res.ok) {
-                throw new Error("Gagal memuat data kwitansi: " + res.status);
-            }
-            return res.json();
-        })
+        .then(res => res.json())
         .then(res => {
             const data = res.data || res;
-            renderPrintKwitansi(data);
+            populatePrintView(data);
         })
         .catch(err => {
             console.error("Error:", err);
-            alert("Gagal memuat data kwitansi! " + err.message);
+            alert("Gagal memuat data print!");
         });
 }
 
-function renderPrintKwitansi(data) {
+function populatePrintView(data) {
+    // Header Info
     setText("printNamaPenerima", data.nama_penerima);
     setText("printAlamatPenerima", data.alamat_penerima);
     setText("printTanggal", formatDate(data.tanggal));
     setText("printNomor", data.nomor_kwitansi);
+
+    // Body Info
+    // Detect Signer from Keterangan (Workaround)
+    let signer = data.penandatangan;
+    let cleanKeterangan = data.keterangan || "";
+
+    if (cleanKeterangan.includes('[SIG:Dewi]')) {
+        signer = "Dewi Sulistiowati";
+        cleanKeterangan = cleanKeterangan.replace(' [SIG:Dewi]', '').replace('[SIG:Dewi]', '');
+    }
+
+    // Body Info
     setText("printTerimaDari", data.nama_penerima);
     setText("printTerbilang", data.total_bilangan);
-    setText("printKeterangan", data.keterangan);
+    setText("printKeterangan", cleanKeterangan); // Show clean text
+    setText("printTotal", formatRupiah(data.total_pembayaran));
 
-    const total = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(data.total_pembayaran);
-    setText("printTotal", total);
+    // Signature Logic
+    const signatureImg = document.getElementById('printSignature');
+    const signerName = document.getElementById('printSignerName');
 
-    // Optional: Auto print
-    // setTimeout(() => window.print(), 1000);
+    // Check if signer contains "Dewi" (case insensitive)
+    if (signer && signer.toLowerCase().includes('dewi')) {
+        signatureImg.src = '/assets/images/ttd dewi.jpeg';
+    } else {
+        // Default to Heri
+        signatureImg.src = '/assets/images/ttd heri.png';
+    }
+
+    setText("printSignerName", signer || "Heri Pirdaus, S.Tr.Kes Rad (MRI)");
+
+    // Auto print after a short delay to ensure images load
+    setTimeout(() => {
+        window.print();
+    }, 1000);
 }
 
 function setText(id, value) {
     const el = document.getElementById(id);
     if (el) el.textContent = value || "-";
-}
-
-function formatDate(dateString) {
-    if (!dateString) return "-";
-    const date = new Date(dateString);
-    return date.toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-    });
 }

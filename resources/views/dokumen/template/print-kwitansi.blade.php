@@ -50,9 +50,11 @@
 
       .kw-left {
         flex: 1 1 60%;
-        background: #dbeaff;
+        background: #dbeaff !important;
         border: 1px solid #000;
         padding: 10px;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
       }
 
       .kw-left b {
@@ -146,23 +148,55 @@
       }
 
       @media print {
-      .no-print,
-      .btn,
-      [data-bs-toggle="tooltip"],
-      .content.position-relative {
-        display: none !important;
-        visibility: hidden !important;
-      }
+        @page {
+          size: A4 portrait;
+          margin: 0mm;
+        }
 
-      body {
-        margin: 0;
-        background: white;
-      }
+        body, html {
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+          background: white;
+        }
 
-      .card {
-        border: none !important;
-        box-shadow: none !important;
-      }
+        .no-print,
+        .btn,
+        [data-bs-toggle="tooltip"],
+        .content.position-relative,
+        .footer,
+        .navbar-custom,
+        .left-side-menu,
+        .topbar {
+          display: none !important;
+          visibility: hidden !important;
+        }
+
+        #app-layout,
+        .content-page,
+        .content,
+        .container-fluid,
+        .card,
+        .card-body {
+          width: 100% !important;
+          max-width: 100% !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          box-shadow: none !important;
+          border: none !important;
+        }
+
+        .kw-main {
+          margin: 10mm !important; /* Give content some margin */
+          width: auto !important;
+        }
+
+        /* Ensure background colors print */
+        * {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
       }
     </style>
   </head>
@@ -201,6 +235,7 @@
 
                   <!-- Kotak kiri-kanan -->
                   <div class="kw-row">
+                    <!-- Kiri: Kwitansi To -->
                     <div class="kw-left">
                       <b>KWITANSI TO</b>
                       <div class="address">
@@ -209,59 +244,60 @@
                       </div>
                     </div>
 
+                    <!-- Kanan: Tanggal & No -->
                     <div class="kw-right">
-                      <table>
+                      <table style="width: 100%; border-collapse: collapse;">
                         <tr>
-                          <td style="width:45%;"><strong>Tanggal</strong></td>
-                          <td>:</td>
-                          <td style="text-align:right;" id="printTanggal">Loading...</td>
+                          <td style="background: #bcd9ff; border: 1px solid #000; padding: 2px 5px; font-weight: bold; text-align: center; width: 40%;">Tanggal</td>
+                          <td style="border: 1px solid #000; padding: 2px 5px; text-align: center;" id="printTanggal">Loading...</td>
                         </tr>
                         <tr>
-                          <td><strong>No Kwitansi</strong></td>
-                          <td>:</td>
-                          <td style="text-align:right;" id="printNomor">Loading...</td>
+                          <td style="background: #bcd9ff; border: 1px solid #000; padding: 2px 5px; font-weight: bold; text-align: center;">No Kwitansi</td>
+                          <td style="border: 1px solid #000; padding: 2px 5px; text-align: center;" id="printNomor">Loading...</td>
                         </tr>
                       </table>
                     </div>
                   </div>
 
                   <!-- Judul -->
-                  <div class="kw-subtitle">KWITANSI</div>
-                  <div class="kw-title">R E C E I P T</div>
+                  <div class="kw-subtitle">R E C E I P T</div>
+                  <div class="kw-title" style="font-weight: bold; font-size: 18px; margin-bottom: 20px;">KWITANSI</div>
 
                   <!-- Form -->
                   <table class="kw-form">
                     <tr>
-                      <td style="width:22%;">Received From / Sudah Terima Dari</td>
-                      <td style="width:2%;">:</td>
-                      <td><div class="kw-field"><strong id="printTerimaDari">Loading...</strong></div></td>
+                      <td style="width:22%; font-weight: bold;">Received From<br><span style="font-weight: normal; font-style: italic;">Sudah Terima Dari</span></td>
+                      <td style="width:2%; text-align: center;">:</td>
+                      <td><div class="kw-field" style="background: #dbeaff; border: 1px solid #8cbbf1;"><strong id="printTerimaDari">Loading...</strong></div></td>
                     </tr>
 
                     <tr>
-                      <td>Amount in Words / Banyaknya Uang</td>
-                      <td>:</td>
-                      <td><div class="kw-field"><em id="printTerbilang">Loading...</em></div></td>
+                      <td style="font-weight: bold;">Amount in Words<br><span style="font-weight: normal; font-style: italic;">Banyaknya Uang</span></td>
+                      <td style="text-align: center;">:</td>
+                      <td><div class="kw-field" style="background: #dbeaff; border: 1px solid #8cbbf1;"><em id="printTerbilang">Loading...</em></div></td>
                     </tr>
 
                     <tr>
-                      <td>For Payment of / Untuk Pembayaran</td>
-                      <td>:</td>
-                      <td><div class="kw-field" id="printKeterangan">Loading...</div></td>
+                      <td style="font-weight: bold;">For Payment of<br><span style="font-weight: normal; font-style: italic;">Untuk Pembayaran</span></td>
+                      <td style="text-align: center;">:</td>
+                      <td><div class="kw-field" style="background: #dbeaff; border: 1px solid #8cbbf1;" id="printKeterangan">Loading...</div></td>
                     </tr>
 
                     <tr>
-                      <td style="vertical-align:middle;">Total / Jumlah</td>
-                      <td style="vertical-align:middle;">:</td>
-                      <td><div class="kw-total" id="printTotal">Loading...</div></td>
+                      <td style="vertical-align:middle; font-weight: bold;">Total<br><span style="font-weight: normal; font-style: italic;">Jumlah</span></td>
+                      <td style="vertical-align:middle; text-align: center;"></td>
+                      <td><div class="kw-total" style="background: #dbeaff; border: 1px solid #8cbbf1; min-width: 200px;" id="printTotal">Loading...</div></td>
                     </tr>
                   </table>
+
                   <!-- Blok tanda tangan -->
                   <div class="kw-sign">
-                    <div class="kw-sign-right">
-                      <p>Hormat Kami,</p>
-                      <p><strong>PT. Ranay Nusantara Sejahtera</strong></p>
-                      <img src="{{ asset('assets/images/ttdsurat.png') }}" alt="Tanda Tangan Heri Pirdaus" class="kw-sign-img" />
-                      <p class="sign-name">Heri Pirdaus, S.Tr.Kes Rad (MRI)</p>
+                    <div class="kw-sign-right" style="display: inline-block; text-align: center; min-width: 200px;">
+                      <p style="margin-bottom: 5px;">Hormat Kami</p>
+                      <p style="margin-bottom: 10px;">PT.Ranay Nusantara Sejahtera</p>
+                      <!-- Dynamic Signature Image -->
+                      <img id="printSignature" src="" alt="Tanda Tangan" class="kw-sign-img" style="height: 80px; display: block; margin: 0 auto;" />
+                      <p class="sign-name" style="margin-top: 5px; font-weight: bold; text-decoration: underline;" id="printSignerName">Loading...</p>
                     </div>
                   </div>
                 <!-- /kw-main -->

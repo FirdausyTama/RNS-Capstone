@@ -7,10 +7,92 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+// Global state
+let allData = [];
+let filteredData = [];
+let currentPage = 1;
+let itemsPerPage = 5;
+let currentFilter = 'Semua Waktu';
+let currentSearch = '';
+
 const API_SURAT_JALAN = "http://127.0.0.1:8000/api/surat-jalan";
 
 function getToken() {
     return localStorage.getItem("token");
+}
+
+function setFilter(filter) {
+    currentFilter = filter;
+    document.getElementById('selectedFilter').innerText = filter;
+    currentPage = 1;
+    applyFilterAndRender();
+}
+
+function searchSuratJalan() {
+    currentSearch = document.getElementById('searchInput').value;
+    currentPage = 1;
+    applyFilterAndRender();
+}
+
+function applyFilterAndRender() {
+    // Filter data
+    filteredData = allData.filter(item => {
+        // 1. Time Filter
+        let passTime = true;
+        const itemDate = new Date(item.tanggal);
+        const today = new Date();
+
+        if (currentFilter === 'Hari Ini') {
+            passTime = isSameDay(itemDate, today);
+        } else if (currentFilter === 'Minggu Ini') {
+            passTime = isSameWeek(itemDate, today);
+        } else if (currentFilter === 'Bulan Ini') {
+            passTime = isSameMonth(itemDate, today);
+        }
+
+        // 2. Search Filter
+        let passSearch = true;
+        if (currentSearch) {
+            const searchLower = currentSearch.toLowerCase();
+            const no = (item.nomor_surat_jalan || '').toLowerCase();
+            const pengirim = (item.nama_pengirim || '').toLowerCase();
+            const penerima = (item.nama_penerima || '').toLowerCase();
+            const barang = (item.nama_barang_jasa || '').toLowerCase();
+            passSearch = no.includes(searchLower) || pengirim.includes(searchLower) || penerima.includes(searchLower) || barang.includes(searchLower);
+        }
+
+        return passTime && passSearch;
+    });
+
+    // Render current page
+    renderCurrentPage();
+}
+
+function renderCurrentPage() {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageData = filteredData.slice(start, end);
+
+    renderTable(pageData, start + 1);
+    renderPagination();
+}
+
+// Helper dates
+function isSameDay(d1, d2) {
+    return d1.getFullYear() === d2.getFullYear() &&
+        d1.getMonth() === d2.getMonth() &&
+        d1.getDate() === d2.getDate();
+}
+
+function isSameMonth(d1, d2) {
+    return d1.getFullYear() === d2.getFullYear() &&
+        d1.getMonth() === d2.getMonth();
+}
+
+function isSameWeek(d1, d2) {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const diffDays = Math.round(Math.abs((d1 - d2) / oneDay));
+    return diffDays <= 7;
 }
 
 function loadSuratJalan() {
@@ -22,6 +104,7 @@ function loadSuratJalan() {
         headers["Authorization"] = "Bearer " + token;
     }
 
+    // Fetch all data
     fetch(API_SURAT_JALAN, {
         method: "GET",
         headers: headers
@@ -32,23 +115,29 @@ function loadSuratJalan() {
         })
         .then(res => {
             const data = res.data || res;
-            renderTable(data);
+            if (Array.isArray(data)) {
+                allData = data;
+            } else {
+                allData = [];
+            }
+            applyFilterAndRender();
         })
         .catch(err => {
             console.error("Error:", err);
-            // alert("Gagal memuat data surat jalan");
+            const tbody = document.querySelector("#tabelSuratJalan tbody");
+            if (tbody) tbody.innerHTML = `<tr><td colspan="8" class="text-center text-danger">Gagal memuat data!</td></tr>`;
         });
 }
 
-function renderTable(data) {
+function renderTable(data, startNo = 1) {
     const tbody = document.querySelector("#tabelSuratJalan tbody");
     if (!tbody) return;
 
     tbody.innerHTML = "";
-    let no = 1;
+    let no = startNo;
 
     if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="text-center">Belum ada data surat jalan</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center">Tidak ada data surat jalan</td></tr>`;
         return;
     }
 
@@ -57,6 +146,7 @@ function renderTable(data) {
         <tr>
             <td class="text-center">${no++}</td>
             <td class="text-center">${formatDate(item.tanggal)}</td>
+            <td>${item.nama_pengirim || "-"}</td>
             <td>${item.nama_penerima || "-"}</td>
             <td>${item.alamat_penerima || "-"}</td>
             <td>${item.nama_barang_jasa || "-"}</td>
@@ -79,6 +169,70 @@ function renderTable(data) {
     });
 }
 
+function renderPagination() {
+    const container = document.getElementById('paginationContainer');
+    const info = document.getElementById("paginationInfo");
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    const totalItems = filteredData.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const startItem = (currentPage - 1) * itemsPerPage + 1;
+    const endItem = Math.min(startItem + itemsPerPage - 1, totalItems);
+
+    if (info) {
+        if (totalItems === 0) {
+            info.innerText = `Menampilkan 0 surat jalan`;
+        } else {
+            info.innerText = `Menampilkan ${startItem}–${endItem} dari ${totalItems} surat jalan`;
+        }
+    }
+
+    if (totalPages <= 1) return;
+
+    // Previous
+    const prevDisabled = currentPage === 1 ? 'disabled' : '';
+    container.innerHTML += `
+        <li class="page-item ${prevDisabled}">
+            <a class="page-link" href="#" onclick="event.preventDefault(); changePage(${currentPage - 1})" aria-label="Previous">
+                <i class="mdi mdi-chevron-left"></i>
+            </a>
+        </li>
+    `;
+
+    // Pages
+    for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+            const active = i === currentPage ? 'active' : '';
+            container.innerHTML += `
+                <li class="page-item ${active}">
+                    <a class="page-link" href="#" onclick="event.preventDefault(); changePage(${i})">${i}</a>
+                </li>
+            `;
+        } else if (i === currentPage - 2 || i === currentPage + 2) {
+            container.innerHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        }
+    }
+
+    // Next
+    const nextDisabled = currentPage === totalPages ? 'disabled' : '';
+    container.innerHTML += `
+        <li class="page-item ${nextDisabled}">
+            <a class="page-link" href="#" onclick="event.preventDefault(); changePage(${currentPage + 1})" aria-label="Next">
+                <i class="mdi mdi-chevron-right"></i>
+            </a>
+        </li>
+    `;
+}
+
+function changePage(page) {
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    if (page < 1 || page > totalPages) return;
+    currentPage = page;
+    renderCurrentPage();
+}
+
 function submitFormSuratJalan() {
     const form = document.getElementById("formSuratJalan");
     if (!form.checkValidity()) {
@@ -91,6 +245,19 @@ function submitFormSuratJalan() {
     formData.forEach((value, key) => {
         data[key] = value;
     });
+
+    // WORKAROUND: Append signer to keterangan
+    // First remove any existing tags to avoid duplication
+    let ket = data.keterangan || '';
+    ket = ket.replace(' [SIG:Dewi]', '').replace('[SIG:Dewi]', '');
+    ket = ket.replace(' [SIG:Heri]', '').replace('[SIG:Heri]', '');
+
+    if (data.penandatangan && data.penandatangan.includes('Dewi')) {
+        ket += ' [SIG:Dewi]';
+    } else if (data.penandatangan && data.penandatangan.includes('Heri')) {
+        ket += ' [SIG:Heri]';
+    }
+    data.keterangan = ket;
 
     const token = getToken();
     const headers = {
@@ -121,7 +288,13 @@ function submitFormSuratJalan() {
             return res.json();
         })
         .then(res => {
-            alert("Surat Jalan berhasil disimpan!");
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: 'Surat Jalan berhasil disimpan!',
+                timer: 1500,
+                showConfirmButton: false
+            });
             const modalEl = document.getElementById('modalTambahSuratJalan');
             const modal = bootstrap.Modal.getInstance(modalEl);
             if (modal) modal.hide();
@@ -130,43 +303,66 @@ function submitFormSuratJalan() {
         })
         .catch(err => {
             console.error("Error:", err);
-            alert("Gagal menyimpan surat jalan! " + err.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: 'Gagal menyimpan surat jalan! ' + err.message
+            });
         });
 }
 
 function deleteSuratJalan(id) {
-    if (!confirm("Apakah Anda yakin ingin menghapus surat jalan ini?")) return;
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Data surat jalan akan dihapus permanen!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const token = getToken();
+            const headers = {
+                "Accept": "application/json"
+            };
+            if (token) {
+                headers["Authorization"] = "Bearer " + token;
+            }
 
-    const token = getToken();
-    const headers = {
-        "Accept": "application/json"
-    };
-    if (token) {
-        headers["Authorization"] = "Bearer " + token;
-    }
+            // Add CSRF token
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            if (csrfToken) {
+                headers["X-CSRF-TOKEN"] = csrfToken;
+            }
 
-    // Add CSRF token
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-    if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken;
-    }
-
-    fetch(`${API_SURAT_JALAN}/${id}`, {
-        method: "DELETE",
-        headers: headers
-    })
-        .then(res => {
-            if (!res.ok) throw new Error("Gagal menghapus data");
-            return res.json();
-        })
-        .then(res => {
-            alert("Data berhasil dihapus");
-            loadSuratJalan();
-        })
-        .catch(err => {
-            console.error("Error:", err);
-            alert("Gagal menghapus data");
-        });
+            fetch(`${API_SURAT_JALAN}/${id}`, {
+                method: "DELETE",
+                headers: headers
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error("Gagal menghapus data");
+                    return res.json();
+                })
+                .then(res => {
+                    Swal.fire(
+                        'Terhapus!',
+                        'Data surat jalan berhasil dihapus.',
+                        'success'
+                    );
+                    loadSuratJalan();
+                })
+                .catch(err => {
+                    console.error("Error:", err);
+                    Swal.fire(
+                        'Gagal!',
+                        'Terjadi kesalahan saat menghapus data.',
+                        'error'
+                    );
+                });
+        }
+    });
 }
 
 function formatDate(dateString) {

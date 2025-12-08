@@ -19,6 +19,7 @@
     <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
 
     <script src="assets/js/head.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
 
   <body data-menu-color="light" data-sidebar="default">
@@ -85,10 +86,11 @@
                       <tr>
                         <th class="text-center" style="width: 50px;">No</th>
                         <th class="text-center">Tanggal</th>
+                        <th>Nama Pengirim</th>
                         <th>Nama Penerima</th>
                         <th>Alamat Penerima</th>
                         <th>Nama Barang/Jasa</th>
-                        <th class="text-center">Qty</th>
+                        <th class="text-center">Jumlah Barang</th>
                         <th class="text-center" style="width: 100px;">Aksi</th>
                       </tr>
                     </thead>
@@ -99,9 +101,9 @@
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mt-3">
-                  <small class="text-muted">Menampilkan data surat jalan</small>
+                  <small class="text-muted" id="paginationInfo">Menampilkan data surat jalan</small>
                   <nav>
-                    <ul class="pagination pagination-sm mb-0">
+                    <ul class="pagination pagination-sm mb-0" id="paginationContainer">
                       <!-- Pagination logic can be added here -->
                     </ul>
                   </nav>
@@ -247,7 +249,7 @@
                 <!-- Qty & Jumlah -->
                 <div class="col-md-6 mb-3">
                   <label for="qty" class="form-label fw-semibold">
-                    Qty <span class="text-danger">*</span>
+                    Jumlah Barang <span class="text-danger">*</span>
                   </label>
                   <input 
                     type="number" 
@@ -285,6 +287,27 @@
                     rows="2"
                     placeholder="Catatan tambahan..."
                   ></textarea>
+                </div>
+
+                <!-- Penandatangan -->
+                <div class="col-12 mb-3">
+                  <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-light">
+                      <h6 class="mb-0 fw-semibold"><i class="mdi mdi-pencil-outline me-2"></i>Penandatangan</h6>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <label class="form-label">Nama Penandatangan <span class="text-danger">*</span></label>
+                          <select class="form-select" name="penandatangan" required>
+                            <option value="">Pilih penandatangan...</option>
+                            <option value="Dewi Sulistiowati">Dewi Sulistiowati</option>
+                            <option value="Heri Pirdaus, S.Tr.Kes Rad (MRI)">Heri Pirdaus, S.Tr.Kes Rad (MRI)</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </form>

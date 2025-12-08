@@ -71,86 +71,91 @@
                 </button>
             </div>
 
-            <div class="row">
-                <!-- Kolom Kiri - Informasi Surat Jalan -->
-                <div class="col-lg-8">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <h5 class="fw-semibold mb-4">Informasi Surat Jalan</h5>
+                <div class="row">
+                    <!-- Kolom Kiri - Informasi Surat Jalan -->
+                    <div class="col-lg-8">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <h5 class="fw-semibold mb-4">Informasi Surat Jalan</h5>
 
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div class="info-label">Nomor Surat Jalan</div>
-                                    <div class="info-value" id="detailNomor">Loading...</div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="info-label">Tanggal</div>
+                                        <div class="info-value" id="detailTanggal">Loading...</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-label">Nama Pengirim</div>
+                                        <div class="info-value" id="detailNamaPengirim">Loading...</div> <!-- Added ID for Pengirim -->
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="info-label">Tanggal</div>
-                                    <div class="info-value" id="detailTanggal">Loading...</div>
+
+                                <div class="mb-3">
+                                    <div class="info-label">Keterangan</div>
+                                    <div class="info-value" id="detailKeterangan">Loading...</div>
+                                </div>
+
+                                <hr class="my-4">
+
+                                <h5 class="fw-semibold mb-4">Detail Barang</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered border-dark mb-0">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th class="text-center" style="width: 5%;">NO</th>
+                                                <th>NAMA BARANG / JASA</th>
+                                                <th class="text-center" style="width: 15%;">JUMLAH BARANG</th>
+                                                <th class="text-center" style="width: 15%;">JUMLAH</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center">1.</td>
+                                                <td id="detailNamaBarang">-</td>
+                                                <td class="text-center" id="detailQty">-</td>
+                                                <td class="text-center" id="detailJumlah">-</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="mb-3">
-                                <div class="info-label">Nama Pengirim</div>
-                                <div class="info-value" id="detailNamaPengirim">Loading...</div>
-                            </div>
+                    <!-- Kolom Kanan - Data Penerima -->
+                    <div class="col-lg-4">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <h5 class="fw-semibold mb-4">Data Penerima</h5>
 
-                            <div class="mb-3">
-                                <div class="info-label">Keterangan</div>
-                                <div class="info-value" id="detailKeterangan">Loading...</div>
-                            </div>
+                                <div class="mb-3">
+                                    <div class="info-label">Nama Penerima</div>
+                                    <div class="info-value" id="detailNamaPenerima">Loading...</div>
+                                </div>
 
-                            <hr class="my-4">
+                                <div class="mb-3">
+                                    <div class="info-label">Alamat</div>
+                                    <div class="info-value" id="detailAlamatPenerima">Loading...</div>
+                                </div>
 
-                            <h5 class="fw-semibold mb-4">Detail Barang</h5>
-
-                            <div class="table-responsive">
-                              <table class="table table-bordered table-striped">
-                                <thead class="table-light">
-                                  <tr>
-                                    <th class="text-center" style="width: 50px;">No</th>
-                                    <th>Nama Barang / Jasa</th>
-                                    <th class="text-center" style="width: 100px;">Qty</th>
-                                    <th class="text-end" style="width: 200px;">Jumlah (Rp)</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr>
-                                    <td class="text-center">1</td>
-                                    <td id="detailNamaBarang">-</td>
-                                    <td class="text-center" id="detailQty">-</td>
-                                    <td class="text-end" id="detailJumlah">-</td>
-                                  </tr>
-                                </tbody>
-                              </table>
+                                <div class="mb-3">
+                                    <div class="info-label">No. Telepon</div>
+                                    <div class="info-value" id="detailTelpPenerima">Loading...</div>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <h5 class="fw-semibold mb-3">Penandatangan</h5>
+                                <div class="text-center">
+                                    <p class="mb-1 fw-medium">ENGINEER</p>
+                                    <div style="height: 80px; display: flex; align-items: center; justify-content: center;">
+                                        <img id="detailSignature" src="" alt="Tanda Tangan" style="max-height: 80px; max-width: 100%; object-fit: contain;">
+                                    </div>
+                                    <p class="fw-bold m-0 text-uppercase" id="detailSignerName">Loading...</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Kolom Kanan - Data Penerima -->
-                <div class="col-lg-4">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <h5 class="fw-semibold mb-4">Data Penerima</h5>
-
-                            <div class="mb-3">
-                                <div class="info-label">Nama Penerima</div>
-                                <div class="info-value" id="detailNamaPenerima">Loading...</div>
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="info-label">Alamat</div>
-                                <div class="info-value" id="detailAlamatPenerima">Loading...</div>
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="info-label">No. Telepon</div>
-                                <div class="info-value" id="detailTelpPenerima">Loading...</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
           </div>
         </div>
 
@@ -183,11 +188,10 @@
           <div class="modal-body">
             <form id="formEditSuratJalan">
               <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="editNomor" class="form-label fw-semibold">Nomor Surat Jalan <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="editNomor" name="nomor_surat_jalan" required />
-                </div>
-                <div class="col-md-6 mb-3">
+                <!-- Hidden Nomor -->
+                <input type="hidden" id="editNomor" name="nomor_surat_jalan" />
+
+                <div class="col-md-12 mb-3">
                   <label for="editTanggal" class="form-label fw-semibold">Tanggal <span class="text-danger">*</span></label>
                   <input type="date" class="form-control" id="editTanggal" name="tanggal" required />
                 </div>
@@ -213,7 +217,7 @@
                   <input type="text" class="form-control" id="editNamaBarang" name="nama_barang_jasa" required />
                 </div>
                 <div class="col-md-3 mb-3">
-                  <label for="editQty" class="form-label fw-semibold">Qty <span class="text-danger">*</span></label>
+                  <label for="editQty" class="form-label fw-semibold">Jumlah Barang <span class="text-danger">*</span></label>
                   <input type="number" class="form-control" id="editQty" name="qty" required />
                 </div>
                 <div class="col-md-3 mb-3">
@@ -223,6 +227,15 @@
                 <div class="col-12 mb-3">
                   <label for="editKeterangan" class="form-label fw-semibold">Keterangan</label>
                   <textarea class="form-control" id="editKeterangan" name="keterangan" rows="2"></textarea>
+                </div>
+                <div class="col-12 mb-3">
+                  <label for="editPenandatangan" class="form-label fw-semibold">Nama Penandatangan <span class="text-danger">*</span></label>
+                  <select class="form-select" id="editPenandatangan" name="penandatangan" required>
+                    <option value="">Pilih penandatangan...</option>
+                    <option value="Dewi Sulistiowati">Dewi Sulistiowati</option>
+                    <option value="Heri Pirdaus, S.Tr.Kes Rad (MRI)">Heri Pirdaus, S.Tr.Kes Rad (MRI)</option>
+                    <option value="MUHAMMAD ARYA">MUHAMMAD ARYA</option>
+                  </select>
                 </div>
               </div>
             </form>
