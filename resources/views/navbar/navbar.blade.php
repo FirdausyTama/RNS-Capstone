@@ -18,11 +18,7 @@
 
         <!-- 🌟 Logo versi HP (tengah topbar) -->
         <li class="d-block d-lg-none text-center w-100 mobile-logo">
-          <img
-            src="{{ asset('assets/images/hp-logo.png') }}"
-            alt="Logo HP"
-            class="hp-logo"
-          />
+          <img src="{{ asset('assets/images/hp-logo.png') }}" alt="Logo HP" class="hp-logo" />
         </li>
       </ul>
 
@@ -46,21 +42,11 @@
 
         <!-- 🌟 Profile Dropdown -->
         <li class="dropdown notification-list topbar-dropdown">
-          <a
-            class="nav-link dropdown-toggle nav-user me-0 d-flex align-items-center"
-            data-bs-toggle="dropdown"
-            href="#"
-            role="button"
-            aria-haspopup="false"
-            aria-expanded="false"
-          >
+          <a class="nav-link dropdown-toggle nav-user me-0 d-flex align-items-center" data-bs-toggle="dropdown" href="#"
+            role="button" aria-haspopup="false" aria-expanded="false">
             <!-- 🌟 Foto profil tetap tampil di HP -->
-            <img
-              src="{{ asset('assets/images/users/user-13.jpg') }}"
-              alt="user-image"
-              class="rounded-circle"
-              style="width: 35px; height: 35px; object-fit: cover;"
-            />
+            <img src="{{ asset('assets/images/users/user-13.jpg') }}" alt="user-image" class="rounded-circle"
+              style="width: 35px; height: 35px; object-fit: cover;" />
             <!-- 🌟 Nama disembunyikan di HP -->
             <span class="pro-user-name ms-1 fw-semibold text-dark d-none d-lg-inline">
               Heri Pirdaus
@@ -93,24 +79,14 @@
       <div class="logo-box">
         <a href="/" class="logo logo-light">
           <span class="logo-sm d-flex align-items-center">
-            <img
-              src="{{ asset('assets/images/logo-rns-bg.png') }}"
-              alt="Logo Light"
-              height="40"
-              class="me-2"
-            />
+            <img src="{{ asset('assets/images/logo-rns-bg.png') }}" alt="Logo Light" height="40" class="me-2" />
             <span class="fw-bold text-white fs-5"></span>
           </span>
         </a>
 
         <a href="/" class="logo logo-dark">
           <span class="logo-sm d-flex align-items-center">
-            <img
-              src="{{ asset('assets/images/logo-rns-bg.png') }}"
-              alt="Logo Dark"
-              height="40"
-              class="me-2"
-            />
+            <img src="{{ asset('assets/images/logo-rns-bg.png') }}" alt="Logo Dark" height="40" class="me-2" />
             <span class="fw-bold text-dark fs-5">OwnerPanel</span>
           </span>
         </a>
@@ -148,18 +124,34 @@
           </a>
         </li>
 
-        <li>
-          <a href="#sidebarDokumen" data-bs-toggle="collapse">
+        @php
+          $isDokumenActive = Request::is('sph*') || Request::is('print-sph*') || Request::is('invoice*') || Request::is('print-invoice*') || Request::is('kwitansi*') || Request::is('surat-jalan*');
+        @endphp
+        <li class="{{ $isDokumenActive ? 'menuitem-active' : '' }}">
+          <a href="#sidebarDokumen" data-bs-toggle="collapse" aria-expanded="{{ $isDokumenActive ? 'true' : 'false' }}"
+            class="{{ $isDokumenActive ? 'active' : '' }}">
             <i data-feather="folder"></i>
             <span>Dokumen</span>
             <span class="menu-arrow"></span>
           </a>
-          <div class="collapse" id="sidebarDokumen">
+          <div class="collapse {{ $isDokumenActive ? 'show' : '' }}" id="sidebarDokumen">
             <ul class="nav-second-level">
-              <li><a href="/sph" class="tp-link">Surat Penawaran Harga</a></li>
-              <li><a href="/invoice" class="tp-link">Surat Invoice</a></li>
-              <li><a href="/kwitansi" class="tp-link">Surat Kwitansi</a></li>
-              <li><a href="/surat-jalan" class="tp-link">Surat Jalan</a></li>
+              <li class="{{ Request::is('sph*') || Request::is('print-sph*') ? 'active' : '' }}">
+                <a href="/sph"
+                  class="tp-link {{ Request::is('sph*') || Request::is('print-sph*') ? 'active' : '' }}">Surat Penawaran
+                  Harga</a>
+              </li>
+              <li class="{{ Request::is('invoice*') || Request::is('print-invoice*') ? 'active' : '' }}">
+                <a href="/invoice"
+                  class="tp-link {{ Request::is('invoice*') || Request::is('print-invoice*') ? 'active' : '' }}">Surat
+                  Invoice</a>
+              </li>
+              <li class="{{ Request::is('kwitansi*') ? 'active' : '' }}">
+                <a href="/kwitansi" class="tp-link {{ Request::is('kwitansi*') ? 'active' : '' }}">Surat Kwitansi</a>
+              </li>
+              <li class="{{ Request::is('surat-jalan*') ? 'active' : '' }}">
+                <a href="/surat-jalan" class="tp-link {{ Request::is('surat-jalan*') ? 'active' : '' }}">Surat Jalan</a>
+              </li>
             </ul>
           </div>
         </li>
@@ -214,12 +206,12 @@
   });
 </script>
 <script>
-const role = localStorage.getItem("role");
-if (role !== "owner") {
+  const role = localStorage.getItem("role");
+  if (role !== "owner") {
     document.querySelectorAll('[data-role="owner"]').forEach(el => {
-        el.style.display = "none";
+      el.style.display = "none";
     });
-}
+  }
 
 
 </script>
@@ -228,45 +220,45 @@ if (role !== "owner") {
 <!-- 🌟 RESPONSIVE LOGO CSS -->
 <!-- ========================== -->
 <style>
-/* 🌟 Logo di tampilan HP */
-.mobile-logo {
-  pointer-events: none;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -45%);
-  z-index: 0;
-}
-
-.hp-logo {
-  height: 36px;
-  width: auto;
-  object-fit: contain;
-}
-
-/* Sembunyikan logo HP di layar besar */
-@media (min-width: 992px) {
+  /* 🌟 Logo di tampilan HP */
   .mobile-logo {
-    display: none !important;
-  }
-}
-
-/* 🌟 Responsif di HP */
-@media (max-width: 991px) {
-  .topbar-custom {
-    position: relative;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    pointer-events: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -45%);
+    z-index: 0;
   }
 
-  .topbar-custom h5 {
-    margin-bottom: 0;
-    font-size: 14px;
+  .hp-logo {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
   }
 
-  /* 🌟 Tampilkan foto profil, sembunyikan nama */
-  .pro-user-name {
-    display: none !important;
+  /* Sembunyikan logo HP di layar besar */
+  @media (min-width: 992px) {
+    .mobile-logo {
+      display: none !important;
+    }
   }
-}
+
+  /* 🌟 Responsif di HP */
+  @media (max-width: 991px) {
+    .topbar-custom {
+      position: relative;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    .topbar-custom h5 {
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+
+    /* 🌟 Tampilkan foto profil, sembunyikan nama */
+    .pro-user-name {
+      display: none !important;
+    }
+  }
 </style>

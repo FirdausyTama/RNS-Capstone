@@ -53,11 +53,20 @@ Route::get('/invoice', function () {
     return view('dokumen.invoice');
 });
 #============================================
+#DETAIL TEMPLATE=============================
+Route::get('/detail-sph/{id}', function ($id) {
+    return view('dokumen.template.detail-sph');
+});
+Route::get('/detail-invoice/{id}', function ($id) {
+    return view('dokumen.template.detail-invoice');
+});
+
+#============================================
 #PRINT TEMPLATE==============================
-Route::get('/print-sph', function () {
+Route::get('/print-sph/{id}', function ($id) {
     return view('dokumen.template.print-sph');
 });
-Route::get('/print-invoice', function () {
+Route::get('/print-invoice/{id}', function ($id) {
     return view('dokumen.template.print-invoice');
 });
 Route::get('/print-kwitansi', function () {
