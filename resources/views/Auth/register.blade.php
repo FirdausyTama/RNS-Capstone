@@ -116,7 +116,7 @@
     <div class="register-box">
       <h3 class="text-center">Register Admin</h3>
       <p class="text-center">PT. Ranay Nusantara Sejahtera</p>
-
+      <div id="alertBox"></div>
       <form>
         <div class="mb-3">
           <label class="form-label">Username</label>
@@ -171,7 +171,7 @@
     function togglePassword(inputId, iconElement) {
       const input = document.getElementById(inputId);
       const icon = iconElement.querySelector('i');
-      
+
       if (input.type === 'password') {
         input.type = 'text';
         icon.classList.remove('bi-eye-slash');

@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-const API_URL = "http://127.0.0.1:8000/api/pembelians";
+const API_PEMBELIAN_URL = "http://127.0.0.1:8000/api/pembelians";
 const API_STOK_URL = "http://127.0.0.1:8000/api/stoks";
 let allPembelianData = [];
 let baseData = []; // Data from API after status exclude/include
@@ -68,7 +68,7 @@ function loadPembelian(status = null, excludeStatus = null) {
     const token = getToken();
     if (!token) return;
 
-    let url = API_URL;
+    let url = API_PEMBELIAN_URL;
     if (status) {
         url += `?status=${status}`;
     }
@@ -97,8 +97,8 @@ function loadPembelian(status = null, excludeStatus = null) {
                 data = data.filter(item => item.status_pembayaran !== excludeStatus);
             }
 
-            // Sort by no_order ascending
-            data.sort((a, b) => a.no_order.localeCompare(b.no_order));
+            // Sort by no_order descending (newest first)
+            data.sort((a, b) => b.no_order.localeCompare(a.no_order));
 
             baseData = data; // Store base data for filtering
             applyFilters(); // Apply current filters (time & search)
@@ -369,7 +369,7 @@ function updateDropdownBarang(barangList) {
         dropdown.innerHTML = '<option value="">Pilih barang...</option>';
         if (barangList && barangList.length > 0) {
             barangList.forEach(barang => {
-                dropdown.innerHTML += `<option value="${barang.id}" data-harga="${barang.harga_jual || barang.harga}">${barang.nama_barang}</option>`;
+                dropdown.innerHTML += `<option value="${barang.id}" data-harga="${barang.harga_jual || barang.harga}" data-stok="${barang.jumlah}">${barang.nama_barang}</option>`;
             });
         }
 
@@ -501,6 +501,7 @@ function simpanPesanan() {
     // Validasi minimal 1 barang dipilih
     const barangDipilih = document.querySelectorAll('.select-barang');
     let items = [];
+    let stockItemsToUpdate = []; // Array to store data for stock update
 
     barangDipilih.forEach(select => {
         if (select.value) {
@@ -514,6 +515,12 @@ function simpanPesanan() {
                 jumlah: jumlah,
                 harga_satuan: harga,
                 total_harga: harga * jumlah
+            });
+
+            // Store ID and quantity for stock update
+            stockItemsToUpdate.push({
+                id: select.value,
+                qty: jumlah
             });
         }
     });
@@ -549,7 +556,7 @@ function simpanPesanan() {
         items: items
     };
 
-    const url = isEdit ? `${API_URL}/${editId}` : API_URL;
+    const url = isEdit ? `${API_PEMBELIAN_URL}/${editId}` : API_PEMBELIAN_URL;
     const method = isEdit ? "PUT" : "POST";
 
     // Kirim ke backend
@@ -570,7 +577,17 @@ function simpanPesanan() {
             }
             return res.json();
         })
-        .then(res => {
+        .then(async res => {
+            // Update Stock Logic
+            if (!isEdit && stockItemsToUpdate.length > 0) {
+                try {
+                    await updateStokItems(stockItemsToUpdate);
+                } catch (stockError) {
+                    console.error("Gagal update stok:", stockError);
+                    Swal.fire('Warning', 'Pembelian disimpan tapi gagal update stok!', 'warning');
+                }
+            }
+
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil!',
@@ -607,6 +624,68 @@ function simpanPesanan() {
             console.error("Error:", err);
             Swal.fire('Error', 'Gagal menyimpan pembelian!', 'error');
         });
+}
+
+// Function to update stock items
+async function updateStokItems(items) {
+    const token = getToken();
+    const updates = items.map(async (item) => {
+        try {
+            // 1. Get current stock details
+            const res = await fetch(`${API_STOK_URL}/${item.id}`, {
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Accept": "application/json"
+                }
+            });
+
+            if (!res.ok) throw new Error(`Failed to fetch stock ${item.id}`);
+            const stockData = await res.json();
+            const currentStock = stockData.data;
+
+            // 2. Calculate new quantity
+            const newQty = Math.max(0, parseInt(currentStock.jumlah) - parseInt(item.qty));
+
+            // 3. Prepare FormData for update (mimicking stok.js submitUpdateStok)
+            const formData = new FormData();
+            formData.append("nama_barang", currentStock.nama_barang);
+            formData.append("harga", currentStock.harga);
+            formData.append("jumlah", newQty); // Updated quantity
+            formData.append("tgl_masuk", currentStock.tgl_masuk);
+            formData.append("user_id", currentStock.user_id || 1);
+            formData.append("kode_sku", currentStock.kode_sku || "");
+            formData.append("merek", currentStock.merek || "");
+            formData.append("satuan", currentStock.satuan || "");
+            formData.append("panjang", currentStock.panjang || "");
+            formData.append("lebar", currentStock.lebar || "");
+            formData.append("tinggi", currentStock.tinggi || "");
+            formData.append("berat", currentStock.berat || "");
+
+            // Note: We don't re-upload photo/video, so we don't append them. 
+            // The backend should keep existing if not provided, or we might need to handle it if backend is strict.
+            // Assuming backend handles partial updates or keeps existing files if null.
+
+            // 4. Send update
+            const updateRes = await fetch(`${API_STOK_URL}/${item.id}`, {
+                method: "POST",
+                headers: {
+                    "X-HTTP-Method-Override": "PUT",
+                    "Authorization": "Bearer " + token,
+                    "Accept": "application/json"
+                },
+                body: formData
+            });
+
+            if (!updateRes.ok) throw new Error(`Failed to update stock ${item.id}`);
+
+            return true;
+        } catch (err) {
+            console.error(`Error updating stock for item ${item.id}:`, err);
+            throw err;
+        }
+    });
+
+    await Promise.all(updates);
 }
 
 // Reset form
@@ -649,7 +728,7 @@ async function detailPembelian(id) {
     if (!token) return;
 
     try {
-        const response = await fetch(`${API_URL}/${id}`, {
+        const response = await fetch(`${API_PEMBELIAN_URL}/${id}`, {
             method: 'GET',
             headers: {
                 "Authorization": "Bearer " + token,
@@ -732,7 +811,7 @@ async function editPembelian(id) {
     if (!token) return;
 
     try {
-        const response = await fetch(`${API_URL}/${id}`, {
+        const response = await fetch(`${API_PEMBELIAN_URL}/${id}`, {
             method: 'GET',
             headers: {
                 "Authorization": "Bearer " + token,
@@ -785,7 +864,7 @@ async function editPembelian(id) {
             // Re-populate options
             select.innerHTML = '<option value="">Pilih barang...</option>';
             barangList.forEach(b => {
-                select.innerHTML += `<option value="${b.id}" data-harga="${b.harga_jual || b.harga}">${b.nama_barang}</option>`;
+                select.innerHTML += `<option value="${b.id}" data-harga="${b.harga_jual || b.harga}" data-stok="${b.jumlah}">${b.nama_barang}</option>`;
             });
 
             // Select the correct item based on name (since we only save name)
@@ -830,7 +909,7 @@ function deletePembelian(id) {
             const token = getToken();
             if (!token) return;
 
-            fetch(`${API_URL}/${id}`, {
+            fetch(`${API_PEMBELIAN_URL}/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": "Bearer " + token,
@@ -877,4 +956,52 @@ function filterByStatus(status) {
             break;
     }
     loadPembelian(backendStatus);
+}
+
+// ===== STOCK VALIDATION =====
+document.addEventListener('DOMContentLoaded', function () {
+    const container = document.getElementById('containerBarang');
+    if (container) {
+        // Validate on quantity input
+        container.addEventListener('input', function (e) {
+            if (e.target.classList.contains('jumlah-barang')) {
+                validateStock(e.target);
+                hitungTotalItem(e.target); // Ensure total is updated
+            }
+        });
+
+        // Validate on item selection change
+        container.addEventListener('change', function (e) {
+            if (e.target.classList.contains('select-barang')) {
+                const row = e.target.closest('.item-row');
+                const quantityInput = row.querySelector('.jumlah-barang');
+                updateHargaBarang(e.target); // Update price first
+                validateStock(quantityInput); // Then validate stock
+            }
+        });
+    }
+});
+
+function validateStock(input) {
+    const row = input.closest('.item-row');
+    const select = row.querySelector('.select-barang');
+    const selectedOption = select.options[select.selectedIndex];
+
+    if (!selectedOption || !selectedOption.value) return;
+
+    const maxStock = parseInt(selectedOption.getAttribute('data-stok') || 0);
+    let currentQty = parseInt(input.value) || 0;
+
+    if (currentQty > maxStock) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Stok Tidak Cukup',
+            text: `Stok tersedia hanya ${maxStock}. Jumlah akan disesuaikan.`,
+            timer: 2000,
+            showConfirmButton: false
+        });
+        input.value = maxStock;
+        // Trigger input event manually to update totals if needed, 
+        // but we called hitungTotalItem manually in the listener so it's fine.
+    }
 }

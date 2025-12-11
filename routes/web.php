@@ -2,46 +2,53 @@
 
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| AUTH ROUTES
+|--------------------------------------------------------------------------
+*/
 Route::get('/', function () {
     return view('Auth.login');
 });
-
 Route::get('/register', function () {
     return view('Auth.register');
 });
-
 Route::get('/logout', function () {
     return view('Auth.logout');
 });
 
+
+/*
+|--------------------------------------------------------------------------
+| DASHBOARD
+|--------------------------------------------------------------------------
+*/
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
+
+/*
+|--------------------------------------------------------------------------
+| KELOLA DATA (Stok & Pembelian)
+|--------------------------------------------------------------------------
+*/
 Route::get('/kelola-stok', function () {
     return view('kelola-stok');
 });
-
-// ✅ TAMBAHKAN ROUTE INI UNTUK DETAIL STOK
-Route::get('/detail-stok/{id}', function ($id) {
-    return view('dokumen.detail-stok');
-})->name('detail.stok');
-
-
-
 Route::get('/riwayat-pembelian', function () {
     return view('riwayat-pembelian');
 });
-
 Route::get('/kelola-pembelian', function () {
     return view('kelola-pembelian');
 });
 
-Route::get('/detail-pembelian/{id}', function ($id) {
-    return view('detail-pembelian');
-})->name('detail.pembelian');
 
-#DOKUMEN====================================
+/*
+|--------------------------------------------------------------------------
+| DOKUMEN PAGES
+|--------------------------------------------------------------------------
+*/
 Route::get('/sph', function () {
     return view('dokumen.sph');
 });
@@ -54,25 +61,78 @@ Route::get('/kwitansi', function () {
 Route::get('/invoice', function () {
     return view('dokumen.invoice');
 });
-#============================================
-#PRINT TEMPLATE==============================
-Route::get('/print-sph', function () {
+
+
+/*
+|--------------------------------------------------------------------------
+| DETAIL PAGES (Stok & Dokumen)
+|--------------------------------------------------------------------------
+*/
+Route::get('/stok/detail-stok/{id}', function ($id) {
+    return view('stok.detail-stok', ['id' => $id]);
+})->name('stok.detail');
+
+// Route::get('/detail-pembelian/{id}', function ($id) {
+//     return view('dokumen.detail-pembelian');
+// })->name('detail.pembelian');
+
+Route::get('/detail-kwitansi/{id}', function ($id) {
+    if (!is_numeric($id)) {
+        return redirect('/kwitansi')->with('error', 'ID Kwitansi tidak valid');
+    }
+    return view('dokumen.detail-kwitansi', compact('id'));
+})->name('detail.kwitansi')->where('id', '[0-9]+');
+
+Route::get('/detail-surat-jalan/{id}', function ($id) {
+    if (!is_numeric($id)) {
+        return redirect('/surat-jalan')->with('error', 'ID Surat Jalan tidak valid');
+    }
+    return view('dokumen.detail-surat-jalan', compact('id'));
+});
+
+Route::get('/detail-sph/{id}', function ($id) {
+    return view('dokumen.template.detail-sph');
+});
+Route::get('/detail-invoice/{id}', function ($id) {
+    return view('dokumen.template.detail-invoice');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| PRINT TEMPLATE
+|--------------------------------------------------------------------------
+*/
+Route::get('/print-sph/{id?}', function () {
     return view('dokumen.template.print-sph');
 });
-Route::get('/print-invoice', function () {
+Route::get('/print-invoice/{id?}', function () {
     return view('dokumen.template.print-invoice');
 });
-Route::get('/print-kwitansi', function () {
+Route::get('/print-kwitansi/{id?}', function () {
     return view('dokumen.template.print-kwitansi');
 });
-Route::get('/print-surat-jalan', function () {
+Route::get('/print-surat-jalan/{id?}', function () {
     return view('dokumen.template.print-surat-jalan');
 });
-#============================================
-#KELOLA ADMIN================================
+
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN PAGES
+|--------------------------------------------------------------------------
+*/
 Route::get('/kelola-admin', function () {
     return view('kelola-admin');
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| ERROR PAGE
+|--------------------------------------------------------------------------
+*/
 Route::get('/eror-404', function () {
     return view('eror-404');
 });
+

@@ -118,12 +118,13 @@
       <h3 class="text-center">Login</h3>
       <p class="text-center">PT. Ranay Nusantara Sejahtera</p>
 
+      <div id="alertBox"></div>
       <form>
         <div class="mb-3">
-          <label class="form-label">Username</label>
+          <label class="form-label">Email</label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-            <input type="text" id="email" class="form-control" placeholder="Masukkan Username">
+            <input type="text" id="email" class="form-control" placeholder="Masukkan Email">
           </div>
         </div>
 
