@@ -260,8 +260,7 @@ function searchProduct() {
 // ==================== OPEN DETAIL MODAL ====================
 function openDetailModal(id) {
     // Ambil port dari URL saat ini
-    const currentPort = window.location.port || "8001";
-    const apiUrl = `http://127.0.0.1:${currentPort}/api/stoks/${id}`;
+const apiUrl = `http://127.0.0.1:8000/api/stoks/${id}`;
 
     const modal = new bootstrap.Modal(
         document.getElementById("detailStokModal")
@@ -750,21 +749,22 @@ function removeEditFoto(event) {
     document.getElementById("editFotoPlaceholder").style.display = "block";
 }
 
-document
-    .getElementById("modalTambahStok")
-    .addEventListener("hidden.bs.modal", function () {
-        document.getElementById("formTambahStok").reset();
+    const modalTambahStok = document.getElementById("modalTambahStok");
+    if (modalTambahStok) {
+        modalTambahStok.addEventListener("hidden.bs.modal", function () {
+            document.getElementById("formTambahStok").reset();
 
-        document.getElementById("videoElement").src = "";
-        document.getElementById("videoFileNamePreview").textContent = "";
-        document.getElementById("videoPreview").classList.remove("show");
-        document.getElementById("videoPlaceholder").style.display = "block";
+            document.getElementById("videoElement").src = "";
+            document.getElementById("videoFileNamePreview").textContent = "";
+            document.getElementById("videoPreview").classList.remove("show");
+            document.getElementById("videoPlaceholder").style.display = "block";
 
-        document.getElementById("fotoElement").src = "";
-        document.getElementById("fotoFileNamePreview").textContent = "";
-        document.getElementById("fotoPreview").classList.remove("show");
-        document.getElementById("fotoPlaceholder").style.display = "block";
-    });
+            document.getElementById("fotoElement").src = "";
+            document.getElementById("fotoFileNamePreview").textContent = "";
+            document.getElementById("fotoPreview").classList.remove("show");
+            document.getElementById("fotoPlaceholder").style.display = "block";
+        });
+    }
 
 var tooltipTriggerList = [].slice.call(
     document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -817,7 +817,7 @@ async function getStokDetail(id) {
     if (!token) return alertError("Token tidak ditemukan!");
 
     try {
-        const response = await fetch(`${API_URL}/stoks/${id}`, {
+        const response = await fetch(`${API_URL}/${id}`, {
             method: "GET",
             headers: {
                 Authorization: "Bearer " + token,
@@ -844,7 +844,7 @@ function deleteStok(id) {
         const token = getToken();
         if (!token) return alertError("Token tidak ditemukan!");
 
-        fetch(`${API_URL}/stoks/${id}`, {
+        fetch(`${API_URL}/${id}`, {
             method: "DELETE",
             headers: {
                 Authorization: "Bearer " + token,
@@ -875,7 +875,7 @@ async function openEditModal(id) {
     if (!token) return alertError("Token tidak ditemukan!");
 
     try {
-        const res = await fetch(`${API_URL}/stoks/${id}`, {
+        const res = await fetch(`${API_URL}/${id}`, {
             method: "GET",
             headers: {
                 Authorization: "Bearer " + token,
@@ -980,7 +980,7 @@ async function submitUpdateStok() {
     if (video) formData.append("video", video);
 
     try {
-        const response = await fetch(`${API_URL}/stoks/${id}`, {
+        const response = await fetch(`${API_URL}/${id}`, {
             method: "POST",
             headers: {
                 "X-HTTP-Method-Override": "PUT",
@@ -1212,4 +1212,4 @@ function setFilter(filterName) {
 
 //     // Tampilkan
 //     input.value = hasil;
-// }
+// }    

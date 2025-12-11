@@ -260,7 +260,7 @@
                 return;
             }
             try {
-                const res = await fetch(`/api/stoks/${stokId}`, {
+                const res = await fetch(`http://127.0.0.1:8000/api/stoks/${stokId}`, {
                     headers: {
                         "Authorization": "Bearer " + token,
                         "Accept": "application/json"
