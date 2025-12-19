@@ -10,13 +10,13 @@
   <meta name="author" content="Zoyothemes" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-  <!-- App favicon -->
+  
   <link rel="shortcut icon" href="assets/images/favicon.ico">
 
-  <!-- App css -->
+  
   <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
 
-  <!-- Icons -->
+  
   <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
 
   <script src="assets/js/head.js"></script>
@@ -41,20 +41,20 @@
 
 </head>
 
-<!-- body start -->
+
 
 <body data-menu-color="light" data-sidebar="default">
   @include('navbar.navbar')
-  <!-- Begin page -->
+  
   <div id="app-layout">
-    <!-- ============================================================== -->
-    <!-- Start Page Content here -->
-    <!-- ============================================================== -->
+    
+    
+    
 
     <div class="content-page">
       <div class="content">
 
-        <!-- Start Content-->
+        
         <div class="container-fluid">
 
           <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
@@ -75,9 +75,9 @@
             </div>
           </div>
 
-        </div> <!-- container-fluid -->
-        <!-- Start Main Widgets -->
-        <!-- Table -->
+        </div> 
+        
+        
         <div class="row">
           <div class="col-12">
             <div class="card shadow-sm">
@@ -107,7 +107,7 @@
         </div>
       </div>
     </div>
-  </div> <!-- content -->
+  </div> 
 
   <footer class="footer">
     <div class="container-fluid">
@@ -131,9 +131,9 @@
   <script src="assets/libs/jquery.counterup/jquery.counterup.min.js"></script>
   <script src="assets/libs/feather-icons/feather.min.js"></script>
 
-  <!-- App js-->
+  
   <script src="assets/js/app.js"></script>
-  <!-- Inisialisasi -->
+  
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
       const dataTableElement = document.querySelector("#datatable_admin tbody");

@@ -9,13 +9,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- App favicon -->
+    
     <link rel="shortcut icon" href="assets/images/favicon.ico" />
 
-    <!-- App css -->
+    
     <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
 
-    <!-- Icons -->
+    
     <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
 
     <script src="assets/js/head.js"></script>
@@ -25,12 +25,12 @@
   <body data-menu-color="light" data-sidebar="default">
     @include('navbar.navbar')
 
-    <!-- Begin page -->
+    
     <div id="app-layout">
       <div class="content-page">
         <div class="content">
           <div class="container-fluid">
-            <!-- Header -->
+            
             <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
               <div class="flex-grow-1">
                 <h4 class="fs-18 fw-semibold m-0">Kwitansi</h4>
@@ -44,7 +44,7 @@
               </div>
             </div>
 
-            <!-- Card Table -->
+            
             <div class="card shadow-sm border-0">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -53,9 +53,9 @@
                     <p class="text-muted mb-0">Kelola dan pantau seluruh kwitansi transaksi Anda</p>
                   </div>
                   
-                  <!-- Filter & Search -->
+                  
                   <div class="d-flex align-items-center gap-2">
-                    <!-- Filter Waktu -->
+                    
                     <div class="dropdown">
                       <button class="btn btn-light border dropdown-toggle" type="button" id="filterWaktu" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="mdi mdi-calendar-range me-1"></i>
@@ -70,7 +70,7 @@
                       </ul>
                     </div>
                     
-                    <!-- Search -->
+                    
                     <form class="app-search">
                       <div class="position-relative topbar-search">
                         <input type="text" class="form-control ps-4" placeholder="Cari kwitansi..." style="min-width: 200px;" id="searchInput" onkeyup="searchKwitansi()" />
@@ -94,7 +94,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <!-- Data will be loaded via JS -->
+                      
                     </tbody>
                   </table>
                 </div>
@@ -103,7 +103,7 @@
                   <small class="text-muted" id="paginationInfo"></small>
                   <nav>
                     <ul class="pagination pagination-sm mb-0" id="paginationContainer">
-                      <!-- Pagination will be loaded via JS -->
+                      
                     </ul>
                   </nav>
                 </div>
@@ -112,7 +112,7 @@
           </div>
         </div>
 
-        <!-- Footer -->
+        
         <footer class="footer">
           <div class="container-fluid">
             <div class="row">
@@ -130,7 +130,7 @@
       </div>
     </div>
 
-    <!-- Floating Button Tambah Kwitansi (Kanan Bawah) -->
+    
     <button
       type="button"
       id="btnTambahKwitansi"
@@ -143,7 +143,7 @@
       <i class="mdi mdi-plus fs-3 text-white"></i>
     </button>
 
-    <!-- Modal Tambah Kwitansi -->
+    
     <div class="modal fade" id="modalTambahKwitansi" tabindex="-1" aria-labelledby="modalTambahKwitansiLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -156,7 +156,7 @@
           <div class="modal-body">
             <form id="formKwitansi">
               <div class="row">
-                <!-- Nomor Kwitansi -->
+                
                 <div class="col-md-6 mb-3">
                   <label for="nomorKwitansi" class="form-label fw-semibold">
                     Nomor Kwitansi <span class="text-danger">*</span>
@@ -171,7 +171,7 @@
                   />
                 </div>
 
-                <!-- Tanggal -->
+                
                 <div class="col-md-6 mb-3">
                   <label for="tanggalKwitansi" class="form-label fw-semibold">
                     Tanggal <span class="text-danger">*</span>
@@ -185,7 +185,7 @@
                   />
                 </div>
 
-                <!-- Pilih Data Pembelian -->
+                
                 <div class="col-12 mb-3">
                   <label for="pembelianId" class="form-label fw-semibold">
                     Pilih Data Pembelian
@@ -195,7 +195,7 @@
                   </select>
                 </div>
 
-                <!-- Nama Pelanggan -->
+                
                 <div class="col-12 mb-3">
                   <label for="namaPenerima" class="form-label fw-semibold">
                     Nama Pelanggan <span class="text-danger">*</span>
@@ -210,7 +210,7 @@
                   />
                 </div>
 
-                <!-- Alamat -->
+                
                 <div class="col-12 mb-3">
                   <label for="alamatPenerima" class="form-label fw-semibold">
                     Alamat <span class="text-danger">*</span>
@@ -225,7 +225,7 @@
                   />
                 </div>
 
-                <!-- Banyaknya Uang -->
+                
                 <div class="col-12 mb-3">
                   <label for="totalBilangan" class="form-label fw-semibold">
                     Banyaknya Uang <span class="text-danger">*</span>
@@ -240,7 +240,7 @@
                   />
                 </div>
 
-                <!-- Untuk Pembayaran -->
+                
                 <div class="col-12 mb-3">
                   <label for="keteranganPembayaran" class="form-label fw-semibold">
                     Untuk Pembayaran <span class="text-danger">*</span>
@@ -255,7 +255,7 @@
                   ></textarea>
                 </div>
 
-                <!-- Total Jumlah -->
+                
                 <div class="col-md-6 mb-3">
                   <label for="totalPembayaran" class="form-label fw-semibold">
                     Total Jumlah <span class="text-danger">*</span>
@@ -272,7 +272,7 @@
 
 
 
-                <!-- Penandatangan -->
+                
                 <div class="col-12 mb-3">
                   <div class="card border-0 shadow-sm">
                     <div class="card-header bg-light">
@@ -307,17 +307,17 @@
       </div>
     </div>
 
-    <!-- Vendor -->
+    
     <script src="assets/libs/jquery/jquery.min.js"></script>
     <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/libs/simplebar/simplebar.min.js"></script>
     <script src="assets/libs/node-waves/waves.min.js"></script>
     <script src="assets/libs/feather-icons/feather.min.js"></script>
 
-    <!-- App js -->
+    
     <script src="assets/js/app.js"></script>
 
-    <!-- Script untuk Handle Form -->
+    
     <script src="{{ asset('assets/js/kwitansi.js') }}?v={{ time() }}"></script>
     <script>
       $(document).ready(function() {

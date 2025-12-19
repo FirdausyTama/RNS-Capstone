@@ -1,5 +1,4 @@
 <style>
-    /* Modal Custom Styles */
     .modal-header {
         background: #fff;
         border-bottom: 1px solid #e9ecef;
@@ -25,7 +24,6 @@
         background: #f8f9fa;
     }
 
-    /* Section Styles */
     .section-card {
         background: #fff;
         border-radius: 8px;
@@ -68,7 +66,6 @@
         background-color: #e9ecef;
     }
 
-    /* Item Row Styles */
     .items-container {
         background: #fff;
         border-radius: 8px;
@@ -98,7 +95,6 @@
         margin-bottom: 4px;
     }
 
-    /* Button Styles */
     .btn-add-item {
         background: #0d6efd;
         color: white;
@@ -136,7 +132,6 @@
         background: #bb2d3b;
     }
 
-    /* Total Section */
     .total-section {
         background: #fff;
         border-radius: 8px;
@@ -160,7 +155,6 @@
         color: #0d6efd;
     }
 
-    /* Radio Styles */
     .radio-group {
         display: flex;
         gap: 16px;
@@ -201,7 +195,7 @@
     }
 </style>
 
-<!-- Modal Input Pembelian -->
+
 <div class="modal fade" id="inputPembelianModal" tabindex="-1" aria-labelledby="inputPembelianModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -215,7 +209,7 @@
                 <form id="formPembelian">
                     <input type="hidden" id="editPembelianId">
                     
-                    <!-- Informasi Pesanan -->
+                    
                     <div class="section-card">
                         <div class="section-title">Informasi Pesanan</div>
                         <div class="row g-3">
@@ -230,7 +224,7 @@
                         </div>
                     </div>
 
-                    <!-- Data Customer -->
+                    
                     <div class="section-card">
                         <div class="section-title">Data Customer</div>
                         <div class="row g-3">
@@ -249,7 +243,7 @@
                         </div>
                     </div>
 
-                    <!-- Pilih Barang -->
+                    
                     <div class="items-container">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div class="section-title mb-0">Pilih Barang</div>
@@ -258,7 +252,7 @@
                             </button>
                         </div>
                         <div id="containerBarang">
-                            <!-- Item pertama -->
+                            
                             <div class="item-row" data-item="1">
                                 <div class="row g-2 align-items-end">
                                     <div class="col-md-4">
@@ -289,13 +283,13 @@
                         </div>
                     </div>
 
-                    <!-- Total Keseluruhan -->
+                    
                     <div class="total-section">
                         <span class="total-label">Total Keseluruhan:</span>
                         <span class="total-value" id="totalKeseluruhan">Rp 0</span>
                     </div>
 
-                    <!-- Status Pesanan -->
+                    
                     <div class="section-card">
                         <div class="section-title">Status Pesanan</div>
                         <div class="row g-3">
@@ -307,7 +301,7 @@
                                         <label for="statusDikirim">Dikirim</label>
                                     </div>
                                     <div class="radio-item">
-                                        <input type="radio" id="statusMenunggu" name="statusPengiriman" value="menunggu" checked>
+                                        <input type="radio" id="statusMenunggu" name="statusPengiriman" value="menunggu">
                                         <label for="statusMenunggu">Menunggu</label>
                                     </div>
                                 </div>
@@ -320,7 +314,7 @@
                                         <label for="statusLunas">Lunas</label>
                                     </div>
                                     <div class="radio-item">
-                                        <input type="radio" id="statusCicil" name="statusPembayaran" value="cicilan" checked>
+                                        <input type="radio" id="statusCicil" name="statusPembayaran" value="cicilan">
                                         <label for="statusCicil">Cicilan</label>
                                     </div>
                                     <div class="radio-item">
@@ -330,6 +324,56 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        
+                        <div id="containerCicilan" class="mt-3 p-3 bg-light rounded-3 border" style="display: none;">
+                            <h6 class="fw-semibold text-primary mb-3"><i class="mdi mdi-calculator me-1"></i>Kalkulator Cicilan</h6>
+                            
+                            
+                            <div class="mb-3">
+                                <label class="form-label text-muted small mb-1">Deposit Pembayaran (DP)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="calcDeposit" placeholder="0" autocomplete="off">
+                                </div>
+                                <div class="form-text text-danger d-none" id="dpError">DP tidak boleh melebihi total pembelian.</div>
+                            </div>
+
+                            
+                            <div class="mb-3">
+                                <label class="form-label text-muted small mb-1">Tenor Cicilan</label>
+                                <div class="row g-2">
+                                    <div class="col-3">
+                                        <input type="radio" class="btn-check" name="tenor" id="tenor3" value="3" autocomplete="off">
+                                        <label class="btn btn-outline-secondary w-100 btn-sm" for="tenor3">3 Bln</label>
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="radio" class="btn-check" name="tenor" id="tenor6" value="6" autocomplete="off" checked>
+                                        <label class="btn btn-outline-primary w-100 btn-sm" for="tenor6">6 Bln</label>
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="radio" class="btn-check" name="tenor" id="tenor9" value="9" autocomplete="off">
+                                        <label class="btn btn-outline-secondary w-100 btn-sm" for="tenor9">9 Bln</label>
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="radio" class="btn-check" name="tenor" id="tenor12" value="12" autocomplete="off">
+                                        <label class="btn btn-outline-secondary w-100 btn-sm" for="tenor12">12 Bln</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+                            <div class="d-flex justify-content-between align-items-center border-top pt-3">
+                                <div>
+                                    <small class="text-muted d-block">Cicilan per bulan:</small>
+                                    <span class="fw-bold text-primary fs-5" id="calcCicilanPerBulan">Rp 0</span>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-muted d-block">Sisa Tagihan:</small>
+                                    <span class="fw-semibold text-danger" id="calcSisaTagihan">Rp 0</span>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </form>
             </div>

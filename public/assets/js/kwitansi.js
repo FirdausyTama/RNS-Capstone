@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     loadKwitansi();
     loadPembelianList();
 
-    // Event listener for form submission
+    
     const btnSimpan = document.getElementById("btnSimpanKwitansi");
     if (btnSimpan) {
         btnSimpan.addEventListener("click", function () {
@@ -16,16 +16,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Event listener for pembelian dropdown
+    
     const pembelianSelect = document.getElementById('pembelianId');
     if (pembelianSelect) {
         pembelianSelect.addEventListener('change', function () {
             const pembelianId = this.value;
             if (pembelianId) {
-                // Find data
+                
                 const selected = pembelianData.find(p => p.id == pembelianId);
                 if (selected) {
-                    // Autofill Nama & Alamat
+                    
                     const nama = selected.penerima_nama || selected.nama_perusahaan || '';
                     const alamat = selected.penerima_alamat || selected.alamat_perusahaan || '';
 
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// Global state
+
 let allData = [];
 let pembelianData = [];
 let filteredData = [];
@@ -70,7 +70,7 @@ function loadPembelianList() {
             if (select) {
                 select.innerHTML = '<option value="">-- Pilih Pembelian --</option>';
 
-                // Filter ONLY 'Lunas' purchases
+                
                 const availablePurchases = data.filter(item =>
                     (item.status_pembayaran || '').toLowerCase() === 'lunas'
                 );
@@ -102,9 +102,9 @@ function searchKwitansi() {
 }
 
 function applyFilterAndRender() {
-    // Filter data
+    
     filteredData = allData.filter(item => {
-        // 1. Time Filter
+        
         let passTime = true;
         const itemDate = new Date(item.tanggal);
         const today = new Date();
@@ -117,7 +117,7 @@ function applyFilterAndRender() {
             passTime = isSameMonth(itemDate, today);
         }
 
-        // 2. Search Filter
+        
         let passSearch = true;
         if (currentSearch) {
             const searchLower = currentSearch.toLowerCase();
@@ -130,7 +130,7 @@ function applyFilterAndRender() {
         return passTime && passSearch;
     });
 
-    // Render current page
+    
     renderCurrentPage();
 }
 
@@ -143,7 +143,7 @@ function renderCurrentPage() {
     renderPagination();
 }
 
-// Helper dates
+
 function isSameDay(d1, d2) {
     return d1.getFullYear() === d2.getFullYear() &&
         d1.getMonth() === d2.getMonth() &&
@@ -158,7 +158,7 @@ function isSameMonth(d1, d2) {
 function isSameWeek(d1, d2) {
     const oneDay = 24 * 60 * 60 * 1000;
     const diffDays = Math.round(Math.abs((d1 - d2) / oneDay));
-    return diffDays <= 7; // Rough approximation, can be improved
+    return diffDays <= 7; 
 }
 
 
@@ -195,8 +195,8 @@ function loadKwitansi() {
         headers["X-CSRF-TOKEN"] = csrfToken;
     }
 
-    // Try to fetch ALL data by passing a large per_page
-    // If API ignores it, we work with what we get
+    
+    
     const params = new URLSearchParams();
     params.append('per_page', 1000);
 
@@ -213,7 +213,7 @@ function loadKwitansi() {
         })
         .then(res => {
             console.log("Response dari API:", res);
-            // Handle if response is { data: [...] } or just [...]
+            
             let data = [];
             if (Array.isArray(res)) {
                 data = res;
@@ -222,7 +222,7 @@ function loadKwitansi() {
             }
 
             allData = data;
-            // Initial render
+            
             applyFilterAndRender();
         })
         .catch(err => {
@@ -293,7 +293,7 @@ function renderPagination() {
 
     if (totalPages <= 1) return;
 
-    // Previous
+    
     const prevDisabled = currentPage === 1 ? 'disabled' : '';
     container.innerHTML += `
         <li class="page-item ${prevDisabled}">
@@ -303,7 +303,7 @@ function renderPagination() {
         </li>
     `;
 
-    // Pages
+    
     for (let i = 1; i <= totalPages; i++) {
         if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
             const active = i === currentPage ? 'active' : '';
@@ -317,7 +317,7 @@ function renderPagination() {
         }
     }
 
-    // Next
+    
     const nextDisabled = currentPage === totalPages ? 'disabled' : '';
     container.innerHTML += `
         <li class="page-item ${nextDisabled}">
@@ -355,7 +355,7 @@ function submitFormKwitansi(formData) {
         data[key] = value;
     });
 
-    // WORKAROUND: Append signer to keterangan if backend doesn't support penandatangan
+    
     if (data.penandatangan && data.penandatangan.includes('Dewi')) {
         data.keterangan = (data.keterangan || '') + ' [SIG:Dewi]';
     }

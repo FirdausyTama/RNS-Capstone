@@ -67,7 +67,7 @@
             <div class="content">
                 <div class="container-fluid">
 
-                    <!-- Header & Breadcrumb -->
+                    
                     <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
                         <div class="flex-grow-1">
                             <h4 class="fs-18 fw-semibold m-0">Detail Stok Produk</h4>
@@ -81,7 +81,7 @@
                         </div>
                     </div>
 
-                    <!-- Tombol Kembali -->
+                    
                     <div class="mb-3">
                         <a href="{{ url('/kelola-stok') }}" class="btn btn-light border">
                             <i class="mdi mdi-arrow-left me-1"></i> Kembali
@@ -89,9 +89,9 @@
                     </div>
 
                     <div class="row">
-                        <!-- Kiri: Informasi Produk -->
+                        
                         <div class="col-lg-8">
-                            <!-- Informasi Produk -->
+                            
                             <div class="card mb-3 shadow-sm border-0">
                                 <div class="card-body p-3">
                                     <h5 class="card-title mb-3 fs-16">Informasi Produk</h5>
@@ -117,7 +117,7 @@
                                 </div>
                             </div>
 
-                            <!-- Harga & Stok -->
+                            
                             <div class="card mb-3 shadow-sm border-0">
                                 <div class="card-body p-3">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -138,7 +138,7 @@
                                 </div>
                             </div>
 
-                            <!-- Dimensi & Berat -->
+                            
                             <div class="card mb-3 shadow-sm border-0">
                                 <div class="card-body p-3">
                                     <h5 class="card-title mb-3 fs-16">Dimensi & Berat</h5>
@@ -164,9 +164,9 @@
                             </div>
                         </div>
 
-                        <!-- Kanan: Media & Aksi -->
+                        
                         <div class="col-lg-4">
-                            <!-- Media Produk -->
+                            
                             <div class="card mb-4 shadow-sm border-0">
                                 <div class="card-body">
                                     <h5 class="card-title mb-4">Media Produk</h5>
@@ -192,10 +192,10 @@
                         </div>
                     </div>
 
-                </div> <!-- container-fluid -->
-            </div> <!-- content -->
+                </div> 
+            </div> 
 
-            <!-- Footer -->
+            
             <footer class="footer">
                 <div class="container-fluid">
                     <div class="row">
@@ -210,7 +210,7 @@
         </div>
     </div>
 
-    <!-- JS -->
+    
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>

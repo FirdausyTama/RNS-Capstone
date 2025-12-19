@@ -215,6 +215,7 @@
                                     <option value="dibatalkan">Dibatalkan</option>
                                 </select>
                             </div>
+                            </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-semibold">Penandatangan <span
                                         class="text-danger">*</span></label>
@@ -224,6 +225,14 @@
                                     <option value="Heri Pirdaus, S.Tr.Kes Rad (MRI)">Heri Pirdaus, S.Tr.Kes Rad (MRI)
                                     </option>
                                 </select>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label fw-semibold">Ongkir (Rp)</label>
+                                <input type="number" class="form-control" id="editOngkir" name="estimasi_ongkir" placeholder="0" />
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label fw-semibold">Berat Total (Kg)</label>
+                                <input type="text" class="form-control" id="editBerat" name="berat_barang" placeholder="Ex: 5" />
                             </div>
                         </div>
 

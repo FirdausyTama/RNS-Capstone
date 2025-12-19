@@ -9,27 +9,27 @@
     <meta name="author" content="Zoyothemes" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <!-- App favicon -->
+    
     <link rel="shortcut icon" href="assets/images/favicon.ico">
 
-    <!-- App css -->
+    
     <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
 
-    <!-- Icons -->
+    
     <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
 
     <script src="assets/js/head.js"></script>
 </head>
 
-<!-- body start -->
+
 
 <body data-menu-color="light" data-sidebar="default">
     @include('navbar.navbar')
-    <!-- Begin page -->
+    
     <div id="app-layout">
         <div class="content-page">
             <div class="content">
-                <!-- Start Content-->
+                
                 <div class="container-fluid">
                     <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
                         <div class="flex-grow-1">
@@ -43,9 +43,9 @@
                             </ol>
                         </div>
                     </div>
-                </div> <!-- container-fluid -->
+                </div> 
 
-                <!-- Start Main Widgets -->
+                
                 <div class="row">
                     <div class="container-fluid">
                         <div class="card shadow-sm border-0">
@@ -56,9 +56,9 @@
                                         <p class="text-muted mb-0">Kelola dan pantau seluruh surat penawaran Anda</p>
                                     </div>
 
-                                    <!-- Filter & Search -->
+                                    
                                     <div class="d-flex align-items-center gap-2">
-                                        <!-- Filter Waktu -->
+                                        
                                         <div class="dropdown">
                                             <button class="btn btn-light border dropdown-toggle" type="button"
                                                 id="filterWaktu" data-bs-toggle="dropdown" aria-expanded="false">
@@ -80,7 +80,7 @@
                                             </ul>
                                         </div>
 
-                                        <!-- Search -->
+                                        
                                         <form class="app-search">
                                             <div class="position-relative topbar-search">
                                                 <input type="text" class="form-control ps-4" placeholder="Cari SPH..."
@@ -106,9 +106,9 @@
                                             </tr>
                                         </thead>
 
-                                        <!-- ✅ PENTING: INI YANG DIISI JAVASCRIPT -->
+                                        
                                         <tbody id="sph-table-body">
-                                            <!-- Data dari API akan masuk otomatis di sini -->
+                                            
                                         </tbody>
                                     </table>
                                 </div>
@@ -128,10 +128,10 @@
                         </div>
                     </div>
                 </div>
-                <!-- End Main Widgets -->
-            </div> <!-- content -->
+                
+            </div> 
 
-            <!-- Footer Start -->
+            
             <footer class="footer">
                 <div class="container-fluid">
                     <div class="row">
@@ -144,9 +144,9 @@
                     </div>
                 </div>
             </footer>
-            <!-- end Footer -->
+            
 
-            <!-- Modal Tambah SPH -->
+            
             <div class="modal fade" id="modalTambahSPH" tabindex="-1" aria-labelledby="modalTambahSPHLabel"
                 aria-hidden="true">
                 <div class="modal-dialog modal-xl">
@@ -161,7 +161,7 @@
                         <div class="modal-body">
                             <form id="formTambahSPH">
 
-                                <!-- Informasi Surat -->
+                                
                                 <div class="card border-0 shadow-sm mb-3">
                                     <div class="card-header bg-light">
                                         <h6 class="mb-0 fw-semibold"><i
@@ -211,7 +211,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Informasi Penerima -->
+                                
                                 <div class="card border-0 shadow-sm mb-3">
                                     <div class="card-header bg-light">
                                         <h6 class="mb-0 fw-semibold"><i
@@ -235,7 +235,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Detail Penawaran -->
+                                
                                 <div class="card border-0 shadow-sm mb-3">
                                     <div class="card-header bg-light d-flex justify-content-between align-items-center">
                                         <h6 class="mb-0 fw-semibold"><i
@@ -307,7 +307,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Penandatangan -->
+                                
                                 <div class="card border-0 shadow-sm">
                                     <div class="card-header bg-light">
                                         <h6 class="mb-0 fw-semibold"><i
@@ -343,7 +343,7 @@
                 </div>
             </div>
 
-            <!-- Floating Button Tambah SPH -->
+            
             <div class="content position-relative">
                 <button type="button" class="btn btn-primary rounded-circle shadow-lg"
                     style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; z-index: 999;"
@@ -355,7 +355,7 @@
         </div>
     </div>
 
-    <!-- Vendor -->
+    
     <script src="assets/libs/jquery/jquery.min.js"></script>
     <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/libs/simplebar/simplebar.min.js"></script>
@@ -364,10 +364,10 @@
     <script src="assets/libs/jquery.counterup/jquery.counterup.min.js"></script>
     <script src="assets/libs/feather-icons/feather.min.js"></script>
 
-    <!-- App js-->
+    
     <script src="assets/js/app.js"></script>
 
-    <!-- Custom Script untuk SPH -->
+    
     <script>
         // Fungsi untuk set filter waktu
         function setFilter(filterName) {
@@ -646,7 +646,7 @@
         });
     </script>
 
-    <!-- External JS for SPH table rendering -->
+    
     <script src="{{ asset('assets/js/surat-penawaran.js') }}?v={{ time() }}"></script>
 
 </body>

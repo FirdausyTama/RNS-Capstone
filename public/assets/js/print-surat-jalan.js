@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Get ID from URL
+    
     const pathArray = window.location.pathname.split('/');
     const id = pathArray[pathArray.length - 1];
 
@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("ID Surat Jalan tidak valid");
     }
 });
+
 
 const API_SURAT_JALAN = "http://127.0.0.1:8000/api/surat-jalan";
 
@@ -51,13 +52,13 @@ function renderPrintSuratJalan(data) {
     setText("printTelpPenerima", data.telp_penerima);
     setText("printTanggal", formatDate(data.tanggal));
 
-    // New Layout Fields
+    
     setText("printNamaBarang", data.nama_barang_jasa);
     setText("printQty", data.qty);
-    setText("printJumlah", data.qty); // Qty and Jumlah are the same in this context
+    setText("printJumlah", data.qty); 
     setText("printNamaPenerimaSign", data.nama_penerima);
 
-    // Detect Signer from Keterangan (Workaround)
+    
     let signer = data.penandatangan;
     let cleanKeterangan = data.keterangan || "";
 
@@ -71,25 +72,20 @@ function renderPrintSuratJalan(data) {
 
     setText("printKeterangan", cleanKeterangan);
 
-    // Signature Logic
+    
     const signatureImg = document.getElementById('printSignature');
-
-    if (signer && signer.toLowerCase().includes('dewi')) {
-        signatureImg.src = '/assets/images/ttd dewi.jpeg';
-        signatureImg.style.display = 'block';
-    } else if (signer && signer.toLowerCase().includes('heri')) {
-        signatureImg.src = '/assets/images/ttd heri.png';
-        signatureImg.style.display = 'block';
-    } else {
-        // Empty signature (use sender name)
-        signatureImg.src = '';
+    if (signatureImg) {
         signatureImg.style.display = 'none';
-        signer = data.nama_pengirim; // Use sender name
+        signatureImg.src = '';
     }
 
-    setText("printSignerName", signer || data.nama_pengirim || "PENGIRIM");
+    
+    const signerName = data.penandatangan || data.nama_pengirim || "PENGIRIM";
+    setText("printSignerName", signerName);
 
-    // Auto print
+
+
+    
     setTimeout(() => window.print(), 1000);
 }
 

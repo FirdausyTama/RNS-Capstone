@@ -1,12 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Get ID from URL
     const pathArray = window.location.pathname.split('/');
     const id = pathArray[pathArray.length - 1];
 
     if (id && !isNaN(id)) {
         loadDetailKwitansi(id);
 
-        // Setup Edit Button Handler
         const btnUpdate = document.getElementById("btnUpdateKwitansi");
         if (btnUpdate) {
             btnUpdate.addEventListener("click", function () {
@@ -73,7 +71,6 @@ function loadDetailKwitansi(id) {
 }
 
 function renderDetailKwitansi(data) {
-    // Detect Signer from Keterangan (Workaround)
     let signer = data.penandatangan;
     let cleanKeterangan = data.keterangan || "";
 
@@ -81,30 +78,25 @@ function renderDetailKwitansi(data) {
         signer = "Dewi Sulistiowati";
         cleanKeterangan = cleanKeterangan.replace(' [SIG:Dewi]', '').replace('[SIG:Dewi]', '');
     }
-
-    // Populate View
     setText("nomor_kwitansi", data.nomor_kwitansi);
     setText("tanggal", formatDate(data.tanggal));
     setText("nama_penerima", data.nama_penerima);
     setText("alamat_penerima", data.alamat_penerima);
     setText("total_bilangan", data.total_bilangan);
-    setText("keterangan", cleanKeterangan); // Show clean text
+    setText("keterangan", cleanKeterangan); 
     setText("created_at", data.created_at ? new Date(data.created_at).toLocaleString('id-ID') : '-');
 
     const total = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(data.total_pembayaran);
     setText("total_pembayaran", total);
-
-    // Populate Edit Form
     setVal("editNomorKwitansi", data.nomor_kwitansi);
 
-    // Ensure date is in YYYY-MM-DD format for input type="date"
     const dateValue = data.tanggal ? new Date(data.tanggal).toISOString().split('T')[0] : '';
     setVal("editTanggal", dateValue);
 
     setVal("editNamaPenerima", data.nama_penerima);
     setVal("editAlamat", data.alamat_penerima);
     setVal("editTotalBilangan", data.total_bilangan);
-    setVal("editKeterangan", cleanKeterangan); // Set clean text in form
+    setVal("editKeterangan", cleanKeterangan); 
     setVal("editTotalPembayaran", parseInt(data.total_pembayaran));
     setVal("editPenandatangan", signer || "Heri Pirdaus, S.Tr.Kes Rad (MRI)");
 }
@@ -129,8 +121,6 @@ function updateKwitansi(id, formData) {
         data[key] = value;
     });
 
-    // WORKAROUND: Append signer to keterangan
-    // First remove any existing tags
     let ket = data.keterangan || '';
     ket = ket.replace(' [SIG:Dewi]', '').replace('[SIG:Dewi]', '');
     ket = ket.replace(' [SIG:Heri]', '').replace('[SIG:Heri]', '');
@@ -142,7 +132,6 @@ function updateKwitansi(id, formData) {
     }
     data.keterangan = ket;
 
-    // Clean up currency
     if (data.total_pembayaran) {
         data.total_pembayaran = data.total_pembayaran.toString().replace(/\./g, '');
     }
@@ -170,12 +159,11 @@ function updateKwitansi(id, formData) {
                 showConfirmButton: false
             });
 
-            // Close modal
             const modalEl = document.getElementById('modalEditKwitansi');
             const modal = bootstrap.Modal.getInstance(modalEl);
             if (modal) modal.hide();
 
-            loadDetailKwitansi(id); // Reload data
+            loadDetailKwitansi(id);
         })
         .catch(err => {
             console.error("Error:", err);
@@ -187,7 +175,7 @@ function updateKwitansi(id, formData) {
         });
 }
 
-// Helper functions
+
 function setText(id, value) {
     const el = document.getElementById(id);
     if (el) el.textContent = value || "-";

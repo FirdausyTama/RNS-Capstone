@@ -72,9 +72,9 @@ Route::get('/stok/detail-stok/{id}', function ($id) {
     return view('stok.detail-stok', ['id' => $id]);
 })->name('stok.detail');
 
-// Route::get('/detail-pembelian/{id}', function ($id) {
-//     return view('dokumen.detail-pembelian');
-// })->name('detail.pembelian');
+
+
+
 
 Route::get('/detail-kwitansi/{id}', function ($id) {
     if (!is_numeric($id)) {

@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const id = pathArray[pathArray.length - 1];
 
     if (id && !isNaN(id)) {
-        // Load stok data first, then load detail
         loadStokData().then(() => {
             loadDetailInvoice(id);
         });
@@ -109,7 +108,7 @@ function renderDetailInvoice(data) {
     setText("penandatangan", data.penandatangan);
     setText("created_at", data.created_at ? new Date(data.created_at).toLocaleString('id-ID') : '-');
 
-    // Status Badge
+    
     const statusEl = document.getElementById("status");
     if (statusEl) {
         let statusHtml = '';
@@ -126,7 +125,7 @@ function renderDetailInvoice(data) {
         statusEl.innerHTML = statusHtml;
     }
 
-    // Populate Items Table
+    
     const tbody = document.getElementById("items-tbody");
     if (tbody) {
         tbody.innerHTML = '';
@@ -165,13 +164,13 @@ function renderDetailInvoice(data) {
         }
     }
 
-    // Populate Edit Form
+    
     setVal("editTanggalInvoice", data.tanggal_invoice);
     setVal("editNamaPerusahaan", data.nama_perusahaan || data.nama_penerima);
     setVal("editStatus", data.status);
     setVal("editPenandatangan", data.penandatangan);
 
-    // Store and populate items for editing
+    
     editInvoiceItemsData = items || [];
     populateEditInvoiceItems();
 }
@@ -204,7 +203,6 @@ function addEditInvoiceItemRowWithData(item, index) {
 
     const row = document.createElement('tr');
 
-    // Smart fallback: use input if stok empty, dropdown if stok available
     const namaBarangCell = stokData.length > 0
         ? `<select class="form-select form-select-sm select-barang-edit" data-index="${index}" required>
                 ${createItemDropdown(item.nama_barang || item.nama)}
@@ -221,14 +219,12 @@ function addEditInvoiceItemRowWithData(item, index) {
 
     tbody.appendChild(row);
 
-    // Attach event listeners
     if (stokData.length > 0) {
         const selectEl = row.querySelector('.select-barang-edit');
         selectEl.addEventListener('change', function () {
             onInvoiceItemSelectChange(this);
         });
     } else {
-        // For text input, update nama_barang on change
         const inputEl = row.querySelector('input[type="text"]');
         inputEl.addEventListener('input', function () {
             if (editInvoiceItemsData[index]) {
@@ -380,7 +376,7 @@ function formatNumber(num) {
     return Number(num).toLocaleString('id-ID');
 }
 
-// Helper functions
+
 function setText(id, value) {
     const el = document.getElementById(id);
     if (el) el.textContent = value || "-";

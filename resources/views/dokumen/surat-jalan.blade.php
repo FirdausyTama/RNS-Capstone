@@ -9,13 +9,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- App favicon -->
+    
     <link rel="shortcut icon" href="assets/images/favicon.ico" />
 
-    <!-- App css -->
+    
     <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
 
-    <!-- Icons -->
+    
     <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
 
     <script src="assets/js/head.js"></script>
@@ -25,12 +25,12 @@
   <body data-menu-color="light" data-sidebar="default">
     @include('navbar.navbar')
 
-    <!-- Begin page -->
+    
     <div id="app-layout">
       <div class="content-page">
         <div class="content">
           <div class="container-fluid">
-            <!-- Header -->
+            
             <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
               <div class="flex-grow-1">
                 <h4 class="fs-18 fw-semibold m-0">Surat Jalan</h4>
@@ -44,7 +44,7 @@
               </div>
             </div>
 
-            <!-- Card Table -->
+            
             <div class="card shadow-sm border-0">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -53,9 +53,9 @@
                     <p class="text-muted mb-0">Kelola dan pantau seluruh surat jalan pengiriman Anda</p>
                   </div>
                   
-                  <!-- Filter & Search -->
+                  
                   <div class="d-flex align-items-center gap-2">
-                    <!-- Filter Waktu -->
+                    
                     <div class="dropdown">
                       <button class="btn btn-light border dropdown-toggle" type="button" id="filterWaktu" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="mdi mdi-calendar-range me-1"></i>
@@ -70,7 +70,7 @@
                       </ul>
                     </div>
                     
-                    <!-- Search -->
+                    
                     <form class="app-search">
                       <div class="position-relative topbar-search">
                         <input type="text" class="form-control ps-4" placeholder="Cari surat jalan..." style="min-width: 200px;" id="searchInput" onkeyup="searchSuratJalan()" />
@@ -95,7 +95,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <!-- Data will be loaded via JS -->
+                      
                     </tbody>
                   </table>
                 </div>
@@ -104,7 +104,7 @@
                   <small class="text-muted" id="paginationInfo">Menampilkan data surat jalan</small>
                   <nav>
                     <ul class="pagination pagination-sm mb-0" id="paginationContainer">
-                      <!-- Pagination logic can be added here -->
+                      
                     </ul>
                   </nav>
                 </div>
@@ -113,7 +113,7 @@
           </div>
         </div>
 
-        <!-- Footer -->
+        
         <footer class="footer">
           <div class="container-fluid">
             <div class="row">
@@ -131,7 +131,7 @@
       </div>
     </div>
 
-    <!-- Floating Button Tambah Surat Jalan -->
+    
     <button
       type="button"
       id="btnTambahSuratJalan"
@@ -144,7 +144,7 @@
       <i class="mdi mdi-plus fs-3 text-white"></i>
     </button>
 
-    <!-- Modal Tambah Surat Jalan -->
+    
     <div class="modal fade" id="modalTambahSuratJalan" tabindex="-1" aria-labelledby="modalTambahSuratJalanLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -157,7 +157,7 @@
           <div class="modal-body">
             <form id="formSuratJalan">
               <div class="row">
-                <!-- Tanggal -->
+                
                 <div class="col-md-6 mb-3">
                   <label for="tanggalSuratJalan" class="form-label fw-semibold">
                     Tanggal <span class="text-danger">*</span>
@@ -171,7 +171,7 @@
                   />
                 </div>
 
-                <!-- Nama Pengirim -->
+                
                 <div class="col-md-6 mb-3">
                   <label for="namaPengirim" class="form-label fw-semibold">
                     Nama Pengirim <span class="text-danger">*</span>
@@ -186,7 +186,7 @@
                   />
                 </div>
 
-                <!-- Nama Penerima -->
+                
                 <div class="col-md-6 mb-3">
                   <label for="namaPenerima" class="form-label fw-semibold">
                     Nama Penerima <span class="text-danger">*</span>
@@ -201,7 +201,7 @@
                   />
                 </div>
 
-                <!-- Telp Penerima -->
+                
                 <div class="col-md-6 mb-3">
                   <label for="telpPenerima" class="form-label fw-semibold">
                     No. Telp Penerima <span class="text-danger">*</span>
@@ -216,7 +216,7 @@
                   />
                 </div>
 
-                <!-- Alamat Penerima -->
+                
                 <div class="col-12 mb-3">
                   <label for="alamatPenerima" class="form-label fw-semibold">
                     Alamat Penerima <span class="text-danger">*</span>
@@ -231,7 +231,7 @@
                   ></textarea>
                 </div>
 
-                <!-- Nama Barang/Jasa -->
+                
                 <div class="col-12 mb-3">
                   <label for="namaBarangJasa" class="form-label fw-semibold">
                     Nama Barang/Jasa <span class="text-danger">*</span>
@@ -246,7 +246,7 @@
                   />
                 </div>
 
-                <!-- Qty & Jumlah -->
+                
                 <div class="col-md-6 mb-3">
                   <label for="qty" class="form-label fw-semibold">
                     QTY <span class="text-danger">*</span>
@@ -275,7 +275,7 @@
                   />
                 </div>
 
-                <!-- Keterangan -->
+                
                 <div class="col-12 mb-3">
                   <label for="keterangan" class="form-label fw-semibold">
                     Keterangan
@@ -289,26 +289,7 @@
                   ></textarea>
                 </div>
 
-                <!-- Penandatangan -->
-                <div class="col-12 mb-3">
-                  <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-light">
-                      <h6 class="mb-0 fw-semibold"><i class="mdi mdi-pencil-outline me-2"></i>Penandatangan</h6>
-                    </div>
-                    <div class="card-body">
-                      <div class="row">
-                        <div class="col-md-12">
-                          <label class="form-label">Nama Penandatangan</label>
-                          <select class="form-select" name="penandatangan">
-                            <option value="">Tanpa Tanda Tangan (Gunakan Nama Pengirim)</option>
-                            <option value="Dewi Sulistiowati">Dewi Sulistiowati</option>
-                            <option value="Heri Pirdaus, S.Tr.Kes Rad (MRI)">Heri Pirdaus, S.Tr.Kes Rad (MRI)</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+
               </div>
             </form>
           </div>
@@ -324,17 +305,17 @@
       </div>
     </div>
 
-    <!-- Vendor -->
+    
     <script src="assets/libs/jquery/jquery.min.js"></script>
     <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/libs/simplebar/simplebar.min.js"></script>
     <script src="assets/libs/node-waves/waves.min.js"></script>
     <script src="assets/libs/feather-icons/feather.min.js"></script>
 
-    <!-- App js -->
+    
     <script src="assets/js/app.js"></script>
 
-    <!-- Script untuk Handle Form -->
+    
     <script src="{{ asset('assets/js/surat-jalan.js') }}"></script>
     <script>
       $(document).ready(function() {

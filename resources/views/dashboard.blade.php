@@ -10,13 +10,13 @@
         <meta name="author" content="Zoyothemes"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-        <!-- App favicon -->
+        
         <link rel="shortcut icon" href="assets/images/favicon.ico">
 
-        <!-- App css -->
+        
         <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
 
-        <!-- Icons -->
+        
         <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
 
         <script src="assets/js/head.js"></script>
@@ -25,23 +25,23 @@
     </head>
     
 
-    <!-- body start -->
+    
     <body data-menu-color="light" data-sidebar="default">
         @include('navbar.navbar')
 
-        <!-- Begin page -->
+        
         <div id="app-layout">
             
        
 
-            <!-- ============================================================== -->
-            <!-- Start Page Content here -->
-            <!-- ============================================================== -->
+            
+            
+            
 
             <div class="content-page">
                 <div class="content">
 
-                    <!-- Start Content-->
+                    
                     <div class="container-fluid">
                         <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
                             <div class="flex-grow-1">
@@ -49,7 +49,7 @@
                             </div>
                         </div>
 
-                        <!-- Start Main Widgets -->
+                        
                         <div class="row">
                             <div class="col-md-6 col-lg-4 col-xl">
                                 <div class="card">
@@ -72,11 +72,7 @@
 
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <h3 class="mb-0 fs-22 text-dark me-3" id="totalPelanggan">0</h3>
-                                                <div class="text-center">
-                                                    <span class="text-primary fs-14"><i
-                                                            class="mdi mdi-trending-up fs-14"></i> 12.5%</span>
-                                                    <p class="text-dark fs-13 mb-0">7 Hari Terakhir</p>
-                                                </div>
+
                                             </div>
 
                                         </div>
@@ -104,12 +100,8 @@
                                             </div>
 
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h3 class="mb-0 fs-22 text-dark me-3">2,839</h3>
-                                                <div class="text-center">
-                                                    <span class="text-danger fs-14 me-2"><i
-                                                            class="mdi mdi-trending-down fs-14"></i> 1.5%</span>
-                                                    <p class="text-dark fs-13 mb-0">7 Hari Terakhir</p>
-                                                </div>
+                                                <h3 class="mb-0 fs-22 text-dark me-3" id="totalPendingPayment">0</h3>
+
                                             </div>
 
                                         </div>
@@ -137,12 +129,8 @@
                                             </div>
 
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h3 class="mb-0 fs-22 text-dark me-3">2,254</h3>
-                                                <div class="text-center">
-                                                    <span class="text-primary fs-14 me-2"><i
-                                                            class="mdi mdi-trending-up fs-14"></i> 12.8%</span>
-                                                    <p class="text-dark fs-13 mb-0">7 Hari Terakhir</p>
-                                                </div>
+                                                <h3 class="mb-0 fs-22 text-dark me-3" id="totalDocuments">0</h3>
+
                                             </div>
 
                                         </div>
@@ -171,50 +159,35 @@
 
 
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h3 class="mb-0 fs-22 text-dark me-3">Rp920.000</h3>
+                                                <h3 class="mb-0 fs-22 text-dark me-3" id="totalSales">Rp 0</h3>
 
-                                                <div class="text-muted">
-                                                    <span class="text-danger fs-14 me-2"><i
-                                                            class="mdi mdi-trending-down fs-14"></i> 18%</span>
-                                                    <p class="text-dark fs-13 mb-0">7 Hari Terakhir</p>
-                                                </div>
+
                                             </div>
 
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            
-
                         </div>
-                        <!-- End Main Widgets -->
-
-                        <!-- start row -->
                         <div class="row">
-
                             <div class="col-md-12 col-xl-8">
                                 <div class="card">
                                     <div class="card-header">
                                         <div class="d-flex align-items-center">
                                             <h5 class="card-title mb-0">Statistik Pembelian</h5>
-
                                             <div class="ms-auto">
-                                                <button
-                                                    class="btn btn-sm bg-light border dropdown-toggle fw-medium"
-                                                    type="button" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                    aria-expanded="false">Bulan ini<i
-                                                        class="mdi mdi-chevron-down ms-1 fs-14"></i></button>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item" href="#">Bulan ini</a>
-                                                    <a class="dropdown-item" href="#">Bulan Lalu</a>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm bg-light border dropdown-toggle fw-medium" type="button" id="yearDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        2025 <i class="mdi mdi-chevron-down ms-1 fs-14"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-end" id="yearDropdownMenu">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="card-body">
-                                        <div id="sales-overview" class="apex-charts"></div>
+                                        <div id="sales-overview" class=""></div>
                                     </div>
                                 </div>
                             </div>
@@ -223,252 +196,22 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <div class="d-flex align-items-center">
-                                            <h5 class="card-title mb-0">Total Persediaan Stok</h5>
-                                        </div>
-                                    </div>
-
-                                    <div class="card-body">
-                                        <div id="top-session" class="apex-charts"></div>
-
-                                        <div class="row mt-2">
-                                            <div class="col">
-                                                <div class="d-flex justify-content-between align-items-center p-1">
-                                                    <div>
-                                                        <i class="mdi mdi-circle fs-12 align-middle me-1 text-success"></i>
-                                                        <span class="align-middle fw-semibold">Mesin Ronsen</span>
-                                                    </div>
-                                                    <span class="fw-medium text-muted float-end"><i
-                                                            class="mdi mdi-arrow-up text-success align-middle fs-14 me-1"></i>12 Stok</span>
-                                                </div>
-
-                                                <div class="d-flex justify-content-between align-items-center p-1">
-                                                    <div>
-                                                        <i class="mdi mdi-circle fs-12 align-middle me-1"
-                                                            style="color: #522c8f;"></i>
-                                                        <span class="align-middle fw-semibold">Mesin Dokter gigi</span>
-                                                    </div>
-                                                    <span class="fw-medium text-muted float-end"><i
-                                                            class="mdi mdi-arrow-up text-success align-middle fs-14 me-1"></i>5 Stok</span>
-                                                </div>
-
-                                                <div class="d-flex justify-content-between align-items-center p-1">
-                                                    <div>
-                                                        <i class="mdi mdi-circle fs-12 align-middle me-1 text-warning"></i>
-                                                        <span class="align-middle fw-semibold">Panoramic Rotograph</span>
-                                                    </div>
-                                                    <span class="fw-medium text-muted float-end"><i
-                                                            class="mdi mdi-arrow-up text-success align-middle fs-14 me-1"></i>1 Stok</span>
-                                                </div>
-
-                                                 <div class="d-flex justify-content-between align-items-center p-1">
-                                                    <div>
-                                                        <i class="mdi mdi-circle fs-12 align-middle me-1"
-                                                            style="color: #ff0606;"></i>
-                                                        <span class="align-middle fw-semibold">Mesin Dokter gigi</span>
-                                                    </div>
-                                                    <span class="fw-medium text-muted float-end"><i
-                                                            class="mdi mdi-arrow-up text-success align-middle fs-14 me-1"></i>8 Stok</span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                            </div>
-
-
-                        </div>
-                        <!-- end start -->
-
-                        
-                            <div class="col-xl-12 col-xl-5">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <div class="d-flex align-items-center">
                                             <h5 class="card-title mb-0">Transaksi Terakhir</h5>
                                         </div>
                                     </div>
 
                                     <div class="card-body">
-                                        <ul class="list-group list-group-flush list-group-no-gutters">
-
-                                            <!-- List Item -->
-                                            <li class="list-group-item">
-                                                <div class="d-flex">
-
-                                                    <div class="flex-shrink-0 align-self-center">
-                                                        <!-- Avatar -->
-                                                        <div
-                                                            class="align-content-center text-center border border-dashed rounded-circle p-1">
-                                                            <img src="assets/images/users/user-12.jpg"
-                                                                class="avatar avatar-sm rounded-circle">
-                                                        </div>
-                                                        <!-- End Avatar -->
-                                                    </div>
-
-                                                    <div class="flex-grow-1 ms-3 align-content-center">
-                                                        <div class="row">
-                                                            <div class="col-7 col-md-5 order-md-1">
-                                                                <h6 class="mb-1 text-dark fs-15">RS Sari Asih Serang</h6>
-                                                                <span class="fs-14 text-muted">Transfer Bank</span>
-                                                            </div>
-
-                                                            <div class="col-5 col-md-4 order-md-3 text-end mt-2 mt-md-0">
-                                                                <h6 class="mb-1 text-dark fs-14">Rp 230.000.000</h6>
-                                                                <span class="fs-13 text-muted">24 Jan, 2024</span>
-                                                            </div>
-
-                                                            <div class="col-auto col-md-3 order-md-2 align-self-center">
-                                                                <span
-                                                                    class="badge bg-warning-subtle text-warning fw-semibold rounded-pill">Cicilan</span>
-                                                            </div>
-                                                        </div>
-                                                        <!-- End Row -->
-                                                    </div>
-
-                                                </div>
-                                            </li>
-                                            <!-- End List Item -->
-
-                                            <!-- List Item -->
-                                            <li class="list-group-item">
-                                                <div class="d-flex">
-
-                                                    <div class="flex-shrink-0 align-self-center">
-                                                        <!-- Avatar -->
-                                                        <div
-                                                            class="avatar border border-dashed rounded-circle align-content-center text-center p-1">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
-                                                                viewBox="0 0 24 24">
-                                                                <path fill="#2786f1"
-                                                                    d="M15.194 7.57c.487-.163 1.047-.307 1.534-.451c-1.408-.596-3.176-1.227-4.764-1.625c-.253.073-1.01.271-1.534.434c.541.162 2.328.577 4.764 1.642m-8.896 6.785c.577.343 1.19.812 1.786 1.209c3.952-3.068 7.85-5.432 12.127-6.767c-.596-.307-1.119-.578-1.787-.902c-2.562.65-6.947 2.4-12.126 6.46m-.758-6.46c-2.112.974-4.331 2.31-5.54 3.085c.433.199.866.361 1.461.65c2.671-1.805 4.764-2.905 5.594-3.266c-.595-.217-1.154-.361-1.515-.47zm8.066.234c-.686-.379-3.068-1.263-4.71-1.642c-.487.18-1.173.451-1.642.65c.595.162 2.815.758 4.71 1.714c.487-.235 1.173-.523 1.642-.722m-3.374 1.552c-.56-.27-1.173-.523-1.643-.74c-1.425.704-3.284 1.769-5.63 3.447c.505.27 1.047.595 1.624.92c1.805-1.335 3.627-2.598 5.649-3.627m1.732 8.825c3.79-3.249 9.113-6.407 12.036-7.544a48 48 0 0 0-1.949-1.155c-3.771 1.246-8.174 4.007-12.108 7.129c.667.505 1.371 1.028 2.02 1.57zm2.851-.235h-.108l-.18-.27h-.109v.27h-.072v-.596h.27c.055 0 .109 0 .145.036c.054.019.072.073.072.127c0 .108-.09.162-.198.162zm-.289-.343c.09 0 .199.018.199-.09c0-.072-.072-.09-.144-.09h-.163v.18zm-.523.036c0-.289.235-.523.541-.523s.542.234.542.523a.543.543 0 0 1-.542.542a.53.53 0 0 1-.54-.542m.107 0c0 .235.199.433.451.433a.424.424 0 1 0 0-.848c-.27 0-.45.199-.45.415" />
-                                                            </svg>
-                                                        </div>
-                                                        <!-- End Avatar -->
-                                                    </div>
-
-                                                    <div class="flex-grow-1 ms-3 align-content-center">
-                                                        <div class="row">
-                                                            <div class="col-7 col-md-5 order-md-1">
-                                                                <h6 class="mb-1 text-dark fs-15">RS Mata Sehat</h6>
-                                                                <span class="fs-14 text-muted">Cash</span>
-                                                            </div>
-
-                                                            <div class="col-5 col-md-4 order-md-3 text-end mt-2 mt-md-0">
-                                                                <h6 class="mb-1 text-success fs-14">Rp 30.000.000</h6>
-                                                                <span class="fs-13 text-muted">26 June, 2024</span>
-                                                            </div>
-
-                                                            <div class="col-auto col-md-3 order-md-2 align-self-center">
-                                                                <span
-                                                                    class="badge bg-success-subtle text-success fw-semibold rounded-pill">Lunas</span>
-                                                            </div>
-                                                        </div>
-                                                        <!-- End Row -->
-                                                    </div>
-
-                                                </div>
-                                            </li>
-                                            <!-- End List Item -->
-
-                                            <!-- List Item -->
-                                            <li class="list-group-item">
-                                                <div class="d-flex">
-
-                                                    <div class="flex-shrink-0 align-self-center">
-                                                        <!-- Avatar -->
-                                                        <div
-                                                            class="avatar border border-dashed rounded-circle align-content-center text-center p-1">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
-                                                                viewBox="0 0 256 256">
-                                                                <path fill="#e01e5a"
-                                                                    d="M53.841 161.32c0 14.832-11.987 26.82-26.819 26.82S.203 176.152.203 161.32c0-14.831 11.987-26.818 26.82-26.818H53.84zm13.41 0c0-14.831 11.987-26.818 26.819-26.818s26.819 11.987 26.819 26.819v67.047c0 14.832-11.987 26.82-26.82 26.82c-14.83 0-26.818-11.988-26.818-26.82z" />
-                                                                <path fill="#36c5f0"
-                                                                    d="M94.07 53.638c-14.832 0-26.82-11.987-26.82-26.819S79.239 0 94.07 0s26.819 11.987 26.819 26.819v26.82zm0 13.613c14.832 0 26.819 11.987 26.819 26.819s-11.987 26.819-26.82 26.819H26.82C11.987 120.889 0 108.902 0 94.069c0-14.83 11.987-26.818 26.819-26.818z" />
-                                                                <path fill="#2eb67d"
-                                                                    d="M201.55 94.07c0-14.832 11.987-26.82 26.818-26.82s26.82 11.988 26.82 26.82s-11.988 26.819-26.82 26.819H201.55zm-13.41 0c0 14.832-11.988 26.819-26.82 26.819c-14.831 0-26.818-11.987-26.818-26.82V26.82C134.502 11.987 146.489 0 161.32 0s26.819 11.987 26.819 26.819z" />
-                                                                <path fill="#ecb22e"
-                                                                    d="M161.32 201.55c14.832 0 26.82 11.987 26.82 26.818s-11.988 26.82-26.82 26.82c-14.831 0-26.818-11.988-26.818-26.82V201.55zm0-13.41c-14.831 0-26.818-11.988-26.818-26.82c0-14.831 11.987-26.818 26.819-26.818h67.25c14.832 0 26.82 11.987 26.82 26.819s-11.988 26.819-26.82 26.819z" />
-                                                            </svg>
-                                                        </div>
-                                                        <!-- End Avatar -->
-                                                    </div>
-
-                                                    <div class="flex-grow-1 ms-3 align-content-center">
-                                                        <div class="row">
-                                                            <div class="col-7 col-md-5 order-md-1">
-                                                                <h6 class="mb-1 text-dark fs-15">Apotek Sehat Sempurna</h6>
-                                                                <span class="fs-14 text-muted">COD</span>
-                                                            </div>
-
-                                                            <div class="col-5 col-md-4 order-md-3 text-end mt-2 mt-md-0">
-                                                                <h6 class="mb-1 text-dark fs-14">-Rp 1.000.000</h6>
-                                                                <span class="fs-13 text-muted">12 May, 2024</span>
-                                                            </div>
-
-                                                            <div class="col-auto col-md-3 order-md-2 align-self-center">
-                                                                <span
-                                                                    class="badge bg-danger-subtle text-danger fw-semibold rounded-pill">Belum Bayar</span>
-                                                            </div>
-                                                        </div>
-                                                        <!-- End Row -->
-                                                    </div>
-
-                                                </div>
-                                            </li>
-                                            <!-- End List Item -->
-
-                                            <!-- List Item -->
-                                            <li class="list-group-item">
-                                                <div class="d-flex">
-
-                                                    <div class="flex-shrink-0 align-self-center">
-                                                        <!-- Avatar -->
-                                                        <div
-                                                            class="avatar border border-dashed rounded-circle align-content-center text-center p-1">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
-                                                                viewBox="0 0 24 24">
-                                                                <path fill="#f06a6a"
-                                                                    d="M18.78 12.653a5.22 5.22 0 1 0 0 10.44a5.22 5.22 0 0 0 0-10.44m-13.56 0a5.22 5.22 0 1 0 .001 10.439a5.22 5.22 0 0 0-.001-10.439m12-6.525a5.22 5.22 0 1 1-10.44 0a5.22 5.22 0 0 1 10.44 0" />
-                                                            </svg>
-                                                        </div>
-                                                        <!-- End Avatar -->
-                                                    </div>
-
-                                                    <div class="flex-grow-1 ms-3 align-content-center">
-                                                        <div class="row">
-                                                            <div class="col-7 col-md-5 order-md-1">
-                                                                <h6 class="mb-1 text-dark fs-15">PKU Gamping</h6>
-                                                                <span class="fs-14 text-muted">Transfer Bank</span>
-                                                            </div>
-
-                                                            <div class="col-5 col-md-4 order-md-3 text-end mt-2 mt-md-0">
-                                                                <h6 class="mb-1 text-success fs-14">Rp 73.000.000</h6>
-                                                                <span class="fs-13 text-muted">15 Fab, 2024</span>
-                                                            </div>
-
-                                                            <div class="col-auto col-md-3 order-md-2 align-self-center">
-                                                                <span
-                                                                    class="badge bg-success-subtle text-success fw-semibold rounded-pill">Lunas</span>
-                                                            </div>
-                                                        </div>
-                                                        <!-- End Row -->
-                                                    </div>
-
-                                                </div>
-                                            </li>
-                                            <!-- End List Item -->
+                                        <ul class="list-group list-group-flush list-group-no-gutters" id="recentTransactionsList">
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
                        
-                    </div> <!-- container-fluid -->
-                </div> <!-- content -->
+                    </div> 
+                </div> 
 
-                <!-- Footer Start -->
+                
                 <footer class="footer">
                     <div class="container-fluid">
                         <div class="row">
@@ -477,17 +220,17 @@
                         </div>
                     </div>
                 </footer>
-                <!-- end Footer -->
+                
 
             </div>
-            <!-- ============================================================== -->
-            <!-- End Page content -->
-            <!-- ============================================================== -->
+            
+            
+            
 
         </div>
-        <!-- END wrapper -->
+        
 
-        <!-- Vendor -->
+        
         <script src="assets/libs/jquery/jquery.min.js"></script>
         <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="assets/libs/simplebar/simplebar.min.js"></script>
@@ -496,16 +239,16 @@
         <script src="assets/libs/jquery.counterup/jquery.counterup.min.js"></script>
         <script src="assets/libs/feather-icons/feather.min.js"></script>
 
-        <!-- Apexcharts JS -->
+        
         <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
 
-        <!-- Widgets Init Js -->
-        <script src="assets/js/pages/crm-dashboard.init.js"></script>
+        
+        
 
-        <!-- App js-->
+        
         <script src="assets/js/app.js"></script>
 
-        <!-- Dashboard Logic -->
+        
         <script src="assets/js/dashboard.js"></script>
 
     </body>

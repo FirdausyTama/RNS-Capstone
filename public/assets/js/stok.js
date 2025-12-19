@@ -1,24 +1,23 @@
-// ===== CEK DAN SET API_URL =====
 window.API_URL = window.API_URL || "http://127.0.0.1:8000/api/stoks";
 const API_PEMBELIAN_URL = "http://127.0.0.1:8000/api/pembelians";
 
-// ===== TOKEN =====
+
 function getToken() {
     const token = localStorage.getItem("token");
     if (!token) console.error("Token tidak ditemukan!");
     return token;
 }
 
-// ===== LOAD DATA =====
+
 document.addEventListener("DOMContentLoaded", function () {
     if (document.getElementById("stok-table-body")) {
         loadStok();
-        loadStokSummary();
-        loadTotalTerjual(); // Calculate sold items from purchases
+        
+        loadTotalTerjual(); 
     }
 });
 
-// ===== LOAD TOTAL TERJUAL =====
+
 async function loadTotalTerjual() {
     const token = getToken();
     if (!token) return;
@@ -36,7 +35,7 @@ async function loadTotalTerjual() {
 
         const data = await res.json();
 
-        // Calculate total items sold
+        
         let totalTerjual = 0;
         if (Array.isArray(data)) {
             data.forEach(transaksi => {
@@ -48,10 +47,18 @@ async function loadTotalTerjual() {
             });
         }
 
-        // Update UI
+        
         const elmKeluar = document.getElementById("totalStokKeluar");
+        const elmMasuk = document.getElementById("totalStokMasuk");
+
         if (elmKeluar) {
-            elmKeluar.textContent = totalTerjual + " Produk";
+            elmKeluar.textContent = totalTerjual + " Pcs";
+        }
+
+        
+        if (elmMasuk) {
+            const totalMasuk = (window.currentTotalStock || 0) + totalTerjual;
+            elmMasuk.textContent = totalMasuk + " Pcs";
         }
 
     } catch (err) {
@@ -59,45 +66,37 @@ async function loadTotalTerjual() {
     }
 }
 
-// ===== SUMMARY =====
+
+
+window.currentTotalStock = 0;
+
 function updateSummary(data) {
     if (!Array.isArray(data)) data = [];
 
-    const totalMasuk = data
-        .filter((item) => item.tgl_masuk)
-        .reduce((sum, item) => sum + Number(item.jumlah || 0), 0);
+    
+    const totalKeseluruhan = data.reduce((sum, item) => sum + Number(item.jumlah || 0), 0);
+    window.currentTotalStock = totalKeseluruhan;
 
-    const totalKeluar = data
-        .filter((item) => item.tgl_keluar)
-        .reduce((sum, item) => sum + Number(item.jumlah || 0), 0);
-
-    const totalKeseluruhan = totalMasuk - totalKeluar;
-
-    const elmMasuk = document.getElementById("totalStokMasuk");
-    const elmKeluar = document.getElementById("totalStokKeluar");
     const elmKeseluruhan = document.getElementById("totalStokKeseluruhan");
-
-    if (elmMasuk) elmMasuk.textContent = totalMasuk + " Produk";
-    // if (elmKeluar) elmKeluar.textContent = totalKeluar + " Produk"; // Disabled to use loadTotalTerjual
-    if (elmKeseluruhan) elmKeseluruhan.textContent = totalKeseluruhan;
+    if (elmKeseluruhan) elmKeseluruhan.textContent = totalKeseluruhan + " Pcs"; 
 }
 
-// ===== PAGINATION VARIABLES =====
+
 let allStok = [];
 let filteredStok = [];
 let currentPage = 1;
 const rowsPerPage = 5;
 
-// ===== LOAD STOK =====
+
 async function loadStok() {
     const body = document.getElementById("stok-table-body");
     if (!body) return;
 
     const token = getToken();
-    // if (!token) return; // Allow running without token for mock data
+    
 
     try {
-        // Try fetching from API
+        
         const res = await fetch(window.API_URL, {
             method: "GET",
             headers: {
@@ -116,7 +115,7 @@ async function loadStok() {
     filteredStok = [...allStok];
     renderTable(1);
     updateSummary(allStok);
-    loadTotalTerjual(); // Update Total Keluar from Purchases
+    loadTotalTerjual(); 
 
     const paginationContainer = document.getElementById("pagination-container");
     if (paginationContainer) {
@@ -125,7 +124,7 @@ async function loadStok() {
     }
 }
 
-// ===== RENDER TABLE (PAGINATED) =====
+
 function renderTable(page = 1) {
     const body = document.getElementById("stok-table-body");
     if (!body) return;
@@ -144,7 +143,8 @@ function renderTable(page = 1) {
 
     paginatedItems.forEach((item) => {
         const foto = item.foto
-            ? `http://127.0.0.1:8000/storage/${item.foto}`
+            ? `http:/
+            /127.0.0.1:8000/storage/${item.foto}`
             : "assets/images/logo-sm.png";
 
         const hargaNumber = Number(item.harga) || 0;
@@ -190,7 +190,7 @@ function renderTable(page = 1) {
     setupPagination();
 }
 
-// ===== SETUP PAGINATION =====
+
 function setupPagination() {
     const paginationControls = document.getElementById("pagination-controls");
     const paginationInfo = document.getElementById("pagination-info");
@@ -200,7 +200,7 @@ function setupPagination() {
     const totalItems = filteredStok.length;
     const totalPages = Math.ceil(totalItems / rowsPerPage);
 
-    // Update Info Text
+    
     const startItem =
         totalItems === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
     const endItem = Math.min(currentPage * rowsPerPage, totalItems);
@@ -210,7 +210,7 @@ function setupPagination() {
 
     if (totalPages <= 1) return;
 
-    // Prev Button
+    
     const prevLi = document.createElement("li");
     prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
     prevLi.innerHTML = `<a class="page-link" href="javascript:void(0);" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>`;
@@ -219,7 +219,7 @@ function setupPagination() {
     };
     paginationControls.appendChild(prevLi);
 
-    // Page Numbers
+    
     for (let i = 1; i <= totalPages; i++) {
         const li = document.createElement("li");
         li.className = `page-item ${currentPage === i ? "active" : ""}`;
@@ -228,7 +228,7 @@ function setupPagination() {
         paginationControls.appendChild(li);
     }
 
-    // Next Button
+    
     const nextLi = document.createElement("li");
     nextLi.className = `page-item ${currentPage === totalPages ? "disabled" : ""
         }`;
@@ -239,7 +239,7 @@ function setupPagination() {
     paginationControls.appendChild(nextLi);
 }
 
-// ===== SEARCH FUNCTION =====
+
 function searchProduct() {
     const input = document.getElementById("searchInput");
     const term = input.value.toLowerCase();
@@ -252,19 +252,20 @@ function searchProduct() {
             (item.merek && item.merek.toLowerCase().includes(term))
     );
 
-    renderTable(1); // Reset to page 1
+    renderTable(1); 
 }
-// ==================== OPEN DETAIL MODAL ====================
+
 function openDetailModal(id) {
-    // Ambil port dari URL saat ini
-    const apiUrl = `http://127.0.0.1:8000/api/stoks/${id}`;
+    
+    const apiUrl = `http:/
+    /127.0.0.1:8000/api/stoks/${id}`;
 
     const modal = new bootstrap.Modal(
         document.getElementById("detailStokModal")
     );
     const contentDiv = document.getElementById("detailStokContent");
 
-    // Show loading
+    
     contentDiv.innerHTML = `
         <div class="text-center py-5">
             <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
@@ -276,7 +277,7 @@ function openDetailModal(id) {
 
     modal.show();
 
-    // Fetch detail data
+    
     const token = localStorage.getItem("token");
 
     fetch(apiUrl, {
@@ -306,13 +307,14 @@ function openDetailModal(id) {
         });
 }
 
-// ==================== RENDER DETAIL MODAL ====================
+
 function renderDetailStokModal(data, id) {
-    // Gunakan port 8000 untuk backend storage, bukan port window location
-    const storageBaseUrl = `http://127.0.0.1:8000/storage`;
+    
+    const storageBaseUrl = `http:/
+    /127.0.0.1:8000/storage`;
     const contentDiv = document.getElementById("detailStokContent");
 
-    // Tentukan apakah ada media
+    
     const hasFoto = data.foto ? true : false;
     const hasVideo = data.video ? true : false;
     const hasMedia = hasFoto || hasVideo;
@@ -320,7 +322,7 @@ function renderDetailStokModal(data, id) {
     const fotoUrl = data.foto ? `${storageBaseUrl}/${data.foto}` : "";
     const videoUrl = data.video ? `${storageBaseUrl}/${data.video}` : "";
 
-    // Styles khusus untuk modal ini (diambil dari detail-stok.blade.php)
+    
     const styles = `
     <style>
         .product-image,
@@ -367,7 +369,7 @@ function renderDetailStokModal(data, id) {
     </style>
     `;
 
-    // Helper untuk badge (versi blade)
+    
     const getStatusBadgeHtml = (jumlah) => {
         jumlah = Number(jumlah) || 0;
         if (jumlah >= 5) return '<span class="status-badge badge-aman">Stok Aman</span>';
@@ -489,7 +491,7 @@ function renderDetailStokModal(data, id) {
     `;
 }
 
-// Helper functions
+
 function formatRupiah(angka) {
     return "Rp " + Number(angka).toLocaleString("id-ID");
 }
@@ -528,7 +530,7 @@ function getStatusBadge(jumlah) {
     return '<span class="badge bg-danger-subtle text-danger fw-semibold px-3 py-2">Stok Habis</span>';
 }
 
-// Fungsi untuk edit dari modal
+
 function editStokFromModal(id) {
     const modalEl = document.getElementById("detailStokModal");
     const modal = bootstrap.Modal.getInstance(modalEl);
@@ -539,7 +541,7 @@ function editStokFromModal(id) {
     }, 300);
 }
 
-// Fungsi untuk hapus dari modal
+
 function deleteStokFromModal(id) {
     const modalEl = document.getElementById("detailStokModal");
     const modal = bootstrap.Modal.getInstance(modalEl);
@@ -550,7 +552,7 @@ function deleteStokFromModal(id) {
     }, 300);
 }
 
-// ===== SUMMARY API =====
+
 async function loadStokSummary() {
     const token = getToken();
     if (!token) return;
@@ -573,7 +575,7 @@ async function loadStokSummary() {
         const elmKeseluruhan = document.getElementById("totalStokKeseluruhan");
 
         if (elmMasuk) elmMasuk.textContent = data.total_masuk + " Produk";
-        // if (elmKeluar) elmKeluar.textContent = data.total_keluar + " Produk"; // Disabled to use loadTotalTerjual
+        
         if (elmKeseluruhan) elmKeseluruhan.textContent = data.total_keseluruhan;
     } catch (err) {
         console.error("Gagal memuat summary:", err);
@@ -666,7 +668,7 @@ function removeFoto(event) {
     document.getElementById("fotoPlaceholder").style.display = "block";
 }
 
-// ===== EDIT MODAL HANDLERS =====
+
 
 function handleEditVideoUpload(input) {
     const file = input.files[0];
@@ -783,19 +785,19 @@ async function loadWeeklySummary() {
 
         const data = await res.json();
 
-        // Masuk
+        
         if (document.getElementById("totalStokMasuk7Hari")) {
             document.getElementById("totalStokMasuk7Hari").innerHTML =
                 formatTrend(data.persen_masuk);
         }
 
-        // Keluar
+        
         if (document.getElementById("totalStokKeluar7Hari")) {
             document.getElementById("totalStokKeluar7Hari").innerHTML =
                 formatTrend(data.persen_keluar);
         }
 
-        // Total keseluruhan
+        
         if (document.getElementById("totalKeseluruhanPersen")) {
             document.getElementById("totalKeseluruhanPersen").innerHTML =
                 formatTrend(data.persen_total);
@@ -884,10 +886,10 @@ async function openEditModal(id) {
         document.getElementById("editNamaBarang").value =
             data.data.nama_barang || "";
 
-        // Format harga dengan ribuan
+        
         let harga = data.data.harga || "";
         if (harga) {
-            harga = harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            harga = parseFloat(harga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
         document.getElementById("editHargaJual").value = harga;
 
@@ -896,7 +898,7 @@ async function openEditModal(id) {
             data.data.tgl_masuk || "";
         document.getElementById("editSatuan").value = data.data.satuan || "";
 
-        // Populate missing fields
+        
         document.getElementById("editKodeSKU").value = data.data.kode_sku || "";
         document.getElementById("editMerek").value = data.data.merek || "";
         document.getElementById("editPanjang").value = data.data.panjang || "";
@@ -907,7 +909,8 @@ async function openEditModal(id) {
         if (data.data.foto) {
             document.getElementById(
                 "editFotoElement"
-            ).src = `http://127.0.0.1:8000/storage/${data.data.foto}`;
+            ).src = `http:/
+            /127.0.0.1:8000/storage/${data.data.foto}`;
             document.getElementById("editFotoName").textContent = data.data.foto
                 .split("/")
                 .pop();
@@ -919,7 +922,8 @@ async function openEditModal(id) {
         if (data.data.video) {
             document.getElementById(
                 "editVideoElement"
-            ).src = `http://127.0.0.1:8000/storage/${data.data.video}`;
+            ).src = `http:/
+            /127.0.0.1:8000/storage/${data.data.video}`;
             document.getElementById("editVideoName").textContent =
                 data.data.video.split("/").pop();
             document.getElementById("editVideoPreview").style.display = "block";
@@ -949,7 +953,7 @@ async function submitUpdateStok() {
         document.getElementById("editNamaBarang").value
     );
 
-    // Hapus titik sebelum kirim ke server
+    
     let harga = document.getElementById("editHargaJual").value;
     harga = harga.replace(/\./g, "");
     formData.append("harga", harga);
@@ -985,7 +989,7 @@ async function submitUpdateStok() {
 
         if (!response.ok) {
             const text = await response.text();
-            console.log("Server Response:", text); // 🔥 Debug response 422
+            console.log("Server Response:", text); 
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
@@ -1038,7 +1042,7 @@ function submitTambahStok() {
 
     formData.append("nama_barang", document.getElementById("namaBarang").value);
 
-    // Hapus titik sebelum kirim ke server
+    
     let harga = document.getElementById("hargaJual").value;
     harga = harga.replace(/\./g, "");
     formData.append("harga", harga);
@@ -1140,10 +1144,10 @@ function setFilter(filterName) {
     const now = new Date();
     let startDate, endDate;
 
-    // Reset filteredStok to allStok before applying date filter
-    // Note: This might conflict if we want to combine search + date filter.
-    // For now, let's assume date filter resets search or works on allStok.
-    // Ideally, we should chain filters, but let's keep it simple as per request.
+    
+    
+    
+    
 
     switch (filterName) {
         case "Hari Ini":
@@ -1159,8 +1163,8 @@ function setFilter(filterName) {
             );
             break;
         case "Minggu Ini":
-            const day = now.getDay() || 7; // Get current day number, converting Sun (0) to 7
-            if (day !== 1) now.setHours(-24 * (day - 1)); // Set to Monday of this week
+            const day = now.getDay() || 7; 
+            if (day !== 1) now.setHours(-24 * (day - 1)); 
             startDate = new Date(
                 now.getFullYear(),
                 now.getMonth(),
@@ -1191,18 +1195,17 @@ function setFilter(filterName) {
 
     renderTable(1);
 }
-// function formatRupiahInput(input) {
-//     // Ambil angka mentah hanya digit
-//     let angka = input.value.replace(/\D/g, "");
 
-//     // Simpan RAW NUMBER ke dataset
-//     input.dataset.raw = angka; // <-- ini yg dipakai buat kirim ke API
 
-//     // Format tampilan (ribuan)
-//     let reverse = angka.toString().split("").reverse().join("");
-//     let ribuan = reverse.match(/\d{1,3}/g);
-//     let hasil = ribuan.join(".").split("").reverse().join("");
 
-//     // Tampilkan
-//     input.value = hasil;
-// }    
+
+
+
+
+
+
+
+
+
+
+

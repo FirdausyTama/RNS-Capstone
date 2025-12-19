@@ -1,23 +1,21 @@
-// Konfigurasi API (Port 8000 - Backend API terpisah dari Frontend 8001)
 const API_SPH = "http://127.0.0.1:8000/api/surat-penawaran";
 
-// Fungsi untuk ambil token dari localStorage
-function getToken() {
-    return localStorage.getItem("token");
-}
-
-// Fungsi untuk ambil token dari localStorage
 function getToken() {
     return localStorage.getItem("token");
 }
 
 
-// Variabel global untuk pagination
+function getToken() {
+    return localStorage.getItem("token");
+}
+
+
+
 let currentPage = 1;
 const itemsPerPage = 10;
 let allSPHData = [];
 
-// Fungsi utama untuk load data SPH
+
 function loadSPH() {
     const token = getToken();
     if (!token) {
@@ -46,7 +44,7 @@ function loadSPH() {
             allSPHData = res.data || res;
 
 
-            // Initialize filtered data with all data
+            
             filteredSPHData = [...allSPHData];
 
             currentPage = 1;
@@ -61,7 +59,7 @@ function loadSPH() {
         });
 }
 
-// Fungsi untuk format tanggal Indonesia
+
 function formatTanggalIndonesia(dateString) {
     const bulan = [
         "Januari", "Februari", "Maret", "April", "Mei", "Juni",
@@ -76,7 +74,7 @@ function formatTanggalIndonesia(dateString) {
     return `${day} ${month} ${year}`;
 }
 
-// Fungsi untuk render tabel SPH
+
 function renderSPH(page = 1) {
     const body = document.getElementById("sph-table-body");
     if (!body) {
@@ -86,7 +84,7 @@ function renderSPH(page = 1) {
 
     body.innerHTML = "";
 
-    // Use filteredSPHData for rendering (supports search)
+    
     const dataToRender = filteredSPHData.length > 0 || document.getElementById('searchInput')?.value
         ? filteredSPHData
         : allSPHData;
@@ -106,26 +104,26 @@ function renderSPH(page = 1) {
     let no = startIndex + 1;
 
     paginatedData.forEach(item => {
-        // Safer number formatting
+        
         const totalRaw = item.total_keseluruhan || 0;
         const total = parseInt(totalRaw.toString().replace(/\D/g, "")) || 0;
 
-        // Current status (case-insensitive)
+        
         const currentStatus = item.status || "Menunggu";
 
-        // Determine colors based on status
+        
         let bgStyle = "";
         let textStyle = "";
 
         if (currentStatus === "Diterima") {
-            bgStyle = "#d1fae5"; // Light Green
-            textStyle = "#065f46"; // Dark Green
+            bgStyle = "#d1fae5"; 
+            textStyle = "#065f46"; 
         } else if (currentStatus === "Ditolak") {
-            bgStyle = "#fee2e2"; // Light Red
-            textStyle = "#991b1b"; // Dark Red
+            bgStyle = "#fee2e2"; 
+            textStyle = "#991b1b"; 
         } else {
-            bgStyle = "#fef3c7"; // Light Yellow (Menunggu)
-            textStyle = "#92400e"; // Dark Yellow
+            bgStyle = "#fef3c7"; 
+            textStyle = "#92400e"; 
         }
 
         body.innerHTML += `
@@ -176,7 +174,7 @@ function renderSPH(page = 1) {
     renderPagination(totalPages, page, startIndex + 1, endIndex > totalItems ? totalItems : endIndex, totalItems);
 }
 
-// Fungsi untuk render pagination
+
 function renderPagination(totalPages, currentPageNum, startItem, endItem, totalItems) {
     const paginationInfo = document.querySelector('.d-flex.justify-content-between.align-items-center.mt-3 small');
     const paginationNav = document.querySelector('.d-flex.justify-content-between.align-items-center.mt-3 nav ul');
@@ -217,7 +215,7 @@ function renderPagination(totalPages, currentPageNum, startItem, endItem, totalI
     `;
 }
 
-// Fungsi untuk chang page
+
 function changePage(page) {
     const totalPages = Math.ceil(filteredSPHData.length / itemsPerPage);
     if (page < 1 || page > totalPages) return;
@@ -226,18 +224,18 @@ function changePage(page) {
     document.getElementById('sph-table-body').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Variabel untuk menyimpan data yang sudah difilter
+
 let filteredSPHData = [];
 
-// Fungsi untuk pencarian SPH
+
 function searchSPH() {
     const searchTerm = document.getElementById('searchInput')?.value?.toLowerCase() || '';
 
     if (!searchTerm) {
-        // Reset ke semua data
+        
         filteredSPHData = allSPHData;
     } else {
-        // Filter berdasarkan nomor_sph atau nama_perusahaan
+        
         filteredSPHData = allSPHData.filter(item => {
             const nomorSph = (item.nomor_sph || '').toLowerCase();
             const namaPerusahaan = (item.nama_perusahaan || '').toLowerCase();
@@ -250,10 +248,10 @@ function searchSPH() {
 }
 
 
-// Make searchSPH globally accessible
+
 window.searchSPH = searchSPH;
 
-// Fungsi wrapper untuk delete SPH (Global) - memanggil SweetAlert
+
 window.deleteSPH = function (id) {
     const sphData = allSPHData.find(item => item.id === id);
     const sphName = sphData?.nomor_sph || `ID: ${id}`;
@@ -275,7 +273,7 @@ window.deleteSPH = function (id) {
 }
 
 
-// Fungsi untuk eksekusi hapus SPH (dipanggil dari modal)
+
 function executeDeleteSPH(id) {
     const token = getToken();
     if (!token) {
@@ -316,29 +314,29 @@ function executeDeleteSPH(id) {
 }
 
 
-// Fungsi untuk print SPH (Global)
+
 window.printSPH = function (id) {
     window.location.href = '/print-sph/' + id;
 }
 
-// Load SPH saat halaman dimuat
+
 document.addEventListener("DOMContentLoaded", function () {
     loadSPH();
 
-    // Event Delegation untuk tombol-tombol di tabel
+    
     const tableBody = document.getElementById("sph-table-body");
     if (tableBody) {
         tableBody.addEventListener("click", function (e) {
             const target = e.target.closest("button");
             if (!target) return;
 
-            // Cari ID dari data attribute atau dari onclick
+            
             const row = target.closest("tr");
             const deleteBtn = target.closest(".btn-danger");
             const printBtn = target.closest(".btn-primary");
 
             if (deleteBtn) {
-                // Ambil ID dari onclick attribute
+                
                 const onclickAttr = deleteBtn.getAttribute("onclick");
                 const match = onclickAttr?.match(/deleteSPH\((\d+)\)/);
                 if (match) {
@@ -361,9 +359,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// Custom status modal replaced by inline dropdown with SweetAlert confirmation
 
-// Fungsi untuk update status via dropdown (Connected to Backend API)
+
+
 window.updateStatusDropdown = function (selectElement) {
     const id = parseInt(selectElement.dataset.id);
     const newStatus = selectElement.value;
@@ -378,11 +376,11 @@ window.updateStatusDropdown = function (selectElement) {
             title: 'Akses Ditolak',
             text: 'Token tidak ditemukan! Silakan login kembali.'
         });
-        selectElement.value = originalStatus; // Revert
+        selectElement.value = originalStatus; 
         return;
     }
 
-    // Confirmation logic
+    
     Swal.fire({
         title: 'Ubah Status SPH?',
         text: `Anda akan mengubah status menjadi "${newStatus}".`,
@@ -394,15 +392,15 @@ window.updateStatusDropdown = function (selectElement) {
         cancelButtonText: 'Batal'
     }).then((result) => {
         if (!result.isConfirmed) {
-            selectElement.value = originalStatus; // Revert if cancelled
+            selectElement.value = originalStatus; 
             return;
         }
 
-        // Show loading state
+        
         selectElement.disabled = true;
         selectElement.style.opacity = "0.6";
 
-        // Send PUT request to backend
+        
         fetch(`${API_SPH}/${id}`, {
             method: "PUT",
             headers: {
@@ -415,8 +413,8 @@ window.updateStatusDropdown = function (selectElement) {
         })
             .then(async res => {
                 const text = await res.text();
-                // console.log("RESPONSE STATUS:", res.status);
-                // console.log("RESPONSE RAW:", text);
+                
+                
 
                 if (!res.ok) {
                     throw new Error(text || "Gagal mengupdate status SPH");
@@ -424,13 +422,13 @@ window.updateStatusDropdown = function (selectElement) {
                 return text ? JSON.parse(text) : {};
             })
             .then(() => {
-                // Update local data
+                
                 const sphIndex = allSPHData.findIndex(item => item.id === id);
                 if (sphIndex !== -1) {
                     allSPHData[sphIndex].status = newStatus;
                 }
 
-                // Update Colors Dynamically
+                
                 if (newStatus === "Diterima") {
                     selectElement.style.backgroundColor = "#d1fae5";
                     selectElement.style.color = "#065f46";
@@ -454,7 +452,7 @@ window.updateStatusDropdown = function (selectElement) {
             })
             .catch(err => {
                 console.error("UPDATE ERROR:", err);
-                selectElement.value = originalStatus; // Revert
+                selectElement.value = originalStatus; 
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal',
@@ -468,7 +466,7 @@ window.updateStatusDropdown = function (selectElement) {
     });
 }
 
-// Fungsi untuk submit form SPH (Tambah Data)
+
 window.submitFormSPH = function (formData) {
     const token = getToken();
     if (!token) {
@@ -476,20 +474,20 @@ window.submitFormSPH = function (formData) {
         return;
     }
 
-    // Ambil data dari form menggunakan selector name karena ID tidak lengkap di blade
+    
     const tanggal = document.querySelector('[name="tanggal"]').value;
     const tempat = document.querySelector('[name="tempat"]').value;
     const lampiran = document.querySelector('[name="lampiran"]').value;
     const hal = document.querySelector('[name="hal"]').value;
-    const jabatan_tujuan = document.querySelector('[name="kepada"]').value; // Di blade name="kepada"
+    const jabatan_tujuan = document.querySelector('[name="kepada"]').value; 
     const nama_perusahaan = document.querySelector('[name="nama_perusahaan"]').value;
     const penandatangan = document.querySelector('[name="penandatangan"]').value;
 
-    // Ambil total keseluruhan dari hidden input yang diupdate oleh jQuery
+    
     const totalKeseluruhanInput = document.getElementById('totalKeseluruhanValue');
     const total_keseluruhan = totalKeseluruhanInput ? parseInt(totalKeseluruhanInput.value) : 0;
 
-    // Ambil item barang dari container yang benar (#itemContainer .item-row)
+    
     const items = [];
     document.querySelectorAll("#itemContainer .item-row").forEach((row) => {
         const namaSelect = row.querySelector(".select-barang");
@@ -500,14 +498,14 @@ window.submitFormSPH = function (formData) {
         const nama = namaSelect ? namaSelect.value : "";
         const jumlah = jumlahInput ? parseInt(jumlahInput.value) || 0 : 0;
 
-        // Get harga from hidden input, or fallback to data-harga attribute
+        
         let harga = hargaInput ? parseInt(hargaInput.value) || 0 : 0;
         if (harga === 0 && namaSelect) {
             const selectedOption = namaSelect.options[namaSelect.selectedIndex];
             harga = selectedOption ? parseInt(selectedOption.getAttribute('data-harga')) || 0 : 0;
         }
 
-        // Get total from hidden input, or calculate it
+        
         let total = totalInput ? parseInt(totalInput.value) || 0 : 0;
         if (total === 0) {
             total = harga * jumlah;
@@ -543,8 +541,8 @@ window.submitFormSPH = function (formData) {
         nama_perusahaan: nama_perusahaan,
         penandatangan: penandatangan,
         detail_barang: items,
-        total_keseluruhan: total_keseluruhan, // Wajib sesuai API docs
-        status: "Menunggu" // Default status
+        total_keseluruhan: total_keseluruhan, 
+        status: "Menunggu" 
     };
 
     console.log("Sending Payload:", payload);
@@ -568,15 +566,15 @@ window.submitFormSPH = function (formData) {
             return res.json();
         })
         .then((response) => {
-            // Tutup modal form (Bootstrap)
+            
             const modalEl = document.getElementById('modalTambahSPH');
             const modal = bootstrap.Modal.getInstance(modalEl);
             if (modal) modal.hide();
 
-            // Reset form via jQuery trigger to handle custom resets
+            
             $('#modalTambahSPH').trigger('hidden.bs.modal');
 
-            // Show success modal
+            
             const nomorSPH = response?.data?.nomor_sph || response?.nomor_sph || "Baru";
 
             Swal.fire({
@@ -598,13 +596,13 @@ window.submitFormSPH = function (formData) {
         });
 }
 
-// Fungsi untuk menampilkan modal sukses
+
 window.showSuccessModal = function (title, identifier) {
-    // Hapus modal lama jika ada
+    
     const oldModal = document.getElementById('successModalOverlay');
     if (oldModal) oldModal.remove();
 
-    // Create Overlay
+    
     const overlay = document.createElement('div');
     overlay.id = 'successModalOverlay';
     Object.assign(overlay.style, {
@@ -614,7 +612,7 @@ window.showSuccessModal = function (title, identifier) {
         animation: 'fadeIn 0.3s'
     });
 
-    // Create Modal Content
+    
     const content = document.createElement('div');
     Object.assign(content.style, {
         background: 'white', borderRadius: '16px', padding: '32px',
@@ -622,16 +620,16 @@ window.showSuccessModal = function (title, identifier) {
         textAlign: 'center'
     });
 
-    // Animated Success Icon (SVG)
+    
     const iconContainer = document.createElement('div');
     iconContainer.innerHTML = `
-        <svg class="success-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" style="width: 80px; height: 80px; margin-bottom: 16px;">
+        <svg class="success-checkmark" xmlns="http:
             <circle class="success-checkmark-circle" cx="26" cy="26" r="25" fill="none" stroke="#10b981" stroke-width="2"/>
             <path class="success-checkmark-check" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
         </svg>
     `;
 
-    // Add CSS animations for checkmark
+    
     const animationStyle = document.createElement('style');
     animationStyle.textContent = `
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
@@ -666,7 +664,7 @@ window.showSuccessModal = function (title, identifier) {
     `;
     overlay.appendChild(animationStyle);
 
-    // Header
+    
     const header = document.createElement('h5');
     header.textContent = `${title} Berhasil Dibuat!`;
     Object.assign(header.style, {
@@ -674,7 +672,7 @@ window.showSuccessModal = function (title, identifier) {
         color: '#065f46'
     });
 
-    // SPH Number Display
+    
     const sphNumber = document.createElement('div');
     sphNumber.innerHTML = `<span style="color:#6b7280;">Nomor Surat:</span><br><strong style="font-size:18px; color:#1f2937;">${identifier}</strong>`;
     Object.assign(sphNumber.style, {
@@ -682,7 +680,7 @@ window.showSuccessModal = function (title, identifier) {
         margin: '16px 0 24px 0', border: '1px solid #bbf7d0'
     });
 
-    // OK Button
+    
     const btnOK = document.createElement('button');
     btnOK.textContent = 'OK, Mengerti';
     btnOK.type = 'button';
@@ -697,14 +695,14 @@ window.showSuccessModal = function (title, identifier) {
         overlay.remove();
     });
 
-    // Append elements
+    
     content.appendChild(iconContainer);
     content.appendChild(header);
     content.appendChild(sphNumber);
     content.appendChild(btnOK);
     overlay.appendChild(content);
 
-    // Close on overlay click
+    
     overlay.addEventListener('click', function (e) {
         if (e.target === overlay) overlay.remove();
     });

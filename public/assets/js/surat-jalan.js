@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// Global state
+
 let allData = [];
 let filteredData = [];
 let currentPage = 1;
@@ -35,9 +35,9 @@ function searchSuratJalan() {
 }
 
 function applyFilterAndRender() {
-    // Filter data
+    
     filteredData = allData.filter(item => {
-        // 1. Time Filter
+        
         let passTime = true;
         const itemDate = new Date(item.tanggal);
         const today = new Date();
@@ -50,7 +50,7 @@ function applyFilterAndRender() {
             passTime = isSameMonth(itemDate, today);
         }
 
-        // 2. Search Filter
+        
         let passSearch = true;
         if (currentSearch) {
             const searchLower = currentSearch.toLowerCase();
@@ -64,7 +64,7 @@ function applyFilterAndRender() {
         return passTime && passSearch;
     });
 
-    // Render current page
+    
     renderCurrentPage();
 }
 
@@ -77,7 +77,7 @@ function renderCurrentPage() {
     renderPagination();
 }
 
-// Helper dates
+
 function isSameDay(d1, d2) {
     return d1.getFullYear() === d2.getFullYear() &&
         d1.getMonth() === d2.getMonth() &&
@@ -104,7 +104,7 @@ function loadSuratJalan() {
         headers["Authorization"] = "Bearer " + token;
     }
 
-    // Fetch all data
+    
     fetch(API_SURAT_JALAN, {
         method: "GET",
         headers: headers
@@ -188,7 +188,7 @@ function renderPagination() {
 
     if (totalPages <= 1) return;
 
-    // Previous
+    
     const prevDisabled = currentPage === 1 ? 'disabled' : '';
     container.innerHTML += `
         <li class="page-item ${prevDisabled}">
@@ -198,7 +198,7 @@ function renderPagination() {
         </li>
     `;
 
-    // Pages
+    
     for (let i = 1; i <= totalPages; i++) {
         if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
             const active = i === currentPage ? 'active' : '';
@@ -212,7 +212,7 @@ function renderPagination() {
         }
     }
 
-    // Next
+    
     const nextDisabled = currentPage === totalPages ? 'disabled' : '';
     container.innerHTML += `
         <li class="page-item ${nextDisabled}">
@@ -243,18 +243,7 @@ function submitFormSuratJalan() {
         data[key] = value;
     });
 
-    // WORKAROUND: Append signer to keterangan
-    // First remove any existing tags to avoid duplication
-    let ket = data.keterangan || '';
-    ket = ket.replace(' [SIG:Dewi]', '').replace('[SIG:Dewi]', '');
-    ket = ket.replace(' [SIG:Heri]', '').replace('[SIG:Heri]', '');
 
-    if (data.penandatangan && data.penandatangan.includes('Dewi')) {
-        ket += ' [SIG:Dewi]';
-    } else if (data.penandatangan && data.penandatangan.includes('Heri')) {
-        ket += ' [SIG:Heri]';
-    }
-    data.keterangan = ket;
 
     const token = getToken();
     const headers = {
@@ -265,7 +254,7 @@ function submitFormSuratJalan() {
         headers["Authorization"] = "Bearer " + token;
     }
 
-    // Add CSRF token
+    
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     if (csrfToken) {
         headers["X-CSRF-TOKEN"] = csrfToken;
@@ -328,7 +317,7 @@ function deleteSuratJalan(id) {
                 headers["Authorization"] = "Bearer " + token;
             }
 
-            // Add CSRF token
+            
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
             if (csrfToken) {
                 headers["X-CSRF-TOKEN"] = csrfToken;

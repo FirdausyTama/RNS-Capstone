@@ -86,7 +86,7 @@
                     </div>
 
                     <div class="row">
-                        <!-- 🟢 Stok Aman -->
+                        
                         <div class="col-md-6 col-lg-4">
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
@@ -100,17 +100,12 @@
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h3 class="mb-0 fs-22 text-dark me-3 mt-2" id="totalStokMasuk">0</h3>
-                                        <div class="d-flex justify-content-between align-items-center mt-1">
-                                            <span id="totalStokMasuk7Hari" class="text-success fw-semibold d-flex align-items-center">
-                                            </span>
-                                            <small class="text-muted">7 Hari Terakhir</small>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 🟡 Stok Keluar -->
+                        
                         <div class="col-md-6 col-lg-4">
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
@@ -124,17 +119,12 @@
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h3 class="mb-0 fs-22 text-dark me-3 mt-2" id="totalStokKeluar">0</h3>
-                                        <div class="d-flex justify-content-between align-items-center mt-1">
-                                            <span id="totalStokKeluar7Hari" class="text-danger fw-semibold d-flex align-items-center">
-                                            </span>
-                                            <small class="text-muted">7 Hari Terakhir</small>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 🟣 Total Stok Keseluruhan -->
+                        
                         <div class="col-md-6 col-lg-4">
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
@@ -148,11 +138,6 @@
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h3 class="mb-0 fs-22 text-dark me-3 mt-2" id="totalStokKeseluruhan">0</h3>
-                                        <div class="d-flex justify-content-between align-items-center mt-1">
-                                            <span id="totalKeseluruhanPersen" class="fw-semibold d-flex align-items-center">
-                                            </span>
-                                            <small class="text-muted">7 Hari Terakhir</small>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -212,14 +197,14 @@
                                 </table>
                             </div>
                             
-                            <!-- Pagination Container -->
+                            
                             <div class="row align-items-center mt-3" id="pagination-container" style="display: none;">
                                 <div class="col-sm-6">
                                     <p class="text-muted mb-0" id="pagination-info">Menampilkan 0-0 dari 0 transaksi</p>
                                 </div>
                                 <div class="col-sm-6">
                                     <ul class="pagination pagination-rounded justify-content-end mb-0" id="pagination-controls">
-                                        <!-- Pagination items will be injected here -->
+                                        
                                     </ul>
                                 </div>
                             </div>
@@ -249,7 +234,7 @@
         </div>
     </div>
 
-    <!-- Modal Tambah Stok -->
+    
     <div class="modal fade" id="modalTambahStok" tabindex="-1" aria-labelledby="modalTambahStokLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -388,7 +373,7 @@
         </div>
     </div>
 
-    <!-- Modal Edit Stok -->
+    
     <div class="modal fade" id="modalEditStok" tabindex="-1" aria-labelledby="modalEditStokLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -537,7 +522,7 @@
         </div>
     </div>
 
-    <!-- Modal Detail Stok -->
+    
     <div class="modal fade" id="detailStokModal" tabindex="-1" aria-labelledby="detailStokLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
@@ -546,7 +531,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4" id="detailStokContent">
-                    <!-- Content injected via JS -->
+                    
                 </div>
             </div>
         </div>

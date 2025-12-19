@@ -12,10 +12,10 @@ function getToken() {
     return token;
 }
 
-// Store pembelian data for reference
+
 let pembelianData = [];
 
-// Load list of available pembelian for dropdown
+
 function loadPembelianList() {
     const token = getToken();
     if (!token) return;
@@ -34,7 +34,7 @@ function loadPembelianList() {
             const select = document.getElementById('pembelianId');
             if (select) {
                 select.innerHTML = '<option value="">-- Pilih Pembelian --</option>';
-                // Filter out 'Lunas' purchases
+                
                 const availablePurchases = data.filter(item =>
                     (item.status_pembayaran || '').toLowerCase() !== 'lunas'
                 );
@@ -53,14 +53,14 @@ function loadPembelianList() {
         });
 }
 
-// Event listener for pembelian dropdown change
+
 document.addEventListener("DOMContentLoaded", function () {
     const pembelianSelect = document.getElementById('pembelianId');
     if (pembelianSelect) {
         pembelianSelect.addEventListener('change', function () {
             const pembelianId = this.value;
             if (pembelianId) {
-                // Find the selected pembelian data
+                
                 const selectedPembelian = pembelianData.find(p => p.id == pembelianId);
                 if (selectedPembelian && selectedPembelian.items) {
                     autoFillItemsFromPembelian(selectedPembelian);
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// Auto-fill items from pembelian data
+
 function autoFillItemsFromPembelian(pembelian) {
     const container = document.getElementById('itemContainer');
     const placeholder = document.getElementById('itemPlaceholder');
@@ -79,21 +79,21 @@ function autoFillItemsFromPembelian(pembelian) {
 
     if (!container || !pembelian.items || pembelian.items.length === 0) return;
 
-    // Show table, hide placeholder
+    
     if (placeholder) placeholder.style.display = 'none';
     if (tableContainer) tableContainer.style.display = 'block';
 
-    // Auto-fill nama perusahaan from pembelian data
+    
     if (namaPerusahaanInput) {
         const namaPerusahaan = pembelian.penerima_nama || pembelian.nama_perusahaan || '';
         namaPerusahaanInput.value = namaPerusahaan;
         namaPerusahaanInput.setAttribute('readonly', true);
     }
 
-    // Clear existing items
+    
     container.innerHTML = '';
 
-    // Add items from pembelian
+    
     pembelian.items.forEach((item, index) => {
         const harga = item.harga_satuan || item.harga || 0;
         const qty = item.jumlah || item.qty || 1;
@@ -117,15 +117,15 @@ function autoFillItemsFromPembelian(pembelian) {
         container.innerHTML += row;
     });
 
-    // Update totals
+    
     recalculateTotals();
 
-    // Show info that items are from pembelian
+    
     console.log(`Loaded ${pembelian.items.length} items from Pembelian ID: ${pembelian.id}`);
 }
 
-// Recalculate totals after auto-fill
-// Recalculate totals after auto-fill or manual changes
+
+
 function recalculateTotals() {
     let subtotal = 0;
     document.querySelectorAll('.subtotal-input').forEach(input => {
@@ -173,11 +173,11 @@ function loadInvoice() {
         .then(res => {
             console.log("Response dari API:", res);
 
-            // Cari nomor invoice tertinggi
+            
             if (res && res.length > 0) {
                 const numbers = res.map(item => {
-                    // Asumsi format: INV/XXX/RNS/YYYY atau XXX/INV-RNS/X/YYYY
-                    // Kita coba ambil angka pertama yang ditemukan
+                    
+                    
                     const match = item.nomor_invoice.match(/(\d+)/);
                     return match ? parseInt(match[0]) : 0;
                 });
@@ -186,7 +186,7 @@ function loadInvoice() {
                 latestInvoiceNumber = 0;
             }
 
-            allInvoiceData = res; // Store for reference in delete modal
+            allInvoiceData = res; 
             renderInvoice(res);
         })
         .catch(err => {
@@ -199,15 +199,15 @@ function loadInvoice() {
 function generateNextInvoiceNumber() {
     const nextNumber = latestInvoiceNumber + 1;
     const year = new Date().getFullYear();
-    // Format: INV/001/RNS/2025 (sesuai placeholder di blade)
-    // Atau format user sebelumnya: 01/INV-RNS/X/2025. Kita ikuti placeholder: INV/004/RNS/2025
-    // Tapi user minta otomatis, jadi kita buat standar baru yang rapi.
-    // Kita pakai format: INV/XXX/RNS/YYYY
+    
+    
+    
+    
     const paddedNumber = String(nextNumber).padStart(3, '0');
     return `INV/${paddedNumber}/RNS/${year}`;
 }
 
-// Event saat modal dibuka
+
 document.addEventListener("DOMContentLoaded", function () {
     const modal = document.getElementById('modalTambahInvoice');
     if (modal) {
@@ -234,13 +234,13 @@ function formatTanggalIndonesia(tanggal) {
     return `${hari} ${bulan} ${tahun}`;
 }
 
-// Pagination variables
+
 let currentPage = 1;
 const itemsPerPage = 10;
 let filteredInvoiceData = [];
 
 function renderInvoice(data) {
-    // Store for pagination
+    
     filteredInvoiceData = data || [];
     currentPage = 1;
     renderPaginatedInvoice();
@@ -257,17 +257,17 @@ function renderPaginatedInvoice() {
         return;
     }
 
-    // Calculate pagination
+    
     const totalItems = filteredInvoiceData.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
     const paginatedData = filteredInvoiceData.slice(startIndex, endIndex);
 
-    // Render paginated data
+    
     let no = startIndex + 1;
     paginatedData.forEach(item => {
-        // Fallback checks for different backend column names
+        
         const nama = item.nama_perusahaan || item.nama_penerima || item.penerima_nama || "-";
         const total = item.total_pembayaran || item.total_tagihan || item.grand_total || item.total_harga || 0;
 
@@ -294,7 +294,7 @@ function renderPaginatedInvoice() {
         `;
     });
 
-    // Update pagination info and controls
+    
     updatePaginationInfo(startIndex + 1, endIndex, totalItems);
     renderPaginationControls(totalPages);
 }
@@ -316,17 +316,17 @@ function renderPaginationControls(totalPages) {
 
     container.innerHTML = '';
 
-    // Always show pagination even if only 1 page (like SPH)
+    
     const pages = totalPages || 1;
 
-    // Previous button
+    
     container.innerHTML += `
         <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
             <a class="page-link" href="#" onclick="goToPage(${currentPage - 1}); return false;">‹</a>
         </li>
     `;
 
-    // Page numbers
+    
     const maxVisiblePages = 5;
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(pages, startPage + maxVisiblePages - 1);
@@ -343,7 +343,7 @@ function renderPaginationControls(totalPages) {
         `;
     }
 
-    // Next button
+    
     container.innerHTML += `
         <li class="page-item ${currentPage === pages ? 'disabled' : ''}">
             <a class="page-link" href="#" onclick="goToPage(${currentPage + 1}); return false;">›</a>
@@ -358,14 +358,14 @@ function goToPage(page) {
     renderPaginatedInvoice();
 }
 
-// function getInvoiceDetail(id) {
-//    window.location.href = `/detail-invoice/${id}`;
-// }
 
-// Store all invoice data for reference
+
+
+
+
 let allInvoiceData = [];
 
-// Fungsi wrapper untuk delete Invoice (Global) - memanggil SweetAlert
+
 window.deleteInvoice = function (id) {
     const invoiceData = allInvoiceData.find(item => item.id === id);
     const invoiceName = invoiceData?.nomor_invoice || `ID: ${id}`;
@@ -386,7 +386,7 @@ window.deleteInvoice = function (id) {
     });
 }
 
-// Fungsi untuk eksekusi hapus Invoice
+
 function executeDeleteInvoice(id) {
     const token = getToken();
     if (!token) {
@@ -430,12 +430,12 @@ function executeDeleteInvoice(id) {
         });
 }
 
-// Custom modals replaced by SweetAlert2
-
-// Fungsi wrapper untuk delete Invoice (Global) - memanggil modal
 
 
-// Override submit handler from inline script
+
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const btnSimpan = document.getElementById('btnSimpanInvoice');
     if (btnSimpan) {
@@ -475,23 +475,23 @@ function submitFormInvoice() {
         }
     });
 
-    // Get pembelian_id from dropdown
+    
     const pembelianIdSelect = document.getElementById('pembelianId');
     const pembelianId = pembelianIdSelect?.value ? parseInt(pembelianIdSelect.value) : null;
 
-    // Build data payload
+    
     const data = {
         tanggal_invoice: document.getElementById('tanggalInvoice')?.value || null,
         nama_penerima: document.getElementById('namaPerusahaan')?.value || '',
-        pembelian_id: pembelianId, // Send pembelian_id if selected
-        // If pembelian_id is set, backend will use items from Pembelian
-        // If not, we send manual items
+        pembelian_id: pembelianId, 
+        
+        
         items: pembelianId ? [] : items.map(item => ({
             nama_barang: item.nama_barang || '',
             qty: parseInt(item.qty) || 0,
             harga_satuan: parseInt(item.harga_satuan) || 0
         })),
-        // Additional fields for display/compatibility
+        
         nomor_invoice: document.getElementById('nomorInvoice')?.value || '',
         nama_perusahaan: document.getElementById('namaPerusahaan')?.value || '',
         penandatangan: document.querySelector('select[name="penandatangan"]')?.value || 'Dewi Sulistiowati',
@@ -526,7 +526,7 @@ function submitFormInvoice() {
             const modal = bootstrap.Modal.getInstance(modalEl);
             if (modal) modal.hide();
 
-            // Show success modal
+            
             const nomorInvoice = response?.data?.nomor_invoice || response?.nomor_invoice || document.getElementById('nomorInvoice').value;
 
             Swal.fire({
@@ -548,21 +548,21 @@ function submitFormInvoice() {
         });
 }
 
-// Custom success modal replaced by SweetAlert2
+
 
 window.printInvoice = function (id) {
     window.location.href = '/print-invoice/' + id;
 }
 
-// Search function for invoice
+
 function searchInvoice() {
     const searchTerm = document.getElementById('searchInput')?.value?.toLowerCase() || '';
 
     if (!searchTerm) {
-        // Reset to all data
+        
         filteredInvoiceData = allInvoiceData;
     } else {
-        // Filter by nomor_invoice or nama_perusahaan
+        
         filteredInvoiceData = allInvoiceData.filter(item => {
             const nomorInvoice = (item.nomor_invoice || '').toLowerCase();
             const namaPerusahaan = (item.nama_perusahaan || '').toLowerCase();
@@ -574,5 +574,5 @@ function searchInvoice() {
     renderPaginatedInvoice();
 }
 
-// Make searchInvoice globally accessible
+
 window.searchInvoice = searchInvoice;

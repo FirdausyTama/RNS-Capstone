@@ -10,13 +10,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- App favicon -->
+    
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
 
-    <!-- App css -->
+    
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" id="app-style" />
 
-    <!-- Icons -->
+    
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
 
     <script src="{{ asset('assets/js/head.js') }}"></script>
@@ -47,11 +47,11 @@
 <body data-menu-color="light" data-sidebar="default">
     @include('navbar.navbar')
 
-    <!-- Begin page -->
+    
     <div id="app-layout">
         <div class="content-page">
             <div class="content">
-                <!-- Start Content-->
+                
                 <div class="container-fluid">
                     <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
                         <div class="flex-grow-1">
@@ -67,7 +67,7 @@
                         </div>
                     </div>
 
-                    <!-- Button Kembali -->
+                    
                     <div class="mb-3 d-flex justify-content-between">
                         <a href="{{ url('/kwitansi') }}" class="btn btn-light">
                             <i class="mdi mdi-arrow-left me-1"></i> Kembali
@@ -78,7 +78,7 @@
                     </div>
 
                     <div class="row">
-                        <!-- Kolom Kiri - Informasi Kwitansi -->
+                        
                         <div class="col-lg-8">
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
@@ -119,7 +119,7 @@
                             </div>
                         </div>
 
-                        <!-- Kolom Kanan - Data Penerima -->
+                        
                         <div class="col-lg-4">
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
@@ -146,10 +146,10 @@
                         </div>
                     </div>
                 </div>
-                <!-- End Content-->
-            </div> <!-- content -->
+                
+            </div> 
 
-            <!-- Footer Start -->
+            
             <footer class="footer">
                 <div class="container-fluid">
                     <div class="row">
@@ -161,11 +161,11 @@
                     </div>
                 </div>
             </footer>
-            <!-- end Footer -->
+            
         </div>
     </div>
 
-    <!-- Modal Edit Kwitansi -->
+    
     <div class="modal fade" id="modalEditKwitansi" tabindex="-1" aria-labelledby="modalEditKwitansiLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -246,21 +246,21 @@
       </div>
     </div>
 
-    <!-- Vendor -->
+    
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
     <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
 
-    <!-- App js -->
+    
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
 
-    <!-- App js -->
+    
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
-    <!-- External JS -->
+    
     <script src="{{ asset('assets/js/detail-kwitansi.js') }}"></script>
     <script>
         // Keep only UI specific logic if needed, but most logic is now in detail-kwitansi.js

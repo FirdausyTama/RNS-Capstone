@@ -9,13 +9,13 @@
   <meta name="author" content="Zoyothemes" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-  <!-- App favicon -->
+  
   <link rel="shortcut icon" href="assets/images/favicon.ico" />
 
-  <!-- App css -->
+  
   <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
 
-  <!-- Icons -->
+  
   <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
 
   <script src="assets/js/head.js"></script>
@@ -41,7 +41,7 @@
           </div>
         </div>
 
-        <!-- Start Main Widgets -->
+        
         <div class="row">
           <div class="container-fluid">
             <div class="card shadow-sm border-0">
@@ -52,9 +52,9 @@
                     <p class="text-muted mb-0">Kelola dan pantau seluruh surat invoice Anda</p>
                   </div>
 
-                  <!-- Filter & Search -->
+                  
                   <div class="d-flex align-items-center gap-2">
-                    <!-- Filter Waktu -->
+                    
                     <div class="dropdown">
                       <button class="btn btn-light border dropdown-toggle" type="button" id="filterWaktu"
                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -72,7 +72,7 @@
                       </ul>
                     </div>
 
-                    <!-- Search -->
+                    
                     <form class="app-search">
                       <div class="position-relative topbar-search">
                         <input type="text" class="form-control ps-4" placeholder="Cari invoice..."
@@ -97,7 +97,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <!-- Data akan diisi oleh JavaScript -->
+                      
                     </tbody>
                   </table>
                 </div>
@@ -106,7 +106,7 @@
                   <small class="text-muted" id="paginationInfo">Menampilkan 0 dari 0 invoice</small>
                   <nav>
                     <ul class="pagination pagination-sm mb-0" id="paginationContainer">
-                      <!-- Pagination will be populated by JavaScript -->
+                      
                     </ul>
                   </nav>
                 </div>
@@ -114,10 +114,10 @@
             </div>
           </div>
         </div>
-        <!-- End Main Widgets -->
+        
       </div>
 
-      <!-- Footer -->
+      
       <footer class="footer">
         <div class="container-fluid">
           <div class="row">
@@ -131,7 +131,7 @@
         </div>
       </footer>
 
-      <!-- Floating Button Tambah Invoice -->
+      
       <div class="content position-relative">
         <button type="button" id="btnTambahInvoice" class="btn btn-primary rounded-circle shadow-lg"
           style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; z-index: 1000;"
@@ -142,12 +142,12 @@
     </div>
   </div>
 
-  <!-- Modal Tambah Invoice -->
+  
   <div class="modal fade" id="modalTambahInvoice" tabindex="-1" aria-labelledby="modalTambahInvoiceLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
-        <!-- Header -->
+        
         <div class="modal-header bg-primary text-white">
           <h5 class="modal-title" id="modalTambahInvoiceLabel">
             <i class="mdi mdi-file-document me-2"></i>Tambah Surat Invoice Baru
@@ -155,10 +155,10 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
-        <!-- Body -->
+        
         <div class="modal-body">
           <form id="formInvoice">
-            <!-- Section 1: Informasi Invoice -->
+            
             <div class="mb-4">
               <h6 class="fw-bold text-primary mb-3">
                 <i class="mdi mdi-information-outline me-1"></i>Informasi Invoice
@@ -181,7 +181,7 @@
               </div>
             </div>
 
-            <!-- Section 2: Informasi Pelanggan -->
+            
             <div class="mb-4">
               <h6 class="fw-bold text-primary mb-3">
                 <i class="mdi mdi-domain me-1"></i>Informasi Pelanggan
@@ -193,7 +193,7 @@
                   </label>
                   <select class="form-select" id="pembelianId" name="pembelianId" required>
                     <option value="">-- Pilih Pembelian --</option>
-                    <!-- Options will be loaded via JS -->
+                    
                   </select>
                   <small class="text-muted">Pilih data pembelian untuk mengisi invoice</small>
                 </div>
@@ -207,7 +207,7 @@
               </div>
             </div>
 
-            <!-- Section 3: Detail Item -->
+            
             <div class="mb-4" id="sectionDetailItem">
               <div class="d-flex justify-content-between align-items-center mb-3">
                 <h6 class="fw-bold text-primary mb-0">
@@ -219,7 +219,7 @@
                 </button>
               </div>
 
-              <!-- Message when pembelian not selected -->
+              
               <div id="itemPlaceholder" class="text-center py-4 border rounded bg-light">
                 <i class="mdi mdi-package-variant-closed fs-1 text-muted"></i>
                 <p class="text-muted mb-0 mt-2">Silakan pilih <strong>Data Pembelian</strong> di atas untuk mengisi item
@@ -227,7 +227,7 @@
                 <small class="text-muted">Item akan otomatis terisi dari data pembelian yang dipilih</small>
               </div>
 
-              <!-- Table (hidden until pembelian selected) -->
+              
               <div class="table-responsive" id="itemTableContainer" style="display: none;">
                 <table class="table table-bordered" id="tabelDetailItem">
                   <thead class="table-light">
@@ -241,13 +241,13 @@
                     </tr>
                   </thead>
                   <tbody id="itemContainer">
-                    <!-- Items akan diisi dari data pembelian -->
+                    
                   </tbody>
                 </table>
               </div>
             </div>
 
-            <!-- Section 4: Ringkasan Pembayaran & Ongkir -->
+            
             <div class="mb-4">
               <div class="d-flex justify-content-between align-items-center mb-3">
                 <h6 class="fw-bold text-primary mb-0">
@@ -260,13 +260,13 @@
               </div>
 
               <div class="row">
-                <!-- Subtotal -->
+                
                 <div class="col-md-6 mb-3">
                   <label for="subtotalInvoice" class="form-label fw-semibold">Subtotal</label>
                   <input type="text" class="form-control" id="subtotalInvoice" readonly>
                 </div>
 
-                <!-- Blok Ongkir -->
+                
                 <div class="col-12 mb-3 p-3 rounded border bg-light" id="blokOngkir"
                   style="opacity: 0.5; pointer-events: none;">
                   <div class="row">
@@ -286,13 +286,13 @@
                   </div>
                 </div>
 
-                <!-- Total Tagihan -->
+                
                 <div class="col-md-6 mb-3">
                   <label for="totalInvoice" class="form-label fw-semibold">Total Tagihan</label>
                   <input type="text" class="form-control fw-bold text-primary" id="totalInvoice" readonly>
                 </div>
 
-                <!-- Penandatangan -->
+                
                 <div class="card border-0 shadow-sm">
                   <div class="card-header bg-light">
                     <h6 class="mb-0 fw-semibold"><i class="mdi mdi-pencil-outline me-2"></i>Penandatangan</h6>
@@ -316,7 +316,7 @@
           </form>
         </div>
 
-        <!-- Footer -->
+        
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             <i class="mdi mdi-close me-1"></i>Batal
@@ -330,7 +330,7 @@
   </div>
 
 
-  <!-- Vendor -->
+  
   <script src="assets/libs/jquery/jquery.min.js"></script>
   <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/libs/simplebar/simplebar.min.js"></script>
@@ -339,13 +339,13 @@
   <script src="assets/libs/jquery.counterup/jquery.counterup.min.js"></script>
   <script src="assets/libs/feather-icons/feather.min.js"></script>
 
-  <!-- App js -->
+  
   <script src="assets/js/app.js"></script>
 
-  <!-- Invoice Logic -->
+  
   <script src="assets/js/invoice.js"></script>
 
-  <!-- Helper Scripts for Form Interactions (Moved from inline to here for now or keep minimal) -->
+  
   <script>
     // Helper functions for form interactivity (Calculations, etc.)
     // These are UI specific, separate from API logic in invoice.js

@@ -8,13 +8,13 @@
     <meta name="author" content="Zoyothemes" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <!-- App favicon -->
+    
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" />
 
-    <!-- App css -->
+    
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" id="app-style" />
 
-    <!-- Icons -->
+    
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
 
     <script src="{{ asset('assets/js/head.js') }}"></script>
@@ -48,7 +48,7 @@
       <div class="content-page">
         <div class="content">
           <div class="container-fluid">
-            <!-- Header halaman -->
+            
             <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
               <div class="flex-grow-1">
                 <h4 class="fs-18 fw-semibold m-0">Detail Surat Jalan</h4>
@@ -61,7 +61,7 @@
               </div>
             </div>
 
-            <!-- Button Kembali -->
+            
             <div class="mb-3 d-flex justify-content-between">
                 <a href="{{ url('/surat-jalan') }}" class="btn btn-light">
                     <i class="mdi mdi-arrow-left me-1"></i> Kembali
@@ -72,7 +72,7 @@
             </div>
 
                 <div class="row">
-                    <!-- Kolom Kiri - Informasi Surat Jalan -->
+                    
                     <div class="col-lg-8">
                         <div class="card shadow-sm border-0">
                             <div class="card-body">
@@ -85,7 +85,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="info-label">Nama Pengirim</div>
-                                        <div class="info-value" id="detailNamaPengirim">Loading...</div> <!-- Added ID for Pengirim -->
+                                        <div class="info-value" id="detailNamaPengirim">Loading...</div> 
                                     </div>
                                 </div>
 
@@ -121,7 +121,7 @@
                         </div>
                     </div>
 
-                    <!-- Kolom Kanan - Data Penerima -->
+                    
                     <div class="col-lg-4">
                         <div class="card shadow-sm border-0">
                             <div class="card-body">
@@ -159,7 +159,7 @@
           </div>
         </div>
 
-        <!-- Footer -->
+        
         <footer class="footer">
           <div class="container-fluid">
             <div class="row">
@@ -175,7 +175,7 @@
       </div>
     </div>
 
-    <!-- Modal Edit Surat Jalan -->
+    
     <div class="modal fade" id="modalEditSuratJalan" tabindex="-1" aria-labelledby="modalEditSuratJalanLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -188,7 +188,7 @@
           <div class="modal-body">
             <form id="formEditSuratJalan">
               <div class="row">
-                <!-- Hidden Nomor -->
+                
                 <input type="hidden" id="editNomor" name="nomor_surat_jalan" />
 
                 <div class="col-md-12 mb-3">
@@ -252,17 +252,17 @@
       </div>
     </div>
 
-    <!-- Vendor -->
+    
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
     <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
 
-    <!-- App js -->
+    
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
-    <!-- External JS -->
+    
     <script src="{{ asset('assets/js/detail-surat-jalan.js') }}"></script>
   </body>
 </html>

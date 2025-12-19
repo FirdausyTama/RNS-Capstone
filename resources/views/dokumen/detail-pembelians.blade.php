@@ -35,17 +35,17 @@
     </style>
 </head>
 <body data-menu-color="light" data-sidebar="default">
-    <!-- Navbar akan diinclude dari navbar.navbar -->
+    
     
     <div id="app-layout">
         <div class="content-page">
             <div class="content">
                 <div class="container-fluid">
-                    <!-- Breadcrumb -->
+                    
                     <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
                         <div class="flex-grow-1">
                             <div class="d-flex align-items-center gap-3">
-                                <!-- Tombol Back -->
+                                
                                 <a href="#" onclick="history.back()" class="btn btn-light border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;" title="Kembali">
                                     <i class="mdi mdi-arrow-left fs-5"></i>
                                 </a>
@@ -65,9 +65,9 @@
                     </div>
 
                     <div class="row">
-                        <!-- Kolom Kiri -->
+                        
                         <div class="col-lg-5">
-                            <!-- Card Info Transaksi -->
+                            
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-3">
@@ -107,7 +107,7 @@
                                 </div>
                             </div>
 
-                            <!-- Card Customer -->
+                            
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <h6 class="fw-semibold mb-3">Data Customer</h6>
@@ -130,7 +130,7 @@
                                 </div>
                             </div>
 
-                            <!-- Card Ringkasan -->
+                            
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <h6 class="fw-semibold mb-3">Ringkasan Pembayaran</h6>
@@ -160,9 +160,9 @@
                             </div>
                         </div>
 
-                        <!-- Kolom Kanan -->
+                        
                         <div class="col-lg-7">
-                            <!-- Card Detail Barang -->
+                            
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -229,7 +229,7 @@
                                 </div>
                             </div>
 
-                            <!-- Card Riwayat -->
+                            
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <h6 class="fw-semibold mb-3">Riwayat Pembayaran</h6>
@@ -289,7 +289,7 @@
                                 </div>
                             </div>
 
-                            <!-- Card Actions -->
+                            
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <div class="d-flex gap-2 flex-wrap">
@@ -314,7 +314,7 @@
                 </div>
             </div>
 
-            <!-- Footer -->
+            
             <footer class="footer">
                 <div class="container-fluid">
                     <div class="row">

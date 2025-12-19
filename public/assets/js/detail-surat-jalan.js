@@ -1,18 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Get ID from URL
+    
     const pathArray = window.location.pathname.split('/');
     const id = pathArray[pathArray.length - 1];
 
     if (id && !isNaN(id)) {
         loadDetailSuratJalan(id);
 
-        // Set print button link (if exists)
+        
         const btnCetak = document.getElementById("btnCetak");
         if (btnCetak) {
             btnCetak.href = `/print-surat-jalan/${id}`;
         }
 
-        // Setup Update Button Handler
+        
         const btnUpdate = document.getElementById("btnUpdateSuratJalan");
         if (btnUpdate) {
             btnUpdate.addEventListener("click", function () {
@@ -66,11 +66,11 @@ function loadDetailSuratJalan(id) {
 }
 
 function renderDetailSuratJalan(data) {
-    // Detect Signer from Keterangan (Workaround)
+    
     let signer = data.penandatangan;
     let cleanKeterangan = data.keterangan || "";
 
-    // Clean existing tags
+    
     if (cleanKeterangan.includes('[SIG:Dewi]')) {
         signer = "Dewi Sulistiowati";
         cleanKeterangan = cleanKeterangan.replace(' [SIG:Dewi]', '').replace('[SIG:Dewi]', '');
@@ -79,7 +79,7 @@ function renderDetailSuratJalan(data) {
         cleanKeterangan = cleanKeterangan.replace(' [SIG:Heri]', '').replace('[SIG:Heri]', '');
     }
 
-    // Populate View
+    
     setText("detailTanggal", formatDate(data.tanggal));
     setText("detailNamaPengirim", data.nama_pengirim);
     setText("detailNamaPenerima", data.nama_penerima);
@@ -89,14 +89,14 @@ function renderDetailSuratJalan(data) {
 
     setText("detailNamaBarang", data.nama_barang_jasa);
     setText("detailQty", data.qty);
-    setText("detailJumlah", data.qty); // Match Print Layout (Qty in both columns)
+    setText("detailJumlah", data.qty); 
 
-    // detailNamaPenerimaSign removed in new layout
+    
 
-    // Signature Logic
+    
     const signatureImg = document.getElementById('detailSignature');
 
-    // Check if signer contains "Dewi" (case insensitive)
+    
     if (signer && signer.toLowerCase().includes('dewi')) {
         signatureImg.src = '/assets/images/ttd dewi.jpeg';
     } else if (signer && signer.toLowerCase().includes('heri')) {
@@ -104,13 +104,13 @@ function renderDetailSuratJalan(data) {
     } else if (signer && signer.toLowerCase().includes('arya')) {
         signatureImg.src = '/assets/images/ttd arya.png';
     } else {
-        // Default to Arya
+        
         signatureImg.src = '/assets/images/ttd arya.png';
     }
 
     setText("detailSignerName", signer || "MUHAMMAD ARYA");
 
-    // Populate Edit Form
+    
     setVal("editNomor", data.nomor_surat_jalan);
     const dateValue = data.tanggal ? new Date(data.tanggal).toISOString().split('T')[0] : '';
     setVal("editTanggal", dateValue);
@@ -121,8 +121,8 @@ function renderDetailSuratJalan(data) {
     setVal("editNamaBarang", data.nama_barang_jasa);
     setVal("editQty", data.qty);
     setVal("editJumlah", data.jumlah);
-    setVal("editKeterangan", cleanKeterangan); // Set clean text
-    setVal("editPenandatangan", signer || "MUHAMMAD ARYA"); // Default to Arya in Edit too
+    setVal("editKeterangan", cleanKeterangan); 
+    setVal("editPenandatangan", signer || "MUHAMMAD ARYA"); 
 }
 
 function updateSuratJalan(id, formData) {
@@ -140,8 +140,8 @@ function updateSuratJalan(id, formData) {
         data[key] = value;
     });
 
-    // WORKAROUND: Append signer to keterangan
-    // First remove any existing tags to avoid duplication
+    
+    
     let ket = data.keterangan || '';
     ket = ket.replace(' [SIG:Dewi]', '').replace('[SIG:Dewi]', '');
     ket = ket.replace(' [SIG:Heri]', '').replace('[SIG:Heri]', '');
@@ -176,12 +176,12 @@ function updateSuratJalan(id, formData) {
                 showConfirmButton: false
             });
 
-            // Close modal
+            
             const modalEl = document.getElementById('modalEditSuratJalan');
             const modal = bootstrap.Modal.getInstance(modalEl);
             if (modal) modal.hide();
 
-            loadDetailSuratJalan(id); // Reload data
+            loadDetailSuratJalan(id); 
         })
         .catch(err => {
             console.error("Error:", err);

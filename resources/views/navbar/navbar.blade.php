@@ -9,7 +9,7 @@
           </button>
         </li>
         <li class="d-none d-lg-block">
-          <h5 class="mb-0">Good Morning, RNS</h5>
+          <h5 class="mb-0">Selamat Datang, RNS</h5>
         </li>
 
         <li class="d-block d-lg-none text-center w-100 mobile-logo">
@@ -42,14 +42,14 @@
      aria-haspopup="false"
      aria-expanded="false">
 
-    <!-- Avatar dengan fallback -->
+    
     <div id="user-avatar"
       class="rounded-circle text-center bg-primary text-white fw-bold"
       style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 14px;">
       U
     </div>
 
-    <!-- Nama dengan fallback -->
+    
     <span id="user-name" class="ms-1 fw-semibold text-dark d-lg-inline">
       User
     </span>
