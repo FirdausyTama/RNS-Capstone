@@ -153,14 +153,11 @@ function renderTable(data, startNo = 1) {
             <td class="text-center">${item.qty || "0"}</td>
             <td class="text-center">
                 <div class="d-flex justify-content-center gap-1">
-                    <a href="detail-surat-jalan/${item.id}" class="btn btn-sm btn-light border" title="Lihat Detail">
-                        <i class="mdi mdi-eye-outline text-info"></i>
-                    </a>
                     <a href="print-surat-jalan/${item.id}" class="btn btn-sm btn-light border" title="Print Surat Jalan">
                         <i class="mdi mdi-printer text-dark"></i>
                     </a>
                     <button class="btn btn-sm btn-light border" onclick="deleteSuratJalan(${item.id})" title="Hapus">
-                        <i class="mdi mdi-delete-outline text-danger"></i>
+                        <i class="mdi mdi-delete text-danger"></i>
                     </button>
                 </div>
             </td>

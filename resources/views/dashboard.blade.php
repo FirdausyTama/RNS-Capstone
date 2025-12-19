@@ -71,7 +71,7 @@
                                             </div>
 
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h3 class="mb-0 fs-22 text-dark me-3">456</h3>
+                                                <h3 class="mb-0 fs-22 text-dark me-3" id="totalPelanggan">0</h3>
                                                 <div class="text-center">
                                                     <span class="text-primary fs-14"><i
                                                             class="mdi mdi-trending-up fs-14"></i> 12.5%</span>
@@ -504,6 +504,9 @@
 
         <!-- App js-->
         <script src="assets/js/app.js"></script>
+
+        <!-- Dashboard Logic -->
+        <script src="assets/js/dashboard.js"></script>
 
     </body>
 

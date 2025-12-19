@@ -185,6 +185,16 @@
                   />
                 </div>
 
+                <!-- Pilih Data Pembelian -->
+                <div class="col-12 mb-3">
+                  <label for="pembelianId" class="form-label fw-semibold">
+                    Pilih Data Pembelian
+                  </label>
+                  <select class="form-select" id="pembelianId" name="pembelian_id">
+                    <option value="">-- Pilih Pembelian --</option>
+                  </select>
+                </div>
+
                 <!-- Nama Pelanggan -->
                 <div class="col-12 mb-3">
                   <label for="namaPenerima" class="form-label fw-semibold">

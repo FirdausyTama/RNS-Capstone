@@ -6,18 +6,11 @@ function getToken() {
     return localStorage.getItem("token");
 }
 
-// Fungsi untuk ambil status overrides dari localStorage
-function getStatusOverrides() {
-    const saved = localStorage.getItem("sph_status_overrides");
-    return saved ? JSON.parse(saved) : {};
+// Fungsi untuk ambil token dari localStorage
+function getToken() {
+    return localStorage.getItem("token");
 }
 
-// Fungsi untuk simpan status override ke localStorage
-function saveStatusOverride(id, status) {
-    const overrides = getStatusOverrides();
-    overrides[id] = status;
-    localStorage.setItem("sph_status_overrides", JSON.stringify(overrides));
-}
 
 // Variabel global untuk pagination
 let currentPage = 1;
@@ -52,15 +45,6 @@ function loadSPH() {
             console.log("Data SPH berhasil dimuat:", res);
             allSPHData = res.data || res;
 
-            // Apply localStorage status overrides
-            const overrides = getStatusOverrides();
-            allSPHData = allSPHData.map(item => {
-                if (overrides[item.id]) {
-                    item.status = overrides[item.id];
-                    console.log(`Applied localStorage override for ID ${item.id}: ${item.status}`);
-                }
-                return item;
-            });
 
             // Initialize filtered data with all data
             filteredSPHData = [...allSPHData];
@@ -265,116 +249,31 @@ function searchSPH() {
     renderSPH(currentPage);
 }
 
+
 // Make searchSPH globally accessible
 window.searchSPH = searchSPH;
 
-// Fungsi untuk menampilkan modal konfirmasi hapus
-window.showDeleteConfirmModal = function (id) {
-    // Hapus modal lama jika ada
-    const oldModal = document.getElementById('deleteConfirmOverlay');
-    if (oldModal) oldModal.remove();
-
-    // Find SPH data for display
+// Fungsi wrapper untuk delete SPH (Global) - memanggil SweetAlert
+window.deleteSPH = function (id) {
     const sphData = allSPHData.find(item => item.id === id);
     const sphName = sphData?.nomor_sph || `ID: ${id}`;
 
-    // Create Overlay
-    const overlay = document.createElement('div');
-    overlay.id = 'deleteConfirmOverlay';
-    Object.assign(overlay.style, {
-        position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
-        background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
-        zIndex: '99999', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        animation: 'fadeIn 0.2s'
+    Swal.fire({
+        title: 'Hapus Surat Penawaran?',
+        html: `Anda akan menghapus SPH:<br><strong class="text-danger">${sphName}</strong><br><br>Tindakan ini tidak dapat dibatalkan.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Hapus',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            executeDeleteSPH(id);
+        }
     });
-
-    // Create Modal Content
-    const content = document.createElement('div');
-    Object.assign(content.style, {
-        background: 'white', borderRadius: '16px', padding: '32px',
-        maxWidth: '400px', width: '90%', boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-        textAlign: 'center'
-    });
-
-    // Warning Icon
-    const icon = document.createElement('div');
-    icon.innerHTML = '🗑️';
-    icon.style.fontSize = '48px';
-    icon.style.marginBottom = '16px';
-
-    // Header
-    const header = document.createElement('h5');
-    header.textContent = 'Hapus Surat Penawaran?';
-    Object.assign(header.style, {
-        margin: '0 0 8px 0', fontSize: '20px', fontWeight: '600',
-        color: '#1f2937'
-    });
-
-    // Message
-    const message = document.createElement('p');
-    message.innerHTML = `Anda akan menghapus SPH:<br><strong style="color:#dc2626;">${sphName}</strong><br><br>Tindakan ini tidak dapat dibatalkan.`;
-    Object.assign(message.style, {
-        margin: '0 0 24px 0', color: '#6b7280', fontSize: '14px', lineHeight: '1.6'
-    });
-
-    // Button Container
-    const btnContainer = document.createElement('div');
-    btnContainer.style.display = 'flex';
-    btnContainer.style.gap = '12px';
-    btnContainer.style.justifyContent = 'center';
-
-    // Cancel Button
-    const btnBatal = document.createElement('button');
-    btnBatal.textContent = 'Batal';
-    btnBatal.type = 'button';
-    Object.assign(btnBatal.style, {
-        padding: '12px 24px', border: '1px solid #d1d5db',
-        background: 'white', color: '#6b7280', borderRadius: '8px',
-        fontSize: '14px', fontWeight: '500', cursor: 'pointer', flex: '1'
-    });
-    btnBatal.addEventListener('click', function (e) {
-        e.preventDefault();
-        overlay.remove();
-    });
-
-    // Delete Button
-    const btnHapus = document.createElement('button');
-    btnHapus.textContent = 'Ya, Hapus';
-    btnHapus.type = 'button';
-    Object.assign(btnHapus.style, {
-        padding: '12px 24px', border: 'none',
-        background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-        color: 'white', borderRadius: '8px',
-        fontSize: '14px', fontWeight: '600', cursor: 'pointer', flex: '1'
-    });
-    btnHapus.addEventListener('click', function (e) {
-        e.preventDefault();
-        overlay.remove();
-        executeDeleteSPH(id);
-    });
-
-    // Append elements
-    btnContainer.appendChild(btnBatal);
-    btnContainer.appendChild(btnHapus);
-
-    content.appendChild(icon);
-    content.appendChild(header);
-    content.appendChild(message);
-    content.appendChild(btnContainer);
-    overlay.appendChild(content);
-
-    // Add style for animation
-    const style = document.createElement('style');
-    style.textContent = '@keyframes fadeIn{from{opacity:0}to{opacity:1}}';
-    overlay.appendChild(style);
-
-    // Close on overlay click
-    overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) overlay.remove();
-    });
-
-    document.body.appendChild(overlay);
 }
+
 
 // Fungsi untuk eksekusi hapus SPH (dipanggil dari modal)
 function executeDeleteSPH(id) {
@@ -397,196 +296,25 @@ function executeDeleteSPH(id) {
             return res.json();
         })
         .then(() => {
-            showDeleteSuccessModal("SPH berhasil dihapus!");
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: 'SPH berhasil dihapus!',
+                timer: 1500,
+                showConfirmButton: false
+            });
             loadSPH();
         })
         .catch(err => {
             console.error("DELETE ERROR:", err);
-            showDeleteErrorModal("Gagal menghapus SPH!");
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Gagal menghapus SPH!'
+            });
         });
 }
 
-// Fungsi untuk menampilkan modal sukses hapus
-window.showDeleteSuccessModal = function (message) {
-    // Hapus modal lama jika ada
-    const oldModal = document.getElementById('deleteSuccessOverlay');
-    if (oldModal) oldModal.remove();
-
-    // Create Overlay
-    const overlay = document.createElement('div');
-    overlay.id = 'deleteSuccessOverlay';
-    Object.assign(overlay.style, {
-        position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
-        background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
-        zIndex: '99999', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        animation: 'fadeIn 0.3s'
-    });
-
-    // Create Modal Content
-    const content = document.createElement('div');
-    Object.assign(content.style, {
-        background: 'white', borderRadius: '16px', padding: '32px',
-        maxWidth: '400px', width: '90%', boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-        textAlign: 'center'
-    });
-
-    // Animated Success Icon (SVG)
-    const iconContainer = document.createElement('div');
-    iconContainer.innerHTML = `
-        <svg class="delete-success-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" style="width: 80px; height: 80px; margin-bottom: 16px;">
-            <circle class="delete-success-circle" cx="26" cy="26" r="25" fill="none" stroke="#10b981" stroke-width="2"/>
-            <path class="delete-success-check" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-        </svg>
-    `;
-
-    // Add CSS animations
-    const animationStyle = document.createElement('style');
-    animationStyle.textContent = `
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        @keyframes circleAnim {
-            0% { stroke-dashoffset: 166; transform: rotate(0deg); }
-            50% { stroke-dashoffset: 0; transform: rotate(180deg); }
-            100% { stroke-dashoffset: 0; transform: rotate(360deg); }
-        }
-        @keyframes checkAnim {
-            0% { stroke-dashoffset: 48; }
-            100% { stroke-dashoffset: 0; }
-        }
-        @keyframes scaleIn {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .delete-success-icon {
-            animation: scaleIn 0.5s ease-out;
-        }
-        .delete-success-circle {
-            stroke-dasharray: 166;
-            stroke-dashoffset: 166;
-            animation: circleAnim 0.8s ease-out forwards;
-            transform-origin: center;
-        }
-        .delete-success-check {
-            stroke-dasharray: 48;
-            stroke-dashoffset: 48;
-            animation: checkAnim 0.4s ease-out 0.5s forwards;
-        }
-    `;
-    overlay.appendChild(animationStyle);
-
-    // Header
-    const header = document.createElement('h5');
-    header.textContent = message;
-    Object.assign(header.style, {
-        margin: '0 0 24px 0', fontSize: '20px', fontWeight: '600',
-        color: '#065f46'
-    });
-
-    // OK Button
-    const btnOK = document.createElement('button');
-    btnOK.textContent = 'OK';
-    btnOK.type = 'button';
-    Object.assign(btnOK.style, {
-        padding: '12px 48px', border: 'none',
-        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-        color: 'white', borderRadius: '10px',
-        fontSize: '15px', fontWeight: '600', cursor: 'pointer'
-    });
-    btnOK.addEventListener('click', function (e) {
-        e.preventDefault();
-        overlay.remove();
-    });
-
-    // Append elements
-    content.appendChild(iconContainer);
-    content.appendChild(header);
-    content.appendChild(btnOK);
-    overlay.appendChild(content);
-
-    // Close on overlay click
-    overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) overlay.remove();
-    });
-
-    document.body.appendChild(overlay);
-}
-
-// Fungsi untuk menampilkan modal error hapus
-window.showDeleteErrorModal = function (message) {
-    // Hapus modal lama jika ada
-    const oldModal = document.getElementById('deleteErrorOverlay');
-    if (oldModal) oldModal.remove();
-
-    // Create Overlay
-    const overlay = document.createElement('div');
-    overlay.id = 'deleteErrorOverlay';
-    Object.assign(overlay.style, {
-        position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
-        background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
-        zIndex: '99999', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        animation: 'fadeIn 0.2s'
-    });
-
-    // Create Modal Content
-    const content = document.createElement('div');
-    Object.assign(content.style, {
-        background: 'white', borderRadius: '16px', padding: '32px',
-        maxWidth: '400px', width: '90%', boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-        textAlign: 'center'
-    });
-
-    // Error Icon
-    const icon = document.createElement('div');
-    icon.innerHTML = '❌';
-    icon.style.fontSize = '56px';
-    icon.style.marginBottom = '16px';
-
-    // Header
-    const header = document.createElement('h5');
-    header.textContent = message;
-    Object.assign(header.style, {
-        margin: '0 0 24px 0', fontSize: '20px', fontWeight: '600',
-        color: '#dc2626'
-    });
-
-    // OK Button
-    const btnOK = document.createElement('button');
-    btnOK.textContent = 'OK';
-    btnOK.type = 'button';
-    Object.assign(btnOK.style, {
-        padding: '12px 48px', border: 'none',
-        background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-        color: 'white', borderRadius: '10px',
-        fontSize: '15px', fontWeight: '600', cursor: 'pointer'
-    });
-    btnOK.addEventListener('click', function (e) {
-        e.preventDefault();
-        overlay.remove();
-    });
-
-    // Add style for animation
-    const style = document.createElement('style');
-    style.textContent = '@keyframes fadeIn{from{opacity:0}to{opacity:1}}';
-    overlay.appendChild(style);
-
-    // Append elements
-    content.appendChild(icon);
-    content.appendChild(header);
-    content.appendChild(btnOK);
-    overlay.appendChild(content);
-
-    // Close on overlay click
-    overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) overlay.remove();
-    });
-
-    document.body.appendChild(overlay);
-}
-
-// Fungsi wrapper untuk delete SPH (Global) - memanggil modal
-window.deleteSPH = function (id) {
-    showDeleteConfirmModal(id);
-}
 
 // Fungsi untuk print SPH (Global)
 window.printSPH = function (id) {
@@ -633,124 +361,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// ========== EDIT STATUS SPH (DOM API VERSION - NO ICONS) ==========
-let currentEditSPHId = null;
-
-// Make functions globally available
-window.showEditStatusModal = function (id, currentStatus) {
-    currentEditSPHId = id;
-    console.log("Opening modal for SPH ID:", id);
-
-    // Hapus modal lama jika ada
-    const oldModal = document.getElementById('customModalOverlay');
-    if (oldModal) oldModal.remove();
-
-    // Create Overlay
-    const overlay = document.createElement('div');
-    overlay.id = 'customModalOverlay';
-    Object.assign(overlay.style, {
-        position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
-        background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
-        zIndex: '99999', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        animation: 'fadeIn 0.2s'
-    });
-
-    // Create Modal Content
-    const content = document.createElement('div');
-    Object.assign(content.style, {
-        background: 'white', borderRadius: '16px', padding: '32px',
-        maxWidth: '400px', width: '90%', boxShadow: '0 20px 60px rgba(0,0,0,0.3)'
-    });
-
-    // Header
-    const header = document.createElement('h5');
-    header.textContent = '📝 Ubah Status SPH';
-    Object.assign(header.style, {
-        margin: '0 0 8px 0', fontSize: '24px', fontWeight: '600',
-        color: '#1f2937', textAlign: 'center'
-    });
-
-    // Status Text
-    const statusP = document.createElement('p');
-    statusP.innerHTML = `Status saat ini: <strong style="color:#2563eb;">${currentStatus}</strong>`;
-    Object.assign(statusP.style, {
-        margin: '0 0 24px 0', textAlign: 'center', color: '#6b7280', fontSize: '14px'
-    });
-
-    // Button Container
-    const btnContainer = document.createElement('div');
-    btnContainer.style.display = 'grid';
-    btnContainer.style.gap = '12px';
-
-    // Helper to create buttons (NO ICONS)
-    function createBtn(text, color1, color2, borderColor, textColor, statusValue) {
-        const btn = document.createElement('button');
-        btn.type = 'button'; // Explicit type
-        Object.assign(btn.style, {
-            padding: '16px 24px', border: `2px solid ${borderColor}`,
-            background: `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`,
-            color: textColor, borderRadius: '12px', fontSize: '16px',
-            fontWeight: '600', cursor: 'pointer', display: 'block',
-            width: '100%', textAlign: 'center'
-        });
-
-        btn.textContent = text;
-
-        // Add Event Listener directly
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log(`Button ${text} clicked`);
-            window.updateStatusFromModal(statusValue);
-        });
-
-        return btn;
-    }
-
-    // Create Buttons (Removed Icons)
-    const btnMenunggu = createBtn('Menunggu', '#fef3c7', '#fde68a', '#fbbf24', '#92400e', 'Menunggu');
-    const btnDiterima = createBtn('Diterima', '#d1fae5', '#a7f3d0', '#10b981', '#065f46', 'Diterima');
-    const btnDitolak = createBtn('Ditolak', '#fee2e2', '#fecaca', '#ef4444', '#991b1b', 'Ditolak');
-
-    // Cancel Button
-    const btnBatal = document.createElement('button');
-    btnBatal.textContent = 'Batal';
-    btnBatal.type = 'button';
-    Object.assign(btnBatal.style, {
-        padding: '12px 24px', border: '1px solid #d1d5db',
-        background: 'white', color: '#6b7280', borderRadius: '12px',
-        fontSize: '14px', fontWeight: '500', cursor: 'pointer', marginTop: '8px',
-        width: '100%'
-    });
-    btnBatal.addEventListener('click', function (e) {
-        e.preventDefault();
-        window.closeCustomModal();
-    });
-
-    // Append everything
-    btnContainer.appendChild(btnMenunggu);
-    btnContainer.appendChild(btnDiterima);
-    btnContainer.appendChild(btnDitolak);
-    btnContainer.appendChild(btnBatal);
-
-    content.appendChild(header);
-    content.appendChild(statusP);
-    content.appendChild(btnContainer);
-    overlay.appendChild(content);
-
-    // Add style for animation
-    const style = document.createElement('style');
-    style.textContent = '@keyframes fadeIn{from{opacity:0}to{opacity:1}}';
-    overlay.appendChild(style);
-
-    document.body.appendChild(overlay);
-}
-
-window.closeCustomModal = function () {
-    const modal = document.getElementById('customModalOverlay');
-    if (modal) modal.remove();
-    currentEditSPHId = null;
-}
+// Custom status modal replaced by inline dropdown with SweetAlert confirmation
 
 // Fungsi untuk update status via dropdown (Connected to Backend API)
 window.updateStatusDropdown = function (selectElement) {
@@ -762,68 +373,99 @@ window.updateStatusDropdown = function (selectElement) {
 
     const token = getToken();
     if (!token) {
-        alert("Token tidak ditemukan! Silakan login kembali.");
+        Swal.fire({
+            icon: 'error',
+            title: 'Akses Ditolak',
+            text: 'Token tidak ditemukan! Silakan login kembali.'
+        });
         selectElement.value = originalStatus; // Revert
         return;
     }
 
-    // Show loading state
-    selectElement.disabled = true;
-    selectElement.style.opacity = "0.6";
+    // Confirmation logic
+    Swal.fire({
+        title: 'Ubah Status SPH?',
+        text: `Anda akan mengubah status menjadi "${newStatus}".`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Ubah',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (!result.isConfirmed) {
+            selectElement.value = originalStatus; // Revert if cancelled
+            return;
+        }
 
-    // Send PUT request to backend
-    fetch(`${API_SPH}/${id}`, {
-        method: "PUT",
-        headers: {
-            "Authorization": "Bearer " + token,
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        },
-        mode: "cors",
-        body: JSON.stringify({ status: newStatus })
-    })
-        .then(async res => {
-            const text = await res.text();
-            console.log("RESPONSE STATUS:", res.status);
-            console.log("RESPONSE RAW:", text);
+        // Show loading state
+        selectElement.disabled = true;
+        selectElement.style.opacity = "0.6";
 
-            if (!res.ok) {
-                throw new Error(text || "Gagal mengupdate status SPH");
-            }
-            return text ? JSON.parse(text) : {};
+        // Send PUT request to backend
+        fetch(`${API_SPH}/${id}`, {
+            method: "PUT",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            body: JSON.stringify({ status: newStatus })
         })
-        .then(() => {
-            // Update local data
-            const sphIndex = allSPHData.findIndex(item => item.id === id);
-            if (sphIndex !== -1) {
-                allSPHData[sphIndex].status = newStatus;
-            }
+            .then(async res => {
+                const text = await res.text();
+                // console.log("RESPONSE STATUS:", res.status);
+                // console.log("RESPONSE RAW:", text);
 
-            // Update Colors Dynamically
-            if (newStatus === "Diterima") {
-                selectElement.style.backgroundColor = "#d1fae5";
-                selectElement.style.color = "#065f46";
-            } else if (newStatus === "Ditolak") {
-                selectElement.style.backgroundColor = "#fee2e2";
-                selectElement.style.color = "#991b1b";
-            } else {
-                selectElement.style.backgroundColor = "#fef3c7";
-                selectElement.style.color = "#92400e";
-            }
+                if (!res.ok) {
+                    throw new Error(text || "Gagal mengupdate status SPH");
+                }
+                return text ? JSON.parse(text) : {};
+            })
+            .then(() => {
+                // Update local data
+                const sphIndex = allSPHData.findIndex(item => item.id === id);
+                if (sphIndex !== -1) {
+                    allSPHData[sphIndex].status = newStatus;
+                }
 
-            console.log("Status berhasil diupdate ke database:", { id, status: newStatus });
-        })
-        .catch(err => {
-            console.error("FETCH ERROR:", err);
-            alert("❌ Gagal mengupdate status: " + err.message);
-            // Revert to original status
-            selectElement.value = originalStatus;
-        })
-        .finally(() => {
-            // Remove loading state
-            selectElement.disabled = false;
-            selectElement.style.opacity = "1";
-        });
+                // Update Colors Dynamically
+                if (newStatus === "Diterima") {
+                    selectElement.style.backgroundColor = "#d1fae5";
+                    selectElement.style.color = "#065f46";
+                } else if (newStatus === "Ditolak") {
+                    selectElement.style.backgroundColor = "#fee2e2";
+                    selectElement.style.color = "#991b1b";
+                } else {
+                    selectElement.style.backgroundColor = "#fef3c7";
+                    selectElement.style.color = "#92400e";
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: 'Status SPH berhasil diperbarui',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+
+                console.log("Status berhasil diupdate ke database:", { id, status: newStatus });
+            })
+            .catch(err => {
+                console.error("UPDATE ERROR:", err);
+                selectElement.value = originalStatus; // Revert
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Gagal mengupdate status SPH'
+                });
+            })
+            .finally(() => {
+                selectElement.disabled = false;
+                selectElement.style.opacity = "1";
+            });
+    });
 }
 
 // Fungsi untuk submit form SPH (Tambah Data)
@@ -884,7 +526,11 @@ window.submitFormSPH = function (formData) {
     });
 
     if (items.length === 0) {
-        alert("Harap tambahkan minimal satu barang!");
+        Swal.fire({
+            icon: 'warning',
+            title: 'Peringatan',
+            text: 'Harap tambahkan minimal satu barang!'
+        });
         return;
     }
 
@@ -932,13 +578,23 @@ window.submitFormSPH = function (formData) {
 
             // Show success modal
             const nomorSPH = response?.data?.nomor_sph || response?.nomor_sph || "Baru";
-            showSuccessModal("Surat Penawaran Harga", nomorSPH);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Surat Penawaran Harga Berhasil Dibuat!',
+                html: `<span style="color:#6b7280;">Nomor Surat:</span><br><strong style="font-size:18px; color:#1f2937;">${nomorSPH}</strong>`,
+                confirmButtonText: 'OK, Mengerti'
+            });
 
             loadSPH();
         })
         .catch(err => {
             console.error(err);
-            alert("Gagal menambahkan SPH: " + err.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Gagal menambahkan SPH: ' + err.message
+            });
         });
 }
 

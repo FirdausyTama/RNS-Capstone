@@ -77,23 +77,48 @@
     }
 
     @media print {
+      @page {
+        size: A4;
+        margin: 15mm;
+      }
+
+      body, html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: white;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
 
       .no-print,
       .btn,
       [data-bs-toggle="tooltip"],
-      .content.position-relative {
+      .content.position-relative,
+      .breadcrumb,
+      .navbar-custom,
+      .left-side-menu,
+      .footer {
         display: none !important;
         visibility: hidden !important;
-      }
-
-      body {
-        margin: 0;
-        background: white;
       }
 
       .card {
         border: none !important;
         box-shadow: none !important;
+        width: 100% !important;
+        margin: 0 !important;
+      }
+
+      /* Reset Layout Containers */
+      #app-layout, .content-page, .content, .container-fluid, .card-body {
+          margin: 0 !important;
+          padding: 0 !important;
+          height: auto !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          display: block !important;
       }
     }
   </style>
@@ -120,7 +145,7 @@
           </div>
 
           <!-- Button Kembali -->
-          <div class="mb-3">
+          <div class="mb-3 no-print">
             <a href="{{ url('/sph') }}" class="btn btn-light">
               <i class="mdi mdi-arrow-left me-1"></i> Kembali
             </a>

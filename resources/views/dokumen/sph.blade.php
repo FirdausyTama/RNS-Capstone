@@ -254,12 +254,6 @@
                                                         <select class="form-select select-barang" name="items[0][nama]"
                                                             required>
                                                             <option value="">Pilih barang...</option>
-                                                            <option value="Betre Alat" data-harga="1000000">Betre Alat
-                                                            </option>
-                                                            <option value="Mesin Ronsen" data-harga="40000000">Mesin
-                                                                Ronsen</option>
-                                                            <option value="Mesin Kursi Gigi" data-harga="300000000">
-                                                                Mesin Kursi Gigi</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-md-2">
@@ -386,6 +380,50 @@
 
         $(document).ready(function () {
             let itemCounter = 1;
+            // Variable to store stock options HTML
+            let stokOptionsHTML = '<option value="">Pilih barang...</option>';
+
+            // Load Stock Options
+            function loadStokForDropdown() {
+                const token = localStorage.getItem("token"); // Use global getToken if available or this
+                // If API_URL is not defined in this scope, we can reconstruct it or use the one from stok.js if loaded.
+                // Assuming standard API path:
+                const API_STOK = "http://127.0.0.1:8000/api/stoks"; 
+
+                fetch(API_STOK, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Accept": "application/json"
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error("Gagal mengambil data stok");
+                    return response.json();
+                })
+                .then(data => {
+                    const stoks = data.data || [];
+                    stokOptionsHTML = '<option value="">Pilih barang...</option>';
+                    
+                    stoks.forEach(item => {
+                        // Assuming item has nama_barang and harga
+                        const nama = item.nama_barang || "Unnamed Item";
+                        const harga = item.harga || 0;
+                        stokOptionsHTML += `<option value="${nama}" data-harga="${harga}">${nama}</option>`;
+                    });
+
+                    // Update existing dropdowns
+                    $('.select-barang').each(function() {
+                       const currentVal = $(this).val();
+                       $(this).html(stokOptionsHTML);
+                       if(currentVal) $(this).val(currentVal);
+                    });
+                })
+                .catch(err => console.error("Error loading stok:", err));
+            }
+
+            // Call loadStok initially
+            loadStokForDropdown();
 
             // Format Rupiah
             function formatRupiah(angka) {
@@ -470,16 +508,14 @@
             // Tambah item baru
             $('#btnTambahItem').click(function () {
                 itemCounter++;
+                // Use stokOptionsHTML variable here
                 const newItem = `
                 <div class="item-row border rounded p-3 mb-3 bg-light">
                     <div class="row g-2 align-items-end">
                         <div class="col-md-4">
                             <label class="form-label">Nama Barang <span class="text-danger">*</span></label>
                             <select class="form-select select-barang" name="items[${itemCounter}][nama]" required>
-                                <option value="">Pilih barang...</option>
-                                <option value="Betre Alat" data-harga="1000000">Betre Alat</option>
-                                <option value="Mesin Ronsen" data-harga="40000000">Mesin Ronsen</option>
-                                <option value="Mesin Kursi Gigi" data-harga="300000000">Mesin Kursi Gigi</option>
+                                ${stokOptionsHTML}
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -526,8 +562,22 @@
                     const tanggalSPH = $('input[name="tanggal"]').val();
                     const today = new Date().toISOString().split('T')[0];
 
+                    if (new Date(tanggalSPH) > new Date(today)) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Tanggal Tidak Valid',
+                            text: 'Tanggal SPH tidak boleh melebihi hari ini!'
+                        });
+                        // Optionally reset the date input to today if it's in the future
+                        $('input[name="tanggal"]').val(today);
+                        return;
+                    }
                     if (tanggalSPH < today) {
-                        alert('Tanggal SPH tidak boleh di masa lalu! Silakan pilih tanggal hari ini atau yang akan datang.');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Tanggal Tidak Valid',
+                            text: 'Tanggal SPH tidak boleh di masa lalu! Silakan pilih tanggal hari ini atau yang akan datang.'
+                        });
                         return;
                     }
 
@@ -540,7 +590,11 @@
                     });
 
                     if (!adaBarang) {
-                        alert('Pilih minimal 1 barang!');
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Peringatan',
+                            text: 'Harap tambahkan minimal satu barang!'
+                        });
                         return;
                     }
 
@@ -565,10 +619,14 @@
                 $('#formTambahSPH')[0].reset();
                 // Reset ke 1 item saja
                 $('#itemContainer .item-row').not(':first').remove();
-                $('#itemContainer .item-row:first .select-barang').val('');
-                $('#itemContainer .item-row:first .harga-satuan').val('');
-                $('#itemContainer .item-row:first .jumlah-barang').val('1');
-                $('#itemContainer .item-row:first .total-item').val('');
+                
+                // Re-populate options just in case, or reset value
+                const firstRow = $('#itemContainer .item-row:first');
+                firstRow.find('.select-barang').val('');
+                firstRow.find('.harga-satuan').val('');
+                firstRow.find('.jumlah-barang').val('1');
+                firstRow.find('.total-item').val('');
+                
                 itemCounter = 1;
                 $('#totalKeseluruhan').text('Rp 0');
                 updateRemoveButtons();
@@ -580,6 +638,9 @@
                 const tanggalInput = $('input[name="tanggal"]');
                 tanggalInput.attr('min', today); // Set tanggal minimum = hari ini
                 tanggalInput.val(today); // Set default value = hari ini
+                
+                // Refresh stock options (real-time data)
+                loadStokForDropdown(); 
             });
 
         });

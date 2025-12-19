@@ -24,7 +24,7 @@
       @media print {
         @page {
           size: A4 portrait;
-          margin: 0;
+          margin: 15mm;
         }
 
         .bg-light {
@@ -36,6 +36,7 @@
         .no-print,
         .btn,
         .footer,
+        .breadcrumb,
         [data-bs-toggle="tooltip"],
         .content.position-relative,
         .navbar-custom,
@@ -94,6 +95,13 @@
                   <li class="breadcrumb-item active">Surat Jalan Detail</li>
                 </ol>
               </div>
+            </div>
+
+            <!-- Button Kembali -->
+            <div class="mb-3 no-print">
+                <a href="{{ url('/surat-jalan') }}" class="btn btn-light">
+                    <i class="mdi mdi-arrow-left me-1"></i> Kembali
+                </a>
             </div>
 
             <!-- Card utama -->

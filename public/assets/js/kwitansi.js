@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     loadKwitansi();
+    loadPembelianList();
 
     // Event listener for form submission
     const btnSimpan = document.getElementById("btnSimpanKwitansi");
@@ -14,15 +15,78 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    // Event listener for pembelian dropdown
+    const pembelianSelect = document.getElementById('pembelianId');
+    if (pembelianSelect) {
+        pembelianSelect.addEventListener('change', function () {
+            const pembelianId = this.value;
+            if (pembelianId) {
+                // Find data
+                const selected = pembelianData.find(p => p.id == pembelianId);
+                if (selected) {
+                    // Autofill Nama & Alamat
+                    const nama = selected.penerima_nama || selected.nama_perusahaan || '';
+                    const alamat = selected.penerima_alamat || selected.alamat_perusahaan || '';
+
+                    document.getElementById('namaPenerima').value = nama;
+                    document.getElementById('alamatPenerima').value = alamat;
+                }
+            } else {
+                document.getElementById('namaPenerima').value = '';
+                document.getElementById('alamatPenerima').value = '';
+            }
+        });
+    }
 });
 
 // Global state
 let allData = [];
+let pembelianData = [];
 let filteredData = [];
 let currentPage = 1;
-let itemsPerPage = 5;
+let itemsPerPage = 10;
 let currentFilter = 'Semua Waktu';
 let currentSearch = '';
+
+const API_KWITANSI = "http://127.0.0.1:8000/api/kwitansi";
+const API_PEMBELIAN_LIST = "http://127.0.0.1:8000/api/pembelians";
+
+function loadPembelianList() {
+    const token = getToken();
+    if (!token) return;
+
+    fetch(API_PEMBELIAN_LIST, {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Accept": "application/json"
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            pembelianData = data;
+            const select = document.getElementById('pembelianId');
+            if (select) {
+                select.innerHTML = '<option value="">-- Pilih Pembelian --</option>';
+
+                // Filter ONLY 'Lunas' purchases
+                const availablePurchases = data.filter(item =>
+                    (item.status_pembayaran || '').toLowerCase() === 'lunas'
+                );
+
+                availablePurchases.forEach(item => {
+                    const noOrder = item.no_order || `Order #${item.id}`;
+                    const nama = item.penerima_nama || item.nama_perusahaan || 'Tanpa Nama';
+                    const tanggal = item.tgl_transaksi ? new Date(item.tgl_transaksi).toLocaleDateString('id-ID') : '-';
+                    const amount = item.grand_total ? `Rp ${Number(item.grand_total).toLocaleString('id-ID')}` : '';
+
+                    select.innerHTML += `<option value="${item.id}">${noOrder} - ${nama} - ${tanggal} (${amount})</option>`;
+                });
+            }
+        })
+        .catch(err => console.error("Error loading pembelian list:", err));
+}
 
 function setFilter(filter) {
     currentFilter = filter;
@@ -97,7 +161,7 @@ function isSameWeek(d1, d2) {
     return diffDays <= 7; // Rough approximation, can be improved
 }
 
-const API_KWITANSI = "http://127.0.0.1:8000/api/kwitansi";
+
 
 function getToken() {
     return localStorage.getItem("token");
@@ -194,14 +258,11 @@ function renderKwitansi(data, startNo = 1) {
             </td>
             <td class="text-center">
                 <div class="d-flex justify-content-center gap-1">
-                    <a href="detail-kwitansi/${item.id}" class="btn btn-sm btn-light border" title="Lihat Detail">
-                        <i class="mdi mdi-eye-outline text-info"></i>
-                    </a>
                     <a href="print-kwitansi/${item.id}" class="btn btn-sm btn-light border" title="Print Kwitansi">
                         <i class="mdi mdi-printer text-dark"></i>
                     </a>
                     <button class="btn btn-sm btn-light border" onclick="deleteKwitansi(${item.id})" title="Hapus">
-                        <i class="mdi mdi-delete-outline text-danger"></i>
+                        <i class="mdi mdi-delete text-danger"></i>
                     </button>
                 </div>
             </td>
@@ -323,7 +384,7 @@ function submitFormKwitansi(formData) {
         .then(res => {
             Swal.fire({
                 icon: 'success',
-                title: 'Berhasil!',
+                title: 'Berhasil',
                 text: 'Kwitansi berhasil disimpan!',
                 timer: 1500,
                 showConfirmButton: false
@@ -340,21 +401,24 @@ function submitFormKwitansi(formData) {
             console.error("Error:", err);
             Swal.fire({
                 icon: 'error',
-                title: 'Gagal!',
+                title: 'Gagal',
                 text: 'Gagal menyimpan Kwitansi! ' + err.message
             });
         });
 }
 
-function deleteKwitansi(id) {
+window.deleteKwitansi = function (id) {
+    const item = allData.find(d => d.id === id);
+    const nomor = item ? item.nomor_kwitansi : ("ID: " + id);
+
     Swal.fire({
-        title: 'Apakah Anda yakin?',
-        text: "Data kwitansi akan dihapus permanen!",
+        title: 'Hapus Kwitansi?',
+        html: `Anda akan menghapus Kwitansi:<br><strong class="text-danger">${nomor}</strong><br><br>Tindakan ini tidak dapat dibatalkan.`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Ya, Hapus!',
+        confirmButtonText: 'Ya, Hapus',
         cancelButtonText: 'Batal'
     }).then((result) => {
         if (result.isConfirmed) {
@@ -383,20 +447,22 @@ function deleteKwitansi(id) {
                     return res.json();
                 })
                 .then(res => {
-                    Swal.fire(
-                        'Terhapus!',
-                        'Data kwitansi berhasil dihapus.',
-                        'success'
-                    );
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: 'Data kwitansi berhasil dihapus.',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
                     loadKwitansi();
                 })
                 .catch(err => {
                     console.error("Error:", err);
-                    Swal.fire(
-                        'Gagal!',
-                        'Terjadi kesalahan saat menghapus data.',
-                        'error'
-                    );
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Terjadi kesalahan saat menghapus data.'
+                    });
                 });
         }
     });

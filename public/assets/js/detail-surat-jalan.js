@@ -168,7 +168,7 @@ function updateSuratJalan(id, formData) {
         })
         .then(res => {
             console.log("Update Success:", res);
-            Swal.fire({
+            wal.fire({
                 icon: 'success',
                 title: 'Berhasil!',
                 text: 'Surat Jalan berhasil diupdate!',

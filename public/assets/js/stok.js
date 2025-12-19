@@ -174,16 +174,13 @@ function renderTable(page = 1) {
             <td class="text-center fw-semibold">${jumlahNumber} ${item.satuan || ""
             }</td>
             <td class="text-center">
-                <button class="btn btn-sm btn-light border me-1" onclick="openEditModal(${item.id
-            })" title="Edit">
+                <button class="btn btn-sm btn-light border me-1" onclick="openEditModal(${item.id})" title="Edit">
                     <i class="mdi mdi-square-edit-outline text-primary"></i>
                 </button>
-                <button class="btn btn-sm btn-light border me-1" onclick="window.location.href='/stok/detail-stok/${item.id
-            }'" title="Detail">
-                    <i class="mdi mdi-eye-outline text-muted"></i>
+                <button class="btn btn-sm btn-light border me-1" onclick="openDetailModal(${item.id})" title="Detail">
+                    <i class="mdi mdi-eye-outline text-info"></i>
                 </button>
-                <button class="btn btn-sm btn-light border" onclick="deleteStok(${item.id
-            })" title="Hapus">
+                <button class="btn btn-sm btn-light border" onclick="deleteStok(${item.id})" title="Hapus">
                     <i class="mdi mdi-delete-outline text-danger"></i>
                 </button>
             </td>
@@ -260,7 +257,7 @@ function searchProduct() {
 // ==================== OPEN DETAIL MODAL ====================
 function openDetailModal(id) {
     // Ambil port dari URL saat ini
-const apiUrl = `http://127.0.0.1:8000/api/stoks/${id}`;
+    const apiUrl = `http://127.0.0.1:8000/api/stoks/${id}`;
 
     const modal = new bootstrap.Modal(
         document.getElementById("detailStokModal")
@@ -311,8 +308,8 @@ const apiUrl = `http://127.0.0.1:8000/api/stoks/${id}`;
 
 // ==================== RENDER DETAIL MODAL ====================
 function renderDetailStokModal(data, id) {
-    const currentPort = window.location.port || "8001";
-    const storageBaseUrl = `http://127.0.0.1:${currentPort}/storage`;
+    // Gunakan port 8000 untuk backend storage, bukan port window location
+    const storageBaseUrl = `http://127.0.0.1:8000/storage`;
     const contentDiv = document.getElementById("detailStokContent");
 
     // Tentukan apakah ada media
@@ -323,104 +320,132 @@ function renderDetailStokModal(data, id) {
     const fotoUrl = data.foto ? `${storageBaseUrl}/${data.foto}` : "";
     const videoUrl = data.video ? `${storageBaseUrl}/${data.video}` : "";
 
-    contentDiv.innerHTML = `
+    // Styles khusus untuk modal ini (diambil dari detail-stok.blade.php)
+    const styles = `
+    <style>
+        .product-image,
+        .product-video {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+            max-height: 300px;
+        }
+
+        .status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-aman {
+            background: #d1f2eb;
+            color: #0f5132;
+        }
+
+        .badge-menipis {
+            background: #fff3cd;
+            color: #997404;
+        }
+
+        .badge-habis {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .media-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .media-item {
+            flex: 1;
+            min-width: 100%;
+        }
+    </style>
+    `;
+
+    // Helper untuk badge (versi blade)
+    const getStatusBadgeHtml = (jumlah) => {
+        jumlah = Number(jumlah) || 0;
+        if (jumlah >= 5) return '<span class="status-badge badge-aman">Stok Aman</span>';
+        if (jumlah > 0) return '<span class="status-badge badge-menipis">Stok Menipis</span>';
+        return '<span class="status-badge badge-habis">Stok Habis</span>';
+    };
+
+    contentDiv.innerHTML = styles + `
         <div class="row">
             <!-- Kiri: Informasi Produk -->
             <div class="col-lg-8">
-                <div class="card mb-3 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="fw-bold mb-3">
-                            <i class="mdi mdi-information-outline text-primary"></i> Informasi Produk
-                        </h5>
-                        <div class="row mb-3">
+                <!-- Informasi Produk -->
+                <div class="card mb-3 shadow-sm border-0">
+                    <div class="card-body p-3">
+                        <h5 class="card-title mb-3 fs-16">Informasi Produk</h5>
+                        
+                        <div class="row g-3">
                             <div class="col-md-6">
-                                <small class="text-muted">Nama Barang</small>
-                                <div class="fw-semibold">${data.nama_barang || "-"
-        }</div>
+                                <small class="text-muted d-block mb-1">Nama Barang</small>
+                                <div class="fw-medium text-truncate">${data.nama_barang || "Loading..."}</div>
                             </div>
                             <div class="col-md-6">
-                                <small class="text-muted">Kode SKU</small>
-                                <div class="fw-semibold">${data.kode_sku || "-"
-        }</div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <small class="text-muted">Merek</small>
-                                <div class="fw-semibold">${data.merek || "-"
-        }</div>
+                                <small class="text-muted d-block mb-1">Kode SKU</small>
+                                <div class="fw-medium">${data.kode_sku || "-"}</div>
                             </div>
                             <div class="col-md-6">
-                                <small class="text-muted">Tanggal Masuk</small>
-                                <div class="fw-semibold">${formatTanggal(
-            data.tgl_masuk
-        )}</div>
+                                <small class="text-muted d-block mb-1">Merek</small>
+                                <div class="fw-medium">${data.merek || "-"}</div>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted d-block mb-1">Tanggal Masuk</small>
+                                <div class="fw-medium">${formatTanggal(data.tgl_masuk)}</div>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <small class="text-muted">Deskripsi</small>
-                            <div class="fw-semibold">${data.deskripsi || "-"
-        }</div>
-                        </div>
+                    </div>
+                </div>
 
-                        <hr>
-                        <h5 class="fw-bold mb-3">
-                            <i class="mdi mdi-currency-usd text-success"></i> Harga & Stok
-                        </h5>
-                        <div class="row mb-3">
+                <!-- Harga & Stok -->
+                <div class="card mb-3 shadow-sm border-0">
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title fs-16 m-0">Harga & Stok</h5>
+                            <div>${getStatusBadgeHtml(data.jumlah)}</div>
+                        </div>
+                        
+                        <div class="row g-3">
                             <div class="col-md-6">
-                                <small class="text-muted">Harga Jual</small>
-                                <div class="fw-semibold text-primary fs-5">${formatRupiah(
-            data.harga || 0
-        )}</div>
+                                <small class="text-muted d-block mb-1">Harga Jual</small>
+                                <div class="fw-bold text-success">${formatRupiah(data.harga || 0)}</div>
                             </div>
                             <div class="col-md-6">
-                                <small class="text-muted">Satuan</small>
-                                <div class="fw-semibold">${data.satuan || "Pcs"
-        }</div>
+                                <small class="text-muted d-block mb-1">Jumlah Stok</small>
+                                <div class="fw-medium">${data.jumlah || 0} ${data.satuan || 'Pcs'}</div>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <small class="text-muted">Jumlah</small>
-                                <div class="fw-semibold">${data.jumlah || 0} ${data.satuan || "Pcs"
-        }</div>
-                            </div>
-                            <div class="col-md-6">
-                                <small class="text-muted">Stok Tersedia</small>
-                                <div class="fw-semibold">${data.jumlah || 0} ${data.satuan || "Pcs"
-        }</div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <small class="text-muted">Status Stok</small>
-                            <div>${getStatusBadge(data.jumlah || 0)}</div>
-                        </div>
+                    </div>
+                </div>
 
-                        <hr>
-                        <h5 class="fw-bold mb-3">
-                            <i class="mdi mdi-ruler text-info"></i> Dimensi & Berat
-                        </h5>
-                        <div class="row mb-2">
-                            <div class="col-md-3">
-                                <small class="text-muted">Panjang</small>
-                                <div class="fw-semibold">${data.panjang || "-"
-        } cm</div>
+                <!-- Dimensi & Berat -->
+                <div class="card mb-3 shadow-sm border-0">
+                    <div class="card-body p-3">
+                        <h5 class="card-title mb-3 fs-16">Dimensi & Berat</h5>
+                        <div class="row g-3">
+                            <div class="col-md-3 col-6">
+                                <small class="text-muted d-block mb-1">Panjang</small>
+                                <div class="fw-medium">${data.panjang || "-"} cm</div>
                             </div>
-                            <div class="col-md-3">
-                                <small class="text-muted">Lebar</small>
-                                <div class="fw-semibold">${data.lebar || "-"
-        } cm</div>
+                            <div class="col-md-3 col-6">
+                                <small class="text-muted d-block mb-1">Lebar</small>
+                                <div class="fw-medium">${data.lebar || "-"} cm</div>
                             </div>
-                            <div class="col-md-3">
-                                <small class="text-muted">Tinggi</small>
-                                <div class="fw-semibold">${data.tinggi || "-"
-        } cm</div>
+                            <div class="col-md-3 col-6">
+                                <small class="text-muted d-block mb-1">Tinggi</small>
+                                <div class="fw-medium">${data.tinggi || "-"} cm</div>
                             </div>
-                            <div class="col-md-3">
-                                <small class="text-muted">Berat</small>
-                                <div class="fw-semibold">${data.berat || "-"
-        } gr</div>
+                            <div class="col-md-3 col-6">
+                                <small class="text-muted d-block mb-1">Berat</small>
+                                <div class="fw-medium">${data.berat || "-"} gr</div>
                             </div>
                         </div>
                     </div>
@@ -429,68 +454,36 @@ function renderDetailStokModal(data, id) {
 
             <!-- Kanan: Media & Aksi -->
             <div class="col-lg-4">
-                <div class="card mb-3 shadow-sm">
+                <!-- Media Produk -->
+                <div class="card mb-4 shadow-sm border-0">
                     <div class="card-body">
-                        <h5 class="fw-bold mb-3">
-                            <i class="mdi mdi-image-multiple text-warning"></i> Media Produk
-                        </h5>
-                        <div class="media-gallery" style="display:flex; flex-direction:column; gap:1.5rem;">
-                            ${hasFoto
-            ? `
+                        <h5 class="card-title mb-4">Media Produk</h5>
+                        <div class="media-gallery">
+                            ${hasFoto ? `
                             <div class="media-item">
                                 <small class="text-muted d-block mb-2">Foto Produk</small>
-                                <img src="${fotoUrl}" class="product-image" alt="Foto Produk" style="width:100%; max-height:300px; object-fit:cover; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
-                            </div>
-                            `
-            : ""
-        }
+                                <img src="${fotoUrl}" class="product-image" alt="Foto Produk">
+                            </div>` : ''}
                             
-                            ${hasVideo
-            ? `
+                            ${hasVideo ? `
                             <div class="media-item">
                                 <small class="text-muted d-block mb-2">Video Produk</small>
-                                <video controls class="product-video" style="width:100%; max-height:300px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                                <video controls class="product-video">
                                     <source src="${videoUrl}" type="video/mp4">
-                                    Browser Anda tidak mendukung video.
                                 </video>
-                            </div>
-                            `
-            : ""
-        }
-                            
-                            ${!hasMedia
-            ? `
-                            <div class="media-item text-center">
-                                <div class="border border-2 border-dashed rounded p-5 text-muted" style="background:#f8f9fa;">
-                                    <i class="mdi mdi-image-off fs-1 d-block mb-2"></i>
-                                    <div>Tidak ada media</div>
+                            </div>` : ''}
+
+                            ${!hasMedia ? `
+                            <div class="media-item text-center w-100">
+                                <div class="border border-2 border-dashed rounded p-5 text-muted bg-light">
+                                    <i class="mdi mdi-image-off fs-1 d-block mb-2"></i> Tidak ada media
                                 </div>
-                            </div>
-                            `
-            : ""
-        }
+                            </div>` : ''}
                         </div>
                     </div>
                 </div>
 
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="fw-bold mb-3">
-                            <i class="mdi mdi-cog-outline text-secondary"></i> Aksi
-                        </h5>
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-primary" onclick="editStokFromModal(${id})">
-                                <i class="mdi mdi-square-edit-outline"></i> Edit Produk
-                            </button>
-                            <button class="btn btn-danger" onclick="deleteStokFromModal(${id})">
-                                <i class="mdi mdi-delete-outline"></i> Hapus Produk
-                            </button>
-                            <button class="btn btn-secondary" data-bs-dismiss="modal">
-                                <i class="mdi mdi-close"></i> Tutup
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     `;
@@ -749,22 +742,22 @@ function removeEditFoto(event) {
     document.getElementById("editFotoPlaceholder").style.display = "block";
 }
 
-    const modalTambahStok = document.getElementById("modalTambahStok");
-    if (modalTambahStok) {
-        modalTambahStok.addEventListener("hidden.bs.modal", function () {
-            document.getElementById("formTambahStok").reset();
+const modalTambahStok = document.getElementById("modalTambahStok");
+if (modalTambahStok) {
+    modalTambahStok.addEventListener("hidden.bs.modal", function () {
+        document.getElementById("formTambahStok").reset();
 
-            document.getElementById("videoElement").src = "";
-            document.getElementById("videoFileNamePreview").textContent = "";
-            document.getElementById("videoPreview").classList.remove("show");
-            document.getElementById("videoPlaceholder").style.display = "block";
+        document.getElementById("videoElement").src = "";
+        document.getElementById("videoFileNamePreview").textContent = "";
+        document.getElementById("videoPreview").classList.remove("show");
+        document.getElementById("videoPlaceholder").style.display = "block";
 
-            document.getElementById("fotoElement").src = "";
-            document.getElementById("fotoFileNamePreview").textContent = "";
-            document.getElementById("fotoPreview").classList.remove("show");
-            document.getElementById("fotoPlaceholder").style.display = "block";
-        });
-    }
+        document.getElementById("fotoElement").src = "";
+        document.getElementById("fotoFileNamePreview").textContent = "";
+        document.getElementById("fotoPreview").classList.remove("show");
+        document.getElementById("fotoPlaceholder").style.display = "block";
+    });
+}
 
 var tooltipTriggerList = [].slice.call(
     document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -817,7 +810,7 @@ async function getStokDetail(id) {
     if (!token) return alertError("Token tidak ditemukan!");
 
     try {
-        const response = await fetch(`${API_URL}/${id}`, {
+        const response = await fetch(`${API_URL}/stoks/${id}`, {
             method: "GET",
             headers: {
                 Authorization: "Bearer " + token,
@@ -844,7 +837,7 @@ function deleteStok(id) {
         const token = getToken();
         if (!token) return alertError("Token tidak ditemukan!");
 
-        fetch(`${API_URL}/${id}`, {
+        fetch(`${API_URL}/stoks/${id}`, {
             method: "DELETE",
             headers: {
                 Authorization: "Bearer " + token,
@@ -875,7 +868,7 @@ async function openEditModal(id) {
     if (!token) return alertError("Token tidak ditemukan!");
 
     try {
-        const res = await fetch(`${API_URL}/${id}`, {
+        const res = await fetch(`${API_URL}/stoks/${id}`, {
             method: "GET",
             headers: {
                 Authorization: "Bearer " + token,
@@ -980,7 +973,7 @@ async function submitUpdateStok() {
     if (video) formData.append("video", video);
 
     try {
-        const response = await fetch(`${API_URL}/${id}`, {
+        const response = await fetch(`${API_URL}/stoks/${id}`, {
             method: "POST",
             headers: {
                 "X-HTTP-Method-Override": "PUT",

@@ -299,7 +299,7 @@ function renderPembelian(data, startIndex = 0) {
                 <td class="text-center">${badgePembayaran}</td>
                 <td class="text-center">
                     <button class="btn btn-sm btn-light border me-1" onclick="detailPembelian(${item.id})" title="Detail">
-                        <i class="mdi mdi-eye-outline text-muted"></i>
+                        <i class="mdi mdi-eye-outline text-info"></i>
                     </button>
                     ${!document.title.includes('Riwayat') ? `
                     <button class="btn btn-sm btn-light border me-1" onclick="editPembelian(${item.id})" title="Edit">

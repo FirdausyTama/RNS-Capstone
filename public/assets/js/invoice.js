@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 const API_INVOICE = "http://127.0.0.1:8000/api/invoice";
-const API_PEMBELIAN_LIST = "http://127.0.0.1:8000/api/invoice/pembelian-list";
+const API_PEMBELIAN_LIST = "http://127.0.0.1:8000/api/pembelians";
 
 function getToken() {
     const token = localStorage.getItem("token");
@@ -34,10 +34,17 @@ function loadPembelianList() {
             const select = document.getElementById('pembelianId');
             if (select) {
                 select.innerHTML = '<option value="">-- Pilih Pembelian --</option>';
-                data.forEach(item => {
-                    const tanggal = item.tanggal ? new Date(item.tanggal).toLocaleDateString('id-ID') : '-';
+                // Filter out 'Lunas' purchases
+                const availablePurchases = data.filter(item =>
+                    (item.status_pembayaran || '').toLowerCase() !== 'lunas'
+                );
+
+                availablePurchases.forEach(item => {
+                    const tanggal = item.tgl_transaksi ? new Date(item.tgl_transaksi).toLocaleDateString('id-ID') : '-';
+                    const nama = item.penerima_nama || item.nama_perusahaan || 'Tanpa Nama';
+                    const noOrder = item.no_order || `Order #${item.id}`;
                     const totalItems = item.items ? item.items.length : 0;
-                    select.innerHTML += `<option value="${item.id}">${item.nama_supplier || item.nama_penerima || 'Pembelian'} - ${tanggal} (${totalItems} item)</option>`;
+                    select.innerHTML += `<option value="${item.id}">${noOrder} - ${nama} - ${tanggal} (${totalItems} item)</option>`;
                 });
             }
         })
@@ -78,7 +85,7 @@ function autoFillItemsFromPembelian(pembelian) {
 
     // Auto-fill nama perusahaan from pembelian data
     if (namaPerusahaanInput) {
-        const namaPerusahaan = pembelian.nama_supplier || pembelian.nama_penerima || pembelian.nama_perusahaan || '';
+        const namaPerusahaan = pembelian.penerima_nama || pembelian.nama_perusahaan || '';
         namaPerusahaanInput.value = namaPerusahaan;
         namaPerusahaanInput.setAttribute('readonly', true);
     }
@@ -118,18 +125,28 @@ function autoFillItemsFromPembelian(pembelian) {
 }
 
 // Recalculate totals after auto-fill
+// Recalculate totals after auto-fill or manual changes
 function recalculateTotals() {
-    let total = 0;
+    let subtotal = 0;
     document.querySelectorAll('.subtotal-input').forEach(input => {
         const value = parseInt(input.value.replace(/\D/g, '')) || 0;
-        total += value;
+        subtotal += value;
     });
 
     const subtotalInput = document.getElementById('subtotalInvoice');
     const totalInput = document.getElementById('totalInvoice');
+    const ongkirInput = document.getElementById('estimasiOngkir');
+    const gunakanOngkir = document.getElementById('gunakanOngkir');
 
-    if (subtotalInput) subtotalInput.value = 'Rp ' + total.toLocaleString('id-ID');
-    if (totalInput) totalInput.value = 'Rp ' + total.toLocaleString('id-ID');
+    let ongkir = 0;
+    if (gunakanOngkir && gunakanOngkir.checked && ongkirInput) {
+        ongkir = parseInt(ongkirInput.value.replace(/\D/g, '')) || 0;
+    }
+
+    const grandTotal = subtotal + ongkir;
+
+    if (subtotalInput) subtotalInput.value = 'Rp ' + subtotal.toLocaleString('id-ID');
+    if (totalInput) totalInput.value = 'Rp ' + grandTotal.toLocaleString('id-ID');
 }
 
 let latestInvoiceNumber = 0;
@@ -250,22 +267,26 @@ function renderPaginatedInvoice() {
     // Render paginated data
     let no = startIndex + 1;
     paginatedData.forEach(item => {
+        // Fallback checks for different backend column names
+        const nama = item.nama_perusahaan || item.nama_penerima || item.penerima_nama || "-";
+        const total = item.total_pembayaran || item.total_tagihan || item.grand_total || item.total_harga || 0;
+
         body.innerHTML += `
         <tr>
             <td class="text-center">${no++}</td>
             <td><strong>${item.nomor_invoice || "-"}</strong></td>
-            <td class="text-center">${formatTanggalIndonesia(item.tanggal_invoice)}</td>
-            <td>${item.nama_perusahaan || "-"}</td>
+            <td class="text-center">${formatTanggalIndonesia(item.tanggal_invoice || item.tanggal)}</td>
+            <td>${nama}</td>
             <td class="text-center fw-semibold">
-                Rp${Number(item.total_tagihan || 0).toLocaleString("id-ID")}
+                Rp${Number(total).toLocaleString("id-ID")}
             </td>
             <td class="text-center">
                 <div class="d-flex justify-content-center gap-1">
-                    <button class="btn btn-sm btn-primary" onclick="printInvoice(${item.id})" title="Print">
-                        <i class="mdi mdi-printer text-white"></i>
+                    <button class="btn btn-sm btn-light border" onclick="printInvoice(${item.id})" title="Print">
+                        <i class="mdi mdi-printer text-dark"></i>
                     </button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteInvoice(${item.id})" title="Hapus">
-                        <i class="mdi mdi-delete text-white"></i>
+                    <button class="btn btn-sm btn-light border" onclick="deleteInvoice(${item.id})" title="Hapus">
+                        <i class="mdi mdi-delete text-danger"></i>
                     </button>
                 </div>
             </td>
@@ -337,119 +358,32 @@ function goToPage(page) {
     renderPaginatedInvoice();
 }
 
-function getInvoiceDetail(id) {
-    window.location.href = `/detail-invoice/${id}`;
-}
+// function getInvoiceDetail(id) {
+//    window.location.href = `/detail-invoice/${id}`;
+// }
 
 // Store all invoice data for reference
 let allInvoiceData = [];
 
-// Fungsi untuk menampilkan modal konfirmasi hapus Invoice
-window.showDeleteInvoiceModal = function (id) {
-    // Hapus modal lama jika ada
-    const oldModal = document.getElementById('deleteInvoiceOverlay');
-    if (oldModal) oldModal.remove();
-
-    // Find Invoice data for display
+// Fungsi wrapper untuk delete Invoice (Global) - memanggil SweetAlert
+window.deleteInvoice = function (id) {
     const invoiceData = allInvoiceData.find(item => item.id === id);
     const invoiceName = invoiceData?.nomor_invoice || `ID: ${id}`;
 
-    // Create Overlay
-    const overlay = document.createElement('div');
-    overlay.id = 'deleteInvoiceOverlay';
-    Object.assign(overlay.style, {
-        position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
-        background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
-        zIndex: '99999', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        animation: 'fadeIn 0.2s'
+    Swal.fire({
+        title: 'Hapus Invoice?',
+        html: `Anda akan menghapus Invoice:<br><strong class="text-danger">${invoiceName}</strong><br><br>Tindakan ini tidak dapat dibatalkan.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Hapus',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            executeDeleteInvoice(id);
+        }
     });
-
-    // Create Modal Content
-    const content = document.createElement('div');
-    Object.assign(content.style, {
-        background: 'white', borderRadius: '16px', padding: '32px',
-        maxWidth: '400px', width: '90%', boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-        textAlign: 'center'
-    });
-
-    // Warning Icon
-    const icon = document.createElement('div');
-    icon.innerHTML = '🗑️';
-    icon.style.fontSize = '48px';
-    icon.style.marginBottom = '16px';
-
-    // Header
-    const header = document.createElement('h5');
-    header.textContent = 'Hapus Invoice?';
-    Object.assign(header.style, {
-        margin: '0 0 8px 0', fontSize: '20px', fontWeight: '600',
-        color: '#1f2937'
-    });
-
-    // Message
-    const message = document.createElement('p');
-    message.innerHTML = `Anda akan menghapus Invoice:<br><strong style="color:#dc2626;">${invoiceName}</strong><br><br>Tindakan ini tidak dapat dibatalkan.`;
-    Object.assign(message.style, {
-        margin: '0 0 24px 0', color: '#6b7280', fontSize: '14px', lineHeight: '1.6'
-    });
-
-    // Button Container
-    const btnContainer = document.createElement('div');
-    btnContainer.style.display = 'flex';
-    btnContainer.style.gap = '12px';
-    btnContainer.style.justifyContent = 'center';
-
-    // Cancel Button
-    const btnBatal = document.createElement('button');
-    btnBatal.textContent = 'Batal';
-    btnBatal.type = 'button';
-    Object.assign(btnBatal.style, {
-        padding: '12px 24px', border: '1px solid #d1d5db',
-        background: 'white', color: '#6b7280', borderRadius: '8px',
-        fontSize: '14px', fontWeight: '500', cursor: 'pointer', flex: '1'
-    });
-    btnBatal.addEventListener('click', function (e) {
-        e.preventDefault();
-        overlay.remove();
-    });
-
-    // Delete Button
-    const btnHapus = document.createElement('button');
-    btnHapus.textContent = 'Ya, Hapus';
-    btnHapus.type = 'button';
-    Object.assign(btnHapus.style, {
-        padding: '12px 24px', border: 'none',
-        background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-        color: 'white', borderRadius: '8px',
-        fontSize: '14px', fontWeight: '600', cursor: 'pointer', flex: '1'
-    });
-    btnHapus.addEventListener('click', function (e) {
-        e.preventDefault();
-        overlay.remove();
-        executeDeleteInvoice(id);
-    });
-
-    // Append elements
-    btnContainer.appendChild(btnBatal);
-    btnContainer.appendChild(btnHapus);
-
-    content.appendChild(icon);
-    content.appendChild(header);
-    content.appendChild(message);
-    content.appendChild(btnContainer);
-    overlay.appendChild(content);
-
-    // Add style for animation
-    const style = document.createElement('style');
-    style.textContent = '@keyframes fadeIn{from{opacity:0}to{opacity:1}}';
-    overlay.appendChild(style);
-
-    // Close on overlay click
-    overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) overlay.remove();
-    });
-
-    document.body.appendChild(overlay);
 }
 
 // Fungsi untuk eksekusi hapus Invoice
@@ -477,196 +411,29 @@ function executeDeleteInvoice(id) {
         })
         .then(res => {
             console.log("Invoice berhasil dihapus:", res);
-            showInvoiceDeleteSuccessModal("Invoice berhasil dihapus!");
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: 'Invoice berhasil dihapus!',
+                timer: 1500,
+                showConfirmButton: false
+            });
             loadInvoice();
         })
         .catch(err => {
             console.error("Error:", err);
-            showInvoiceDeleteErrorModal("Gagal menghapus Invoice!");
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Gagal menghapus Invoice!'
+            });
         });
 }
 
-// Fungsi untuk menampilkan modal sukses hapus Invoice
-window.showInvoiceDeleteSuccessModal = function (message) {
-    // Hapus modal lama jika ada
-    const oldModal = document.getElementById('invoiceDeleteSuccessOverlay');
-    if (oldModal) oldModal.remove();
-
-    // Create Overlay
-    const overlay = document.createElement('div');
-    overlay.id = 'invoiceDeleteSuccessOverlay';
-    Object.assign(overlay.style, {
-        position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
-        background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
-        zIndex: '99999', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        animation: 'fadeIn 0.3s'
-    });
-
-    // Create Modal Content
-    const content = document.createElement('div');
-    Object.assign(content.style, {
-        background: 'white', borderRadius: '16px', padding: '32px',
-        maxWidth: '400px', width: '90%', boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-        textAlign: 'center'
-    });
-
-    // Animated Success Icon (SVG)
-    const iconContainer = document.createElement('div');
-    iconContainer.innerHTML = `
-        <svg class="inv-del-success-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" style="width: 80px; height: 80px; margin-bottom: 16px;">
-            <circle class="inv-del-success-circle" cx="26" cy="26" r="25" fill="none" stroke="#10b981" stroke-width="2"/>
-            <path class="inv-del-success-check" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-        </svg>
-    `;
-
-    // Add CSS animations
-    const animationStyle = document.createElement('style');
-    animationStyle.textContent = `
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        @keyframes circleAnimInv {
-            0% { stroke-dashoffset: 166; transform: rotate(0deg); }
-            50% { stroke-dashoffset: 0; transform: rotate(180deg); }
-            100% { stroke-dashoffset: 0; transform: rotate(360deg); }
-        }
-        @keyframes checkAnimInv {
-            0% { stroke-dashoffset: 48; }
-            100% { stroke-dashoffset: 0; }
-        }
-        @keyframes scaleInInv {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .inv-del-success-icon {
-            animation: scaleInInv 0.5s ease-out;
-        }
-        .inv-del-success-circle {
-            stroke-dasharray: 166;
-            stroke-dashoffset: 166;
-            animation: circleAnimInv 0.8s ease-out forwards;
-            transform-origin: center;
-        }
-        .inv-del-success-check {
-            stroke-dasharray: 48;
-            stroke-dashoffset: 48;
-            animation: checkAnimInv 0.4s ease-out 0.5s forwards;
-        }
-    `;
-    overlay.appendChild(animationStyle);
-
-    // Header
-    const header = document.createElement('h5');
-    header.textContent = message;
-    Object.assign(header.style, {
-        margin: '0 0 24px 0', fontSize: '20px', fontWeight: '600',
-        color: '#065f46'
-    });
-
-    // OK Button
-    const btnOK = document.createElement('button');
-    btnOK.textContent = 'OK';
-    btnOK.type = 'button';
-    Object.assign(btnOK.style, {
-        padding: '12px 48px', border: 'none',
-        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-        color: 'white', borderRadius: '10px',
-        fontSize: '15px', fontWeight: '600', cursor: 'pointer'
-    });
-    btnOK.addEventListener('click', function (e) {
-        e.preventDefault();
-        overlay.remove();
-    });
-
-    // Append elements
-    content.appendChild(iconContainer);
-    content.appendChild(header);
-    content.appendChild(btnOK);
-    overlay.appendChild(content);
-
-    // Close on overlay click
-    overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) overlay.remove();
-    });
-
-    document.body.appendChild(overlay);
-}
-
-// Fungsi untuk menampilkan modal error hapus Invoice
-window.showInvoiceDeleteErrorModal = function (message) {
-    // Hapus modal lama jika ada
-    const oldModal = document.getElementById('invoiceDeleteErrorOverlay');
-    if (oldModal) oldModal.remove();
-
-    // Create Overlay
-    const overlay = document.createElement('div');
-    overlay.id = 'invoiceDeleteErrorOverlay';
-    Object.assign(overlay.style, {
-        position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
-        background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
-        zIndex: '99999', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        animation: 'fadeIn 0.2s'
-    });
-
-    // Create Modal Content
-    const content = document.createElement('div');
-    Object.assign(content.style, {
-        background: 'white', borderRadius: '16px', padding: '32px',
-        maxWidth: '400px', width: '90%', boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-        textAlign: 'center'
-    });
-
-    // Error Icon
-    const icon = document.createElement('div');
-    icon.innerHTML = '❌';
-    icon.style.fontSize = '56px';
-    icon.style.marginBottom = '16px';
-
-    // Header
-    const header = document.createElement('h5');
-    header.textContent = message;
-    Object.assign(header.style, {
-        margin: '0 0 24px 0', fontSize: '20px', fontWeight: '600',
-        color: '#dc2626'
-    });
-
-    // OK Button
-    const btnOK = document.createElement('button');
-    btnOK.textContent = 'OK';
-    btnOK.type = 'button';
-    Object.assign(btnOK.style, {
-        padding: '12px 48px', border: 'none',
-        background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-        color: 'white', borderRadius: '10px',
-        fontSize: '15px', fontWeight: '600', cursor: 'pointer'
-    });
-    btnOK.addEventListener('click', function (e) {
-        e.preventDefault();
-        overlay.remove();
-    });
-
-    // Add style for animation
-    const style = document.createElement('style');
-    style.textContent = '@keyframes fadeIn{from{opacity:0}to{opacity:1}}';
-    overlay.appendChild(style);
-
-    // Append elements
-    content.appendChild(icon);
-    content.appendChild(header);
-    content.appendChild(btnOK);
-    overlay.appendChild(content);
-
-    // Close on overlay click
-    overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) overlay.remove();
-    });
-
-    document.body.appendChild(overlay);
-}
+// Custom modals replaced by SweetAlert2
 
 // Fungsi wrapper untuk delete Invoice (Global) - memanggil modal
-window.deleteInvoice = function (id) {
-    showDeleteInvoiceModal(id);
-}
+
 
 // Override submit handler from inline script
 document.addEventListener("DOMContentLoaded", function () {
@@ -761,129 +528,27 @@ function submitFormInvoice() {
 
             // Show success modal
             const nomorInvoice = response?.data?.nomor_invoice || response?.nomor_invoice || document.getElementById('nomorInvoice').value;
-            showInvoiceSuccessModal("Invoice", nomorInvoice);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Invoice Tersimpan',
+                text: `Invoice ${nomorInvoice} berhasil disimpan!`,
+                confirmButtonText: 'OK'
+            });
 
             loadInvoice();
         })
         .catch(err => {
             console.error("Error:", err);
-            alert("Gagal menyimpan Invoice!");
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Gagal menyimpan Invoice!'
+            });
         });
 }
 
-// Fungsi untuk menampilkan modal sukses Invoice
-window.showInvoiceSuccessModal = function (title, identifier) {
-    // Hapus modal lama jika ada
-    const oldModal = document.getElementById('successInvoiceOverlay');
-    if (oldModal) oldModal.remove();
-
-    // Create Overlay
-    const overlay = document.createElement('div');
-    overlay.id = 'successInvoiceOverlay';
-    Object.assign(overlay.style, {
-        position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
-        background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
-        zIndex: '99999', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        animation: 'fadeIn 0.3s'
-    });
-
-    // Create Modal Content
-    const content = document.createElement('div');
-    Object.assign(content.style, {
-        background: 'white', borderRadius: '16px', padding: '32px',
-        maxWidth: '420px', width: '90%', boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-        textAlign: 'center'
-    });
-
-    // Animated Success Icon (SVG)
-    const iconContainer = document.createElement('div');
-    iconContainer.innerHTML = `
-        <svg class="success-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" style="width: 80px; height: 80px; margin-bottom: 16px;">
-            <circle class="success-checkmark-circle" cx="26" cy="26" r="25" fill="none" stroke="#10b981" stroke-width="2"/>
-            <path class="success-checkmark-check" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-        </svg>
-    `;
-
-    // Add CSS animations for checkmark
-    const animationStyle = document.createElement('style');
-    animationStyle.textContent = `
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        @keyframes circleAnimation {
-            0% { stroke-dashoffset: 166; transform: rotate(0deg); }
-            50% { stroke-dashoffset: 0; transform: rotate(180deg); }
-            100% { stroke-dashoffset: 0; transform: rotate(360deg); }
-        }
-        @keyframes checkAnimation {
-            0% { stroke-dashoffset: 48; }
-            100% { stroke-dashoffset: 0; }
-        }
-        @keyframes scaleIn {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .success-checkmark {
-            animation: scaleIn 0.5s ease-out;
-        }
-        .success-checkmark-circle {
-            stroke-dasharray: 166;
-            stroke-dashoffset: 166;
-            animation: circleAnimation 0.8s ease-out forwards;
-            transform-origin: center;
-        }
-        .success-checkmark-check {
-            stroke-dasharray: 48;
-            stroke-dashoffset: 48;
-            animation: checkAnimation 0.4s ease-out 0.5s forwards;
-        }
-    `;
-    overlay.appendChild(animationStyle);
-
-    // Header
-    const header = document.createElement('h5');
-    header.textContent = `${title} Berhasil Dibuat!`;
-    Object.assign(header.style, {
-        margin: '0 0 12px 0', fontSize: '22px', fontWeight: '600',
-        color: '#065f46'
-    });
-
-    // Invoice Number Display
-    const invoiceNumber = document.createElement('div');
-    invoiceNumber.innerHTML = `<span style="color:#6b7280;">Nomor Invoice:</span><br><strong style="font-size:18px; color:#1f2937;">${identifier}</strong>`;
-    Object.assign(invoiceNumber.style, {
-        background: '#f0fdf4', padding: '16px', borderRadius: '12px',
-        margin: '16px 0 24px 0', border: '1px solid #bbf7d0'
-    });
-
-    // OK Button
-    const btnOK = document.createElement('button');
-    btnOK.textContent = 'OK, Mengerti';
-    btnOK.type = 'button';
-    Object.assign(btnOK.style, {
-        padding: '14px 32px', border: 'none',
-        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-        color: 'white', borderRadius: '10px',
-        fontSize: '15px', fontWeight: '600', cursor: 'pointer', width: '100%'
-    });
-    btnOK.addEventListener('click', function (e) {
-        e.preventDefault();
-        overlay.remove();
-    });
-
-    // Append elements
-    content.appendChild(iconContainer);
-    content.appendChild(header);
-    content.appendChild(invoiceNumber);
-    content.appendChild(btnOK);
-    overlay.appendChild(content);
-
-    // Close on overlay click
-    overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) overlay.remove();
-    });
-
-    document.body.appendChild(overlay);
-}
+// Custom success modal replaced by SweetAlert2
 
 window.printInvoice = function (id) {
     window.location.href = '/print-invoice/' + id;

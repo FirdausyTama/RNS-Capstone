@@ -150,7 +150,7 @@
       @media print {
         @page {
           size: A4 portrait;
-          margin: 0mm;
+          margin: 15mm;
         }
 
         body, html {
@@ -168,6 +168,7 @@
         .footer,
         .navbar-custom,
         .left-side-menu,
+        .breadcrumb,
         .topbar {
           display: none !important;
           visibility: hidden !important;
@@ -188,7 +189,7 @@
         }
 
         .kw-main {
-          margin: 10mm !important; /* Give content some margin */
+          margin: 0 !important;
           width: auto !important;
         }
 
@@ -219,6 +220,13 @@
                   <li class="breadcrumb-item active">Kwitansi Detail</li>
                 </ol>
               </div>
+            </div>
+
+            <!-- Button Kembali -->
+            <div class="mb-3 no-print">
+                <a href="{{ url('/kwitansi') }}" class="btn btn-light">
+                    <i class="mdi mdi-arrow-left me-1"></i> Kembali
+                </a>
             </div>
 
             <!-- Card utama -->

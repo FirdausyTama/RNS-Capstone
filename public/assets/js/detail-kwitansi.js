@@ -162,7 +162,7 @@ function updateKwitansi(id, formData) {
         })
         .then(res => {
             console.log("Update Success:", res);
-            Swal.fire({
+            wal.fire({
                 icon: 'success',
                 title: 'Berhasil!',
                 text: 'Kwitansi berhasil diupdate!',

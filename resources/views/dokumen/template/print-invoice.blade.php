@@ -22,17 +22,16 @@
 
   <style>
     .invoice-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 30px 40px;
-      font-family: 'Times New Roman', Times, serif;
-      font-size: 13px;
+      width: 100%;
+      margin: 0;
+      padding: 20px;
+      font-size: 15px;
       line-height: 1.4;
     }
 
     .kop-surat {
       text-align: center;
-      margin-bottom: 15px;
+      margin-bottom: 5px;
     }
 
     .kop-surat img {
@@ -44,14 +43,13 @@
     /* Header Invoice - Right aligned */
     .invoice-header {
       text-align: right;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     .invoice-title {
       color: #0066cc;
       font-size: 22px;
       font-weight: bold;
-      font-style: italic;
       margin-bottom: 8px;
     }
 
@@ -85,7 +83,7 @@
       text-align: center;
       font-size: 16px;
       font-weight: bold;
-      margin: 25px 0 15px 0;
+      margin: 15px 0 10px 0;
     }
 
     /* Table Styling */
@@ -98,17 +96,16 @@
 
     .table-invoice th {
       background-color: #d4e8fc;
-      border: none;
-      padding: 8px 10px;
+      border: 1px solid #c0dcf7;
+      padding: 6px 8px;
       text-align: center;
       font-weight: bold;
-      font-style: italic;
       color: #333;
     }
 
     .table-invoice td {
-      padding: 6px 10px;
-      border: none;
+      padding: 6px 8px;
+      border: 1px solid #f0f0f0;
       vertical-align: top;
     }
 
@@ -133,7 +130,6 @@
     .table-invoice .col-desc {
       text-align: left;
       color: #0066cc;
-      font-style: italic;
       width: 35%;
     }
 
@@ -170,13 +166,13 @@
       text-align: right;
       font-weight: bold;
       font-style: italic;
-      padding: 8px 10px !important;
+      padding: 4px 5px !important;
     }
 
     .table-invoice .total-row-value {
       text-align: right;
       font-weight: bold;
-      padding: 8px 10px !important;
+      padding: 4px 5px !important;
     }
 
     /* Footer Section */
@@ -202,7 +198,7 @@
 
     /* Signature Section - Left aligned */
     .ttd {
-      margin-top: 40px;
+      margin-top: 20px;
       text-align: left;
     }
 
@@ -253,6 +249,11 @@
         visibility: hidden !important;
       }
 
+      @page {
+        size: A4;
+        margin: 15mm;
+      }
+
       /* Reset page layout */
       body {
         margin: 0 !important;
@@ -261,12 +262,14 @@
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
         color-adjust: exact !important;
+        height: auto !important;
       }
 
       html,
       body {
         width: 100%;
-        height: auto;
+        height: auto !important;
+        min-height: 0 !important;
       }
 
       /* Remove card styling */
@@ -450,7 +453,7 @@
           </div>
 
           <!-- Button Kembali -->
-          <div class="mb-3">
+          <div class="mb-3 no-print">
             <a href="{{ url('/invoice') }}" class="btn btn-light">
               <i class="mdi mdi-arrow-left me-1"></i> Kembali
             </a>
@@ -508,34 +511,17 @@
                   <tbody id="items-tbody">
                     <!-- Items will be populated here -->
                   </tbody>
-                  <tfoot>
-                    <!-- Empty rows for visual padding -->
-                    <tr class="empty-row">
-                      <td colspan="4"></td>
-                    </tr>
-                    <tr class="empty-row">
-                      <td colspan="4"></td>
-                    </tr>
-                    <tr class="empty-row">
-                      <td colspan="4"></td>
-                    </tr>
-                    <tr class="empty-row">
-                      <td colspan="4"></td>
-                    </tr>
-                    <tr class="empty-row">
-                      <td colspan="4"></td>
-                    </tr>
-                    <tr class="empty-row">
-                      <td colspan="4"></td>
-                    </tr>
-                    <!-- Total Row -->
-                    <tr>
-                      <td colspan="2"></td>
-                      <td class="total-row-label">Total Pembayaran</td>
-                      <td class="total-row-value" id="total-pembayaran">Rp. 0,-</td>
-                    </tr>
-                  </tfoot>
                 </table>
+
+                <!-- Total Row - Outside Table -->
+                <div style="display: flex; justify-content: flex-end; margin-top: 5px; padding-right: 5px;">
+                    <table style="width: auto; border-collapse: collapse;">
+                         <tr>
+                             <td style="text-align: right; padding-right: 15px; font-weight: bold;">Total Pembayaran</td>
+                             <td id="total-pembayaran" style="text-align: right; font-weight: bold; min-width: 120px; border-bottom: 1px solid #000;">Rp. 0,-</td>
+                         </tr>
+                    </table>
+                </div>
 
                 <!-- Footer Section -->
                 <div class="invoice-footer">
@@ -553,9 +539,8 @@
                   <p>Hormat Kami</p>
                   <p class="company-name">PT. Ranay Nusantara Sejahtera</p>
                   <div class="logo-signature">
-                    <img src="{{ asset('assets/images/logo-rns-bg.png') }}" alt="Logo RNS" class="logo-small"
-                      onerror="this.style.display='none'" />
-                    <img id="ttd-image-invoice" src="{{ asset('assets/images/ttdHeri.png') }}" alt="Tanda Tangan"
+                    
+                    <img id="ttd-image-invoice" src="" alt="Tanda Tangan"
                       class="signature-img" />
                   </div>
                   <p class="signer-name" id="penandatangan">-</p>
@@ -653,16 +638,26 @@
       document.getElementById('nama-perusahaan').textContent = data.nama_perusahaan || data.nama_penerima || '-';
 
       // Set penandatangan and dynamic signature image
-      const penandatangan = data.penandatangan || 'Dewi Sulistiowati';
+      // PENGATURAN TANDA TANGAN
+      // Ambil nama penandatangan dari data, atau default ke Dewi
+      let penandatangan = data.penandatangan;
+      if (!penandatangan || penandatangan.trim() === '-' || penandatangan.trim() === '') {
+          penandatangan = 'Dewi Sulistiowati';
+      }
+      
       document.getElementById('penandatangan').textContent = penandatangan;
 
-      // Determine signature image based on penandatangan name
+      // Logic pemilihan gambar tanda tangan
       const ttdImage = document.getElementById('ttd-image-invoice');
-      if (penandatangan.toLowerCase().includes('dewi')) {
-        ttdImage.src = '/assets/images/ttdDewi.png';
-      } else {
-        ttdImage.src = '/assets/images/ttdHeri.png';
-      }
+      // const lowerName = penandatangan.toLowerCase();
+
+      // TEMPORARILY DISABLED: User requested signature to be empty initially
+      // if (lowerName.includes('heri') || lowerName.includes('pirdaus')) {
+      //   ttdImage.src = '/assets/images/ttdHeri.png';
+      // } else {
+      //   ttdImage.src = '/assets/images/ttdDewi.png';
+      // }
+      ttdImage.src = ''; // Ensure it is empty
 
       // Populate items - check multiple possible field names
       const tbody = document.getElementById('items-tbody');
