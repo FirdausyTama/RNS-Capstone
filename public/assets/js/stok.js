@@ -143,8 +143,7 @@ function renderTable(page = 1) {
 
     paginatedItems.forEach((item) => {
         const foto = item.foto
-            ? `http:/
-            /127.0.0.1:8000/storage/${item.foto}`
+            ? `http://127.0.0.1:8000/storage/${item.foto}`
             : "assets/images/logo-sm.png";
 
         const hargaNumber = Number(item.harga) || 0;
@@ -257,8 +256,7 @@ function searchProduct() {
 
 function openDetailModal(id) {
     
-    const apiUrl = `http:/
-    /127.0.0.1:8000/api/stoks/${id}`;
+    const apiUrl = `http://127.0.0.1:8000/api/stoks/${id}`;
 
     const modal = new bootstrap.Modal(
         document.getElementById("detailStokModal")
@@ -310,8 +308,7 @@ function openDetailModal(id) {
 
 function renderDetailStokModal(data, id) {
     
-    const storageBaseUrl = `http:/
-    /127.0.0.1:8000/storage`;
+    const storageBaseUrl = `http://127.0.0.1:8000/storage`;
     const contentDiv = document.getElementById("detailStokContent");
 
     
@@ -909,8 +906,7 @@ async function openEditModal(id) {
         if (data.data.foto) {
             document.getElementById(
                 "editFotoElement"
-            ).src = `http:/
-            /127.0.0.1:8000/storage/${data.data.foto}`;
+            ).src = `http://127.0.0.1:8000/storage/${data.data.foto}`;
             document.getElementById("editFotoName").textContent = data.data.foto
                 .split("/")
                 .pop();
@@ -922,8 +918,7 @@ async function openEditModal(id) {
         if (data.data.video) {
             document.getElementById(
                 "editVideoElement"
-            ).src = `http:/
-            /127.0.0.1:8000/storage/${data.data.video}`;
+            ).src = `http://127.0.0.1:8000/storage/${data.data.video}`;
             document.getElementById("editVideoName").textContent =
                 data.data.video.split("/").pop();
             document.getElementById("editVideoPreview").style.display = "block";

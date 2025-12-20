@@ -649,15 +649,13 @@
 
       // Logic pemilihan gambar tanda tangan
       const ttdImage = document.getElementById('ttd-image-invoice');
-      // const lowerName = penandatangan.toLowerCase();
+      const lowerName = penandatangan.toLowerCase();
 
-      // TEMPORARILY DISABLED: User requested signature to be empty initially
-      // if (lowerName.includes('heri') || lowerName.includes('pirdaus')) {
-      //   ttdImage.src = '/assets/images/ttdHeri.png';
-      // } else {
-      //   ttdImage.src = '/assets/images/ttdDewi.png';
-      // }
-      ttdImage.src = ''; // Ensure it is empty
+      if (lowerName.includes('heri') || lowerName.includes('pirdaus')) {
+        ttdImage.src = '/assets/images/ttdHeri.png';
+      } else {
+        ttdImage.src = '/assets/images/ttdDewi.png';
+      }
 
       // Populate items - check multiple possible field names
       const tbody = document.getElementById('items-tbody');
