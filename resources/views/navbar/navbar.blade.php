@@ -91,7 +91,7 @@
               alt="Logo Dark"
               height="40"
               class="me-2" />
-            <span class="fw-bold text-dark fs-5">OwnerPanel</span>
+            <span class="fw-bold text-dark fs-5">Dashboard</span>
           </span>
         </a>
       </div>

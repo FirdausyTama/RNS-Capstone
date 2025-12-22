@@ -38,7 +38,7 @@
 
               <div class="text-end">
                 <ol class="breadcrumb m-0 py-0">
-                  <li class="breadcrumb-item"><a href="javascript:void(0);">Pages</a></li>
+                  <li class="breadcrumb-item"><a href="javascript:void(0);">Halaman</a></li>
                   <li class="breadcrumb-item active">Surat Jalan</li>
                 </ol>
               </div>
@@ -169,6 +169,16 @@
                     name="tanggal"
                     required
                   />
+                </div>
+                
+                <!-- DROPDOWN PILIH PEMBELIAN -->
+                <div class="col-12 mb-3">
+                  <label for="pembelianId" class="form-label fw-semibold">
+                    Pilih Data Pembelian
+                  </label>
+                  <select class="form-select" id="pembelianId" name="pembelian_id">
+                    <option value="">-- Pilih Pembelian --</option>
+                  </select>
                 </div>
 
                 

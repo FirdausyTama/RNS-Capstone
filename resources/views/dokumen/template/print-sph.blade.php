@@ -261,7 +261,7 @@
       <div class="content position-relative">
         <button type="button" class="btn btn-primary rounded-circle shadow-lg"
           style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;" data-bs-toggle="tooltip"
-          data-bs-placement="top" title="Print Surat Penawaran" onclick="window.print()">
+          data-bs-placement="top"  onclick="window.print()">
           <i class="mdi mdi-printer fs-3 text-white"></i>
         </button>
       </div>

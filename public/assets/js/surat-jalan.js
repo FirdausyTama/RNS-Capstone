@@ -1,14 +1,40 @@
 document.addEventListener("DOMContentLoaded", function () {
     loadSuratJalan();
+    loadPembelianList();
 
     const btnSimpan = document.getElementById("btnSimpanSuratJalan");
     if (btnSimpan) {
         btnSimpan.addEventListener("click", submitFormSuratJalan);
     }
+
+    // Autofill Customer Details
+    const pembelianSelect = document.getElementById('pembelianId');
+    if (pembelianSelect) {
+        pembelianSelect.addEventListener('change', function () {
+            const pembelianId = this.value;
+            if (pembelianId) {
+                const selected = pembelianData.find(p => p.id == pembelianId);
+                if (selected) {
+                    const nama = selected.penerima_nama || selected.nama_perusahaan || '';
+                    const alamat = selected.penerima_alamat || selected.alamat_perusahaan || '';
+
+                    document.getElementById('namaPenerima').value = nama;
+                    document.getElementById('alamatPenerima').value = alamat;
+
+                    // Telp penerima if available in purchase data (check console or assume field name)
+                    // if (selected.penerima_telp) document.getElementById('telpPenerima').value = selected.penerima_telp;
+                }
+            } else {
+                document.getElementById('namaPenerima').value = '';
+                document.getElementById('alamatPenerima').value = '';
+            }
+        });
+    }
 });
 
 
 let allData = [];
+let pembelianData = []; // Store purchase data
 let filteredData = [];
 let currentPage = 1;
 let itemsPerPage = 5;
@@ -16,6 +42,40 @@ let currentFilter = 'Semua Waktu';
 let currentSearch = '';
 
 const API_SURAT_JALAN = "http://127.0.0.1:8000/api/surat-jalan";
+const API_PEMBELIAN_LIST = "http://127.0.0.1:8000/api/pembelians";
+
+function loadPembelianList() {
+    const token = getToken();
+    if (!token) return;
+
+    fetch(API_PEMBELIAN_LIST, {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Accept": "application/json"
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            pembelianData = data;
+            const select = document.getElementById('pembelianId');
+            if (select) {
+                select.innerHTML = '<option value="">-- Pilih Pembelian --</option>';
+                // Filter purchases if needed, e.g. status 'lunas' or all
+                // Using all purchases similar to invoice logic might be better or filter by status
+                const availablePurchases = data;
+
+                availablePurchases.forEach(item => {
+                    const noOrder = item.no_order || `Order #${item.id}`;
+                    const nama = item.penerima_nama || item.nama_perusahaan || 'Tanpa Nama';
+                    const tanggal = item.tgl_transaksi ? new Date(item.tgl_transaksi).toLocaleDateString('id-ID') : '-';
+
+                    select.innerHTML += `<option value="${item.id}">${noOrder} - ${nama} - ${tanggal}</option>`;
+                });
+            }
+        })
+        .catch(err => console.error("Error loading pembelian list:", err));
+}
 
 function getToken() {
     return localStorage.getItem("token");
@@ -35,9 +95,9 @@ function searchSuratJalan() {
 }
 
 function applyFilterAndRender() {
-    
+
     filteredData = allData.filter(item => {
-        
+
         let passTime = true;
         const itemDate = new Date(item.tanggal);
         const today = new Date();
@@ -50,7 +110,7 @@ function applyFilterAndRender() {
             passTime = isSameMonth(itemDate, today);
         }
 
-        
+
         let passSearch = true;
         if (currentSearch) {
             const searchLower = currentSearch.toLowerCase();
@@ -64,7 +124,7 @@ function applyFilterAndRender() {
         return passTime && passSearch;
     });
 
-    
+
     renderCurrentPage();
 }
 
@@ -104,7 +164,7 @@ function loadSuratJalan() {
         headers["Authorization"] = "Bearer " + token;
     }
 
-    
+
     fetch(API_SURAT_JALAN, {
         method: "GET",
         headers: headers
@@ -188,7 +248,7 @@ function renderPagination() {
 
     if (totalPages <= 1) return;
 
-    
+
     const prevDisabled = currentPage === 1 ? 'disabled' : '';
     container.innerHTML += `
         <li class="page-item ${prevDisabled}">
@@ -198,7 +258,7 @@ function renderPagination() {
         </li>
     `;
 
-    
+
     for (let i = 1; i <= totalPages; i++) {
         if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
             const active = i === currentPage ? 'active' : '';
@@ -212,7 +272,7 @@ function renderPagination() {
         }
     }
 
-    
+
     const nextDisabled = currentPage === totalPages ? 'disabled' : '';
     container.innerHTML += `
         <li class="page-item ${nextDisabled}">
@@ -254,7 +314,7 @@ function submitFormSuratJalan() {
         headers["Authorization"] = "Bearer " + token;
     }
 
-    
+
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     if (csrfToken) {
         headers["X-CSRF-TOKEN"] = csrfToken;
@@ -317,7 +377,7 @@ function deleteSuratJalan(id) {
                 headers["Authorization"] = "Bearer " + token;
             }
 
-            
+
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
             if (csrfToken) {
                 headers["X-CSRF-TOKEN"] = csrfToken;

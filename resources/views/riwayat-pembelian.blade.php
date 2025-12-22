@@ -51,7 +51,7 @@
             
                             <div class="text-end">
                                 <ol class="breadcrumb m-0 py-0">
-                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Halaman</a></li>
                                     <li class="breadcrumb-item active">Riwayat Pembelian</li>
                                 </ol>
                             </div>

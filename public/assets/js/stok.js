@@ -12,8 +12,8 @@ function getToken() {
 document.addEventListener("DOMContentLoaded", function () {
     if (document.getElementById("stok-table-body")) {
         loadStok();
-        
-        loadTotalTerjual(); 
+
+        loadTotalTerjual();
     }
 });
 
@@ -35,7 +35,7 @@ async function loadTotalTerjual() {
 
         const data = await res.json();
 
-        
+
         let totalTerjual = 0;
         if (Array.isArray(data)) {
             data.forEach(transaksi => {
@@ -47,7 +47,7 @@ async function loadTotalTerjual() {
             });
         }
 
-        
+
         const elmKeluar = document.getElementById("totalStokKeluar");
         const elmMasuk = document.getElementById("totalStokMasuk");
 
@@ -55,7 +55,7 @@ async function loadTotalTerjual() {
             elmKeluar.textContent = totalTerjual + " Pcs";
         }
 
-        
+
         if (elmMasuk) {
             const totalMasuk = (window.currentTotalStock || 0) + totalTerjual;
             elmMasuk.textContent = totalMasuk + " Pcs";
@@ -73,12 +73,12 @@ window.currentTotalStock = 0;
 function updateSummary(data) {
     if (!Array.isArray(data)) data = [];
 
-    
+
     const totalKeseluruhan = data.reduce((sum, item) => sum + Number(item.jumlah || 0), 0);
     window.currentTotalStock = totalKeseluruhan;
 
     const elmKeseluruhan = document.getElementById("totalStokKeseluruhan");
-    if (elmKeseluruhan) elmKeseluruhan.textContent = totalKeseluruhan + " Pcs"; 
+    if (elmKeseluruhan) elmKeseluruhan.textContent = totalKeseluruhan + " Pcs";
 }
 
 
@@ -93,10 +93,10 @@ async function loadStok() {
     if (!body) return;
 
     const token = getToken();
-    
+
 
     try {
-        
+
         const res = await fetch(window.API_URL, {
             method: "GET",
             headers: {
@@ -115,7 +115,7 @@ async function loadStok() {
     filteredStok = [...allStok];
     renderTable(1);
     updateSummary(allStok);
-    loadTotalTerjual(); 
+    loadTotalTerjual();
 
     const paginationContainer = document.getElementById("pagination-container");
     if (paginationContainer) {
@@ -173,15 +173,17 @@ function renderTable(page = 1) {
             <td class="text-center fw-semibold">${jumlahNumber} ${item.satuan || ""
             }</td>
             <td class="text-center">
-                <button class="btn btn-sm btn-light border me-1" onclick="openEditModal(${item.id})" title="Edit">
-                    <i class="mdi mdi-square-edit-outline text-primary"></i>
-                </button>
-                <button class="btn btn-sm btn-light border me-1" onclick="openDetailModal(${item.id})" title="Detail">
-                    <i class="mdi mdi-eye-outline text-info"></i>
-                </button>
-                <button class="btn btn-sm btn-light border" onclick="deleteStok(${item.id})" title="Hapus">
-                    <i class="mdi mdi-delete-outline text-danger"></i>
-                </button>
+                <div class="d-flex justify-content-center gap-1">
+                    <button class="btn btn-sm btn-light border" onclick="openEditModal(${item.id})" title="Edit">
+                        <i class="mdi mdi-square-edit-outline text-primary"></i>
+                    </button>
+                    <button class="btn btn-sm btn-light border" onclick="openDetailModal(${item.id})" title="Detail">
+                        <i class="mdi mdi-eye-outline text-info"></i>
+                    </button>
+                    <button class="btn btn-sm btn-light border" onclick="deleteStok(${item.id})" title="Hapus">
+                        <i class="mdi mdi-delete text-danger"></i>
+                    </button>
+                </div>
             </td>
         </tr>`;
     });
@@ -199,7 +201,7 @@ function setupPagination() {
     const totalItems = filteredStok.length;
     const totalPages = Math.ceil(totalItems / rowsPerPage);
 
-    
+
     const startItem =
         totalItems === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
     const endItem = Math.min(currentPage * rowsPerPage, totalItems);
@@ -209,7 +211,7 @@ function setupPagination() {
 
     if (totalPages <= 1) return;
 
-    
+
     const prevLi = document.createElement("li");
     prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
     prevLi.innerHTML = `<a class="page-link" href="javascript:void(0);" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>`;
@@ -218,7 +220,7 @@ function setupPagination() {
     };
     paginationControls.appendChild(prevLi);
 
-    
+
     for (let i = 1; i <= totalPages; i++) {
         const li = document.createElement("li");
         li.className = `page-item ${currentPage === i ? "active" : ""}`;
@@ -227,7 +229,7 @@ function setupPagination() {
         paginationControls.appendChild(li);
     }
 
-    
+
     const nextLi = document.createElement("li");
     nextLi.className = `page-item ${currentPage === totalPages ? "disabled" : ""
         }`;
@@ -251,11 +253,11 @@ function searchProduct() {
             (item.merek && item.merek.toLowerCase().includes(term))
     );
 
-    renderTable(1); 
+    renderTable(1);
 }
 
 function openDetailModal(id) {
-    
+
     const apiUrl = `http://127.0.0.1:8000/api/stoks/${id}`;
 
     const modal = new bootstrap.Modal(
@@ -263,7 +265,7 @@ function openDetailModal(id) {
     );
     const contentDiv = document.getElementById("detailStokContent");
 
-    
+
     contentDiv.innerHTML = `
         <div class="text-center py-5">
             <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
@@ -275,7 +277,7 @@ function openDetailModal(id) {
 
     modal.show();
 
-    
+
     const token = localStorage.getItem("token");
 
     fetch(apiUrl, {
@@ -307,11 +309,11 @@ function openDetailModal(id) {
 
 
 function renderDetailStokModal(data, id) {
-    
+
     const storageBaseUrl = `http://127.0.0.1:8000/storage`;
     const contentDiv = document.getElementById("detailStokContent");
 
-    
+
     const hasFoto = data.foto ? true : false;
     const hasVideo = data.video ? true : false;
     const hasMedia = hasFoto || hasVideo;
@@ -319,7 +321,7 @@ function renderDetailStokModal(data, id) {
     const fotoUrl = data.foto ? `${storageBaseUrl}/${data.foto}` : "";
     const videoUrl = data.video ? `${storageBaseUrl}/${data.video}` : "";
 
-    
+
     const styles = `
     <style>
         .product-image,
@@ -366,7 +368,7 @@ function renderDetailStokModal(data, id) {
     </style>
     `;
 
-    
+
     const getStatusBadgeHtml = (jumlah) => {
         jumlah = Number(jumlah) || 0;
         if (jumlah >= 5) return '<span class="status-badge badge-aman">Stok Aman</span>';
@@ -572,7 +574,7 @@ async function loadStokSummary() {
         const elmKeseluruhan = document.getElementById("totalStokKeseluruhan");
 
         if (elmMasuk) elmMasuk.textContent = data.total_masuk + " Produk";
-        
+
         if (elmKeseluruhan) elmKeseluruhan.textContent = data.total_keseluruhan;
     } catch (err) {
         console.error("Gagal memuat summary:", err);
@@ -782,19 +784,19 @@ async function loadWeeklySummary() {
 
         const data = await res.json();
 
-        
+
         if (document.getElementById("totalStokMasuk7Hari")) {
             document.getElementById("totalStokMasuk7Hari").innerHTML =
                 formatTrend(data.persen_masuk);
         }
 
-        
+
         if (document.getElementById("totalStokKeluar7Hari")) {
             document.getElementById("totalStokKeluar7Hari").innerHTML =
                 formatTrend(data.persen_keluar);
         }
 
-        
+
         if (document.getElementById("totalKeseluruhanPersen")) {
             document.getElementById("totalKeseluruhanPersen").innerHTML =
                 formatTrend(data.persen_total);
@@ -883,7 +885,7 @@ async function openEditModal(id) {
         document.getElementById("editNamaBarang").value =
             data.data.nama_barang || "";
 
-        
+
         let harga = data.data.harga || "";
         if (harga) {
             harga = parseFloat(harga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -895,7 +897,7 @@ async function openEditModal(id) {
             data.data.tgl_masuk || "";
         document.getElementById("editSatuan").value = data.data.satuan || "";
 
-        
+
         document.getElementById("editKodeSKU").value = data.data.kode_sku || "";
         document.getElementById("editMerek").value = data.data.merek || "";
         document.getElementById("editPanjang").value = data.data.panjang || "";
@@ -948,7 +950,7 @@ async function submitUpdateStok() {
         document.getElementById("editNamaBarang").value
     );
 
-    
+
     let harga = document.getElementById("editHargaJual").value;
     harga = harga.replace(/\./g, "");
     formData.append("harga", harga);
@@ -984,7 +986,7 @@ async function submitUpdateStok() {
 
         if (!response.ok) {
             const text = await response.text();
-            console.log("Server Response:", text); 
+            console.log("Server Response:", text);
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
@@ -1037,7 +1039,7 @@ function submitTambahStok() {
 
     formData.append("nama_barang", document.getElementById("namaBarang").value);
 
-    
+
     let harga = document.getElementById("hargaJual").value;
     harga = harga.replace(/\./g, "");
     formData.append("harga", harga);
@@ -1139,10 +1141,10 @@ function setFilter(filterName) {
     const now = new Date();
     let startDate, endDate;
 
-    
-    
-    
-    
+
+
+
+
 
     switch (filterName) {
         case "Hari Ini":
@@ -1158,8 +1160,8 @@ function setFilter(filterName) {
             );
             break;
         case "Minggu Ini":
-            const day = now.getDay() || 7; 
-            if (day !== 1) now.setHours(-24 * (day - 1)); 
+            const day = now.getDay() || 7;
+            if (day !== 1) now.setHours(-24 * (day - 1));
             startDate = new Date(
                 now.getFullYear(),
                 now.getMonth(),

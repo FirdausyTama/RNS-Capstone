@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    
+
     const pathArray = window.location.pathname.split('/');
     const id = pathArray[pathArray.length - 1];
 
@@ -23,7 +23,7 @@ function formatRupiah(angka) {
 function formatDate(dateString) {
     if (!dateString) return "-";
     const date = new Date(dateString);
-    
+
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
@@ -56,14 +56,14 @@ function loadPrintData(id) {
 }
 
 function populatePrintView(data) {
-    
+
     setText("printNamaPenerima", data.nama_penerima);
     setText("printAlamatPenerima", data.alamat_penerima);
     setText("printTanggal", formatDate(data.tanggal));
     setText("printNomor", data.nomor_kwitansi);
 
-    
-    
+
+
     let signer = data.penandatangan;
     let cleanKeterangan = data.keterangan || "";
 
@@ -72,30 +72,31 @@ function populatePrintView(data) {
         cleanKeterangan = cleanKeterangan.replace(' [SIG:Dewi]', '').replace('[SIG:Dewi]', '');
     }
 
-    
+
     setText("printTerimaDari", data.nama_penerima);
     setText("printTerbilang", data.total_bilangan);
-    setText("printKeterangan", cleanKeterangan); 
+    setText("printKeterangan", cleanKeterangan);
     setText("printTotal", formatRupiah(data.total_pembayaran));
 
-    
+
     const signatureImg = document.getElementById('printSignature');
     const signerName = document.getElementById('printSignerName');
 
-    
+
     if (signer && signer.toLowerCase().includes('dewi')) {
         signatureImg.src = '/assets/images/ttd dewi.jpeg';
     } else {
-        
+
         signatureImg.src = '/assets/images/ttd heri.png';
     }
 
     setText("printSignerName", signer || "Heri Pirdaus, S.Tr.Kes Rad (MRI)");
 
-    
-    setTimeout(() => {
-        window.print();
-    }, 1000);
+
+    // Auto-print removed as per user request to show preview first
+    // setTimeout(() => {
+    //     window.print();
+    // }, 1000);
 }
 
 function setText(id, value) {

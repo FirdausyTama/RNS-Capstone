@@ -44,7 +44,13 @@ function loadSPH() {
             allSPHData = res.data || res;
 
 
-            
+
+
+            // Sort by ID descending (latest first)
+            if (Array.isArray(allSPHData)) {
+                allSPHData.sort((a, b) => b.id - a.id);
+            }
+
             filteredSPHData = [...allSPHData];
 
             currentPage = 1;
@@ -84,7 +90,7 @@ function renderSPH(page = 1) {
 
     body.innerHTML = "";
 
-    
+
     const dataToRender = filteredSPHData.length > 0 || document.getElementById('searchInput')?.value
         ? filteredSPHData
         : allSPHData;
@@ -104,26 +110,26 @@ function renderSPH(page = 1) {
     let no = startIndex + 1;
 
     paginatedData.forEach(item => {
-        
+
         const totalRaw = item.total_keseluruhan || 0;
         const total = parseInt(totalRaw.toString().replace(/\D/g, "")) || 0;
 
-        
+
         const currentStatus = item.status || "Menunggu";
 
-        
+
         let bgStyle = "";
         let textStyle = "";
 
         if (currentStatus === "Diterima") {
-            bgStyle = "#d1fae5"; 
-            textStyle = "#065f46"; 
+            bgStyle = "#d1fae5";
+            textStyle = "#065f46";
         } else if (currentStatus === "Ditolak") {
-            bgStyle = "#fee2e2"; 
-            textStyle = "#991b1b"; 
+            bgStyle = "#fee2e2";
+            textStyle = "#991b1b";
         } else {
-            bgStyle = "#fef3c7"; 
-            textStyle = "#92400e"; 
+            bgStyle = "#fef3c7";
+            textStyle = "#92400e";
         }
 
         body.innerHTML += `
@@ -159,11 +165,11 @@ function renderSPH(page = 1) {
             </td>
             <td class="text-center">
                 <div class="d-flex justify-content-center gap-1">
-                    <button class="btn btn-sm btn-primary" onclick="printSPH(${item.id})" title="Print">
-                        <i class="mdi mdi-printer text-white"></i>
+                    <button class="btn btn-sm btn-light border" onclick="printSPH(${item.id})" title="Print">
+                        <i class="mdi mdi-printer text-dark"></i>
                     </button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteSPH(${item.id})" title="Hapus">
-                        <i class="mdi mdi-delete text-white"></i>
+                    <button class="btn btn-sm btn-light border" onclick="deleteSPH(${item.id})" title="Hapus">
+                        <i class="mdi mdi-delete text-danger"></i>
                     </button>
                 </div>
             </td>
@@ -232,10 +238,10 @@ function searchSPH() {
     const searchTerm = document.getElementById('searchInput')?.value?.toLowerCase() || '';
 
     if (!searchTerm) {
-        
+
         filteredSPHData = allSPHData;
     } else {
-        
+
         filteredSPHData = allSPHData.filter(item => {
             const nomorSph = (item.nomor_sph || '').toLowerCase();
             const namaPerusahaan = (item.nama_perusahaan || '').toLowerCase();
@@ -323,20 +329,20 @@ window.printSPH = function (id) {
 document.addEventListener("DOMContentLoaded", function () {
     loadSPH();
 
-    
+
     const tableBody = document.getElementById("sph-table-body");
     if (tableBody) {
         tableBody.addEventListener("click", function (e) {
             const target = e.target.closest("button");
             if (!target) return;
 
-            
+
             const row = target.closest("tr");
-            const deleteBtn = target.closest(".btn-danger");
-            const printBtn = target.closest(".btn-primary");
+            const deleteBtn = target.closest("button[onclick*='deleteSPH']");
+            const printBtn = target.closest("button[onclick*='printSPH']");
 
             if (deleteBtn) {
-                
+
                 const onclickAttr = deleteBtn.getAttribute("onclick");
                 const match = onclickAttr?.match(/deleteSPH\((\d+)\)/);
                 if (match) {
@@ -376,11 +382,11 @@ window.updateStatusDropdown = function (selectElement) {
             title: 'Akses Ditolak',
             text: 'Token tidak ditemukan! Silakan login kembali.'
         });
-        selectElement.value = originalStatus; 
+        selectElement.value = originalStatus;
         return;
     }
 
-    
+
     Swal.fire({
         title: 'Ubah Status SPH?',
         text: `Anda akan mengubah status menjadi "${newStatus}".`,
@@ -392,15 +398,15 @@ window.updateStatusDropdown = function (selectElement) {
         cancelButtonText: 'Batal'
     }).then((result) => {
         if (!result.isConfirmed) {
-            selectElement.value = originalStatus; 
+            selectElement.value = originalStatus;
             return;
         }
 
-        
+
         selectElement.disabled = true;
         selectElement.style.opacity = "0.6";
 
-        
+
         fetch(`${API_SPH}/${id}`, {
             method: "PUT",
             headers: {
@@ -413,8 +419,8 @@ window.updateStatusDropdown = function (selectElement) {
         })
             .then(async res => {
                 const text = await res.text();
-                
-                
+
+
 
                 if (!res.ok) {
                     throw new Error(text || "Gagal mengupdate status SPH");
@@ -422,13 +428,13 @@ window.updateStatusDropdown = function (selectElement) {
                 return text ? JSON.parse(text) : {};
             })
             .then(() => {
-                
+
                 const sphIndex = allSPHData.findIndex(item => item.id === id);
                 if (sphIndex !== -1) {
                     allSPHData[sphIndex].status = newStatus;
                 }
 
-                
+
                 if (newStatus === "Diterima") {
                     selectElement.style.backgroundColor = "#d1fae5";
                     selectElement.style.color = "#065f46";
@@ -452,7 +458,7 @@ window.updateStatusDropdown = function (selectElement) {
             })
             .catch(err => {
                 console.error("UPDATE ERROR:", err);
-                selectElement.value = originalStatus; 
+                selectElement.value = originalStatus;
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal',
@@ -474,20 +480,20 @@ window.submitFormSPH = function (formData) {
         return;
     }
 
-    
+
     const tanggal = document.querySelector('[name="tanggal"]').value;
     const tempat = document.querySelector('[name="tempat"]').value;
     const lampiran = document.querySelector('[name="lampiran"]').value;
     const hal = document.querySelector('[name="hal"]').value;
-    const jabatan_tujuan = document.querySelector('[name="kepada"]').value; 
+    const jabatan_tujuan = document.querySelector('[name="kepada"]').value;
     const nama_perusahaan = document.querySelector('[name="nama_perusahaan"]').value;
     const penandatangan = document.querySelector('[name="penandatangan"]').value;
 
-    
+
     const totalKeseluruhanInput = document.getElementById('totalKeseluruhanValue');
     const total_keseluruhan = totalKeseluruhanInput ? parseInt(totalKeseluruhanInput.value) : 0;
 
-    
+
     const items = [];
     document.querySelectorAll("#itemContainer .item-row").forEach((row) => {
         const namaSelect = row.querySelector(".select-barang");
@@ -498,14 +504,14 @@ window.submitFormSPH = function (formData) {
         const nama = namaSelect ? namaSelect.value : "";
         const jumlah = jumlahInput ? parseInt(jumlahInput.value) || 0 : 0;
 
-        
+
         let harga = hargaInput ? parseInt(hargaInput.value) || 0 : 0;
         if (harga === 0 && namaSelect) {
             const selectedOption = namaSelect.options[namaSelect.selectedIndex];
             harga = selectedOption ? parseInt(selectedOption.getAttribute('data-harga')) || 0 : 0;
         }
 
-        
+
         let total = totalInput ? parseInt(totalInput.value) || 0 : 0;
         if (total === 0) {
             total = harga * jumlah;
@@ -541,8 +547,8 @@ window.submitFormSPH = function (formData) {
         nama_perusahaan: nama_perusahaan,
         penandatangan: penandatangan,
         detail_barang: items,
-        total_keseluruhan: total_keseluruhan, 
-        status: "Menunggu" 
+        total_keseluruhan: total_keseluruhan,
+        status: "Menunggu"
     };
 
     console.log("Sending Payload:", payload);
@@ -566,15 +572,15 @@ window.submitFormSPH = function (formData) {
             return res.json();
         })
         .then((response) => {
-            
+
             const modalEl = document.getElementById('modalTambahSPH');
             const modal = bootstrap.Modal.getInstance(modalEl);
             if (modal) modal.hide();
 
-            
+
             $('#modalTambahSPH').trigger('hidden.bs.modal');
 
-            
+
             const nomorSPH = response?.data?.nomor_sph || response?.nomor_sph || "Baru";
 
             Swal.fire({
@@ -598,11 +604,11 @@ window.submitFormSPH = function (formData) {
 
 
 window.showSuccessModal = function (title, identifier) {
-    
+
     const oldModal = document.getElementById('successModalOverlay');
     if (oldModal) oldModal.remove();
 
-    
+
     const overlay = document.createElement('div');
     overlay.id = 'successModalOverlay';
     Object.assign(overlay.style, {
@@ -612,7 +618,7 @@ window.showSuccessModal = function (title, identifier) {
         animation: 'fadeIn 0.3s'
     });
 
-    
+
     const content = document.createElement('div');
     Object.assign(content.style, {
         background: 'white', borderRadius: '16px', padding: '32px',
@@ -620,7 +626,7 @@ window.showSuccessModal = function (title, identifier) {
         textAlign: 'center'
     });
 
-    
+
     const iconContainer = document.createElement('div');
     iconContainer.innerHTML = `
         <svg class="success-checkmark" xmlns="http:
@@ -629,7 +635,7 @@ window.showSuccessModal = function (title, identifier) {
         </svg>
     `;
 
-    
+
     const animationStyle = document.createElement('style');
     animationStyle.textContent = `
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
@@ -664,7 +670,7 @@ window.showSuccessModal = function (title, identifier) {
     `;
     overlay.appendChild(animationStyle);
 
-    
+
     const header = document.createElement('h5');
     header.textContent = `${title} Berhasil Dibuat!`;
     Object.assign(header.style, {
@@ -672,7 +678,7 @@ window.showSuccessModal = function (title, identifier) {
         color: '#065f46'
     });
 
-    
+
     const sphNumber = document.createElement('div');
     sphNumber.innerHTML = `<span style="color:#6b7280;">Nomor Surat:</span><br><strong style="font-size:18px; color:#1f2937;">${identifier}</strong>`;
     Object.assign(sphNumber.style, {
@@ -680,7 +686,7 @@ window.showSuccessModal = function (title, identifier) {
         margin: '16px 0 24px 0', border: '1px solid #bbf7d0'
     });
 
-    
+
     const btnOK = document.createElement('button');
     btnOK.textContent = 'OK, Mengerti';
     btnOK.type = 'button';
@@ -695,14 +701,14 @@ window.showSuccessModal = function (title, identifier) {
         overlay.remove();
     });
 
-    
+
     content.appendChild(iconContainer);
     content.appendChild(header);
     content.appendChild(sphNumber);
     content.appendChild(btnOK);
     overlay.appendChild(content);
 
-    
+
     overlay.addEventListener('click', function (e) {
         if (e.target === overlay) overlay.remove();
     });

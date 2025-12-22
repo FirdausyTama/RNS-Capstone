@@ -218,7 +218,7 @@
                                 <input type="text" class="form-control" id="noOrder" placeholder="TRX-2025-001" readonly>
                             </div>
                             <div class="col-md-6">
-                                <label for="tanggalPembelian" class="form-label">Tanggal Pembelian</label>
+                                <label for="tanggalPembelian" class="form-label">Tanggal Pembelian <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control" id="tanggalPembelian" required>
                             </div>
                         </div>
@@ -229,15 +229,15 @@
                         <div class="section-title">Data Customer</div>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label for="namaCustomer" class="form-label">Nama Customer</label>
+                                <label for="namaCustomer" class="form-label">Nama Customer <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="namaCustomer" placeholder="Masukkan nama customer" required>
                             </div>
                             <div class="col-md-6">
-                                <label for="noTelepon" class="form-label">No. Telepon</label>
+                                <label for="noTelepon" class="form-label">No. Telepon <span class="text-danger">*</span></label>
                                 <input type="tel" class="form-control" id="noTelepon" placeholder="08xx-xxxx-xxxx" required>
                             </div>
                             <div class="col-12">
-                                <label for="alamatCustomer" class="form-label">Alamat Lengkap</label>
+                                <label for="alamatCustomer" class="form-label">Alamat Lengkap <span class="text-danger">*</span></label>
                                 <textarea class="form-control" id="alamatCustomer" rows="2" placeholder="Masukkan alamat lengkap customer" required></textarea>
                             </div>
                         </div>
@@ -294,7 +294,7 @@
                         <div class="section-title">Status Pesanan</div>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label d-block mb-2">Status Pengiriman</label>
+                                <label class="form-label d-block mb-2">Status Pengiriman <span class="text-danger">*</span></label>
                                 <div class="radio-group">
                                     <div class="radio-item">
                                         <input type="radio" id="statusDikirim" name="statusPengiriman" value="dikirim">
@@ -307,7 +307,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label d-block mb-2">Status Pembayaran</label>
+                                <label class="form-label d-block mb-2">Status Pembayaran <span class="text-danger">*</span></label>
                                 <div class="radio-group">
                                     <div class="radio-item">
                                         <input type="radio" id="statusLunas" name="statusPembayaran" value="lunas">

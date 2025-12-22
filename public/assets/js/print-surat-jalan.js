@@ -86,7 +86,7 @@ function renderPrintSuratJalan(data) {
 
 
     
-    setTimeout(() => window.print(), 1000);
+    // setTimeout(() => window.print(), 1000);
 }
 
 function setText(id, value) {

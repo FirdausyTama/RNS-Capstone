@@ -79,7 +79,7 @@
 
                         <div class="text-end">
                             <ol class="breadcrumb m-0 py-0">
-                                <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Halaman</a></li>
                                 <li class="breadcrumb-item active">Kelola Stok</li>
                             </ol>
                         </div>
