@@ -296,15 +296,12 @@
 
                                 <div class="col-md-6">
                                     <div class="border border-2 border-dashed rounded p-4 text-center upload-box" onclick="document.getElementById('uploadFoto').click()" style="cursor: pointer;">
-                                        <input type="file" id="uploadFoto" name="foto" accept="image/jpeg,image/png,image/webp" style="display: none;" onchange="handleFotoUpload(this)">
+                                        <input type="file" id="uploadFoto" name="foto[]" accept="image/jpeg,image/png,image/webp" multiple style="display: none;" onchange="handleFotoUpload(this)">
                                         <div id="fotoPlaceholder">
                                             <i class="mdi mdi-camera-outline fs-1 text-muted d-block mb-2"></i>
-                                            <span class="text-muted" id="fotoFileName">Tambah Foto</span>
+                                            <span class="text-muted" id="fotoFileName">Tambah Foto (Bisa banyak)</span>
                                         </div>
-                                        <div class="preview-image" id="fotoPreview">
-                                            <button type="button" class="remove-media" onclick="removeFoto(event)">×</button>
-                                            <img id="fotoElement" src="" alt="Preview">
-                                            <small class="text-muted d-block mt-2" id="fotoFileNamePreview"></small>
+                                        <div class="row g-2 mt-2" id="fotoPreviewContainer" style="display: none;">
                                         </div>
                                     </div>
                                 </div>
@@ -442,18 +439,15 @@
                                 <div class="col-md-6">
                                     <div class="border border-2 border-dashed rounded p-4 text-center upload-box"
                                         onclick="document.getElementById('editUploadFoto').click()">
-                                        <input type="file" id="editUploadFoto" accept="image/*" style="display:none;"
+                                        <input type="file" id="editUploadFoto" name="fotos[]" accept="image/*" multiple style="display:none;"
                                             onchange="handleEditFotoUpload(this)">
 
                                         <div id="editFotoPlaceholder">
                                             <i class="mdi mdi-camera-outline fs-1 text-muted d-block mb-2"></i>
-                                            <span class="text-muted">Edit Foto</span>
+                                            <span class="text-muted">Edit Foto (Bisa banyak)</span>
                                         </div>
 
-                                        <div class="preview-image" id="editFotoPreview">
-                                            <button type="button" class="remove-media" onclick="removeEditFoto(event)">×</button>
-                                            <img id="editFotoElement" src="">
-                                            <small class="text-muted d-block mt-2" id="editFotoName"></small>
+                                        <div class="row g-2 mt-2" id="editFotoPreviewContainer" style="display: none;">
                                         </div>
                                     </div>
                                 </div>

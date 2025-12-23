@@ -313,12 +313,24 @@ function renderDetailStokModal(data, id) {
     const storageBaseUrl = `http://127.0.0.1:8000/storage`;
     const contentDiv = document.getElementById("detailStokContent");
 
+    let fotos = [];
+    if (data.images && Array.isArray(data.images) && data.images.length > 0) {
+        fotos = data.images.map(img => img.image_path);
+    } else if (data.stok_fotos && Array.isArray(data.stok_fotos)) {
+        fotos = data.stok_fotos.map(f => typeof f === 'object' ? (f.filename || f.foto) : f);
+    } else if (data.fotos && Array.isArray(data.fotos)) {
+        fotos = data.fotos;
+    } else if (data.foto) {
+        fotos = [data.foto];
+    }
 
-    const hasFoto = data.foto ? true : false;
+    const hasFoto = fotos.length > 0;
+
     const hasVideo = data.video ? true : false;
     const hasMedia = hasFoto || hasVideo;
 
-    const fotoUrl = data.foto ? `${storageBaseUrl}/${data.foto}` : "";
+    // Use first photo as main if available
+    const fotoUrl = hasFoto ? `${storageBaseUrl}/${fotos[0]}` : "";
     const videoUrl = data.video ? `${storageBaseUrl}/${data.video}` : "";
 
 
@@ -462,8 +474,13 @@ function renderDetailStokModal(data, id) {
                         <div class="media-gallery">
                             ${hasFoto ? `
                             <div class="media-item">
-                                <small class="text-muted d-block mb-2">Foto Produk</small>
-                                <img src="${fotoUrl}" class="product-image" alt="Foto Produk">
+                                <small class="text-muted d-block mb-2">Foto Produk (${fotos.length})</small>
+                                <div class="d-flex overflow-auto gap-2" style="max-width: 100%;">
+                                    ${fotos.map(f => `
+                                        <img src="${storageBaseUrl}/${f}" class="product-image" style="width: 100px; height: 100px; object-fit: cover; cursor: pointer;" onclick="window.open(this.src, '_blank')">
+                                    `).join('')}
+                                </div>
+                                <div class="mt-2 text-center text-muted small"><i class="mdi mdi-information-outline"></i> Klik gambar untuk memperbesar</div>
                             </div>` : ''}
                             
                             ${hasVideo ? `
@@ -621,50 +638,78 @@ function handleVideoUpload(input) {
     }
 }
 
+// Global array to store selected files for multiple upload
+let selectedFotoFiles = [];
+
 function handleFotoUpload(input) {
-    const file = input.files[0];
-    if (file) {
+    const files = Array.from(input.files);
+    const validFormats = ["image/jpeg", "image/png", "image/webp"];
+    
+    if (files.length === 0) return;
+
+    files.forEach(file => {
         if (file.size > 5 * 1024 * 1024) {
-            alert("Ukuran foto maksimal 5MB!");
-            input.value = "";
+            alert(`File ${file.name} terlalu besar! Maksimal 5MB.`);
             return;
         }
-
-        const validFormats = ["image/jpeg", "image/png", "image/webp"];
         if (!validFormats.includes(file.type)) {
-            alert("Format foto harus JPG, PNG, atau WEBP!");
-            input.value = "";
+            alert(`Format file ${file.name} tidak valid! Gunakan JPG, PNG, atau WEBP.`);
             return;
         }
+        
+        // Add to global array
+        selectedFotoFiles.push(file);
+    });
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            document.getElementById("fotoElement").src = e.target.result;
-            document.getElementById("fotoFileNamePreview").textContent =
-                file.name;
-            document.getElementById("fotoPlaceholder").style.display = "none";
-            document.getElementById("fotoPreview").classList.add("show");
-        };
-        reader.readAsDataURL(file);
+    renderFotoPreviews();
+    
+    // Reset input value to allow selecting the same file again if needed (and to not hold state there)
+    input.value = "";
+}
+
+function renderFotoPreviews() {
+    const container = document.getElementById("fotoPreviewContainer");
+    const placeholder = document.getElementById("fotoPlaceholder");
+    
+    if (selectedFotoFiles.length > 0) {
+        placeholder.style.display = "none";
+        container.style.display = "flex"; // Ensure it's treated as a row
+        container.innerHTML = ""; // Clear current
+
+        selectedFotoFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const col = document.createElement("div");
+                col.className = "col-4 position-relative";
+                col.innerHTML = `
+                    <div class="border rounded p-1" style="height: 100px; overflow: hidden; position: relative;">
+                        <img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;" class="rounded">
+                        <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 p-0 d-flex justify-content-center align-items-center" 
+                                style="width: 20px; height: 20px; border-radius: 50%; font-size: 12px; margin: 2px;"
+                                onclick="removeFotoByIndex(${index})">×</button>
+                    </div>
+                    <small class="d-block text-truncate mt-1" style="font-size: 10px;">${file.name}</small>
+                `;
+                container.appendChild(col);
+            };
+            reader.readAsDataURL(file);
+        });
+    } else {
+        container.style.display = "none";
+        placeholder.style.display = "block";
     }
 }
 
-function removeVideo(event) {
-    event.stopPropagation();
-    document.getElementById("uploadVideo").value = "";
-    document.getElementById("videoElement").src = "";
-    document.getElementById("videoFileNamePreview").textContent = "";
-    document.getElementById("videoPreview").classList.remove("show");
-    document.getElementById("videoPlaceholder").style.display = "block";
+function removeFotoByIndex(index) {
+    selectedFotoFiles.splice(index, 1);
+    renderFotoPreviews();
 }
 
+// Kept for backward compatibility if needed, though replaced
 function removeFoto(event) {
     event.stopPropagation();
-    document.getElementById("uploadFoto").value = "";
-    document.getElementById("fotoElement").src = "";
-    document.getElementById("fotoFileNamePreview").textContent = "";
-    document.getElementById("fotoPreview").classList.remove("show");
-    document.getElementById("fotoPlaceholder").style.display = "block";
+    selectedFotoFiles = [];
+    renderFotoPreviews();
 }
 
 
@@ -697,51 +742,7 @@ function handleEditVideoUpload(input) {
     }
 }
 
-function handleEditFotoUpload(input) {
-    const file = input.files[0];
-    if (file) {
-        if (file.size > 5 * 1024 * 1024) {
-            alert("Ukuran foto maksimal 5MB!");
-            input.value = "";
-            return;
-        }
-
-        const validFormats = ["image/jpeg", "image/png", "image/webp"];
-        if (!validFormats.includes(file.type)) {
-            alert("Format foto harus JPG, PNG, atau WEBP!");
-            input.value = "";
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            document.getElementById("editFotoElement").src = e.target.result;
-            document.getElementById("editFotoName").textContent = file.name;
-            document.getElementById("editFotoPlaceholder").style.display =
-                "none";
-            document.getElementById("editFotoPreview").style.display = "block";
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-function removeEditVideo(event) {
-    event.stopPropagation();
-    document.getElementById("editUploadVideo").value = "";
-    document.getElementById("editVideoElement").src = "";
-    document.getElementById("editVideoName").textContent = "";
-    document.getElementById("editVideoPreview").style.display = "none";
-    document.getElementById("editVideoPlaceholder").style.display = "block";
-}
-
-function removeEditFoto(event) {
-    event.stopPropagation();
-    document.getElementById("editUploadFoto").value = "";
-    document.getElementById("editFotoElement").src = "";
-    document.getElementById("editFotoName").textContent = "";
-    document.getElementById("editFotoPreview").style.display = "none";
-    document.getElementById("editFotoPlaceholder").style.display = "block";
-}
+// Old functions removed to support multiple file upload (see end of file)
 
 const modalTambahStok = document.getElementById("modalTambahStok");
 if (modalTambahStok) {
@@ -754,8 +755,15 @@ if (modalTambahStok) {
         document.getElementById("videoPlaceholder").style.display = "block";
 
         document.getElementById("fotoElement").src = "";
+        document.getElementById("fotoElement").src = "";
         document.getElementById("fotoFileNamePreview").textContent = "";
-        document.getElementById("fotoPreview").classList.remove("show");
+        // Reset multiple files
+        selectedFotoFiles = [];
+        const previewContainer = document.getElementById("fotoPreviewContainer");
+        if (previewContainer) {
+            previewContainer.innerHTML = "";
+            previewContainer.style.display = "none";
+        }
         document.getElementById("fotoPlaceholder").style.display = "block";
     });
 }
@@ -905,17 +913,60 @@ async function openEditModal(id) {
         document.getElementById("editTinggi").value = data.data.tinggi || "";
         document.getElementById("editBerat").value = data.data.berat || "";
 
-        if (data.data.foto) {
-            document.getElementById(
-                "editFotoElement"
-            ).src = `http://127.0.0.1:8000/storage/${data.data.foto}`;
-            document.getElementById("editFotoName").textContent = data.data.foto
-                .split("/")
-                .pop();
-            document.getElementById("editFotoPreview").style.display = "block";
-            document.getElementById("editFotoPlaceholder").style.display =
-                "none";
+        // Handling Fotos (Multiple)
+        const editPreviewContainer = document.getElementById("editFotoPreviewContainer");
+        const editPlaceholder = document.getElementById("editFotoPlaceholder");
+        
+        // Reset new files
+        selectedEditFotoFiles = [];
+        editPreviewContainer.innerHTML = "";
+        
+        // Load existing images from 'images' relation
+        const existingImages = data.data.images || [];
+
+        if (existingImages.length > 0 || data.data.foto) {
+            editPlaceholder.style.display = "none";
+            editPreviewContainer.style.display = "flex";
+            
+            // Render from 'images' relation
+            if (existingImages.length > 0) {
+                existingImages.forEach(img => {
+                    const col = document.createElement("div");
+                    col.className = "col-4 position-relative existing-image-item";
+                    col.id = `existing-img-${img.id}`;
+                    col.innerHTML = `
+                        <div class="border rounded p-1" style="height: 100px; overflow: hidden; position: relative;">
+                            <img src="http://127.0.0.1:8000/storage/${img.image_path}" style="width: 100%; height: 100%; object-fit: cover;" class="rounded">
+                            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 p-0 d-flex justify-content-center align-items-center" 
+                                    style="width: 20px; height: 20px; border-radius: 50%; font-size: 12px; margin: 2px;"
+                                    onclick="deleteStokImage(${img.id})" title="Hapus Foto">
+                                <i class="mdi mdi-delete"></i>
+                            </button>
+                            <span class="badge bg-secondary position-absolute bottom-0 start-0 m-1" style="font-size: 10px;">Tersimpan</span>
+                        </div>
+                    `;
+                    editPreviewContainer.appendChild(col);
+                });
+            } else if (data.data.foto) {
+                // Fallback for singular foto
+                const col = document.createElement("div");
+                col.className = "col-4 position-relative existing-image-item";
+                col.innerHTML = `
+                    <div class="border rounded p-1" style="height: 100px; overflow: hidden; position: relative;">
+                        <img src="http://127.0.0.1:8000/storage/${data.data.foto}" style="width: 100%; height: 100%; object-fit: cover;" class="rounded">
+                        <span class="badge bg-secondary position-absolute bottom-0 start-0 m-1" style="font-size: 10px;">Tersimpan</span>
+                    </div>
+                `;
+                editPreviewContainer.appendChild(col);
+            }
+        } else {
+            editPlaceholder.style.display = "block";
+            editPreviewContainer.style.display = "none";
         }
+
+        // Hide legacy elements if they exist
+        if(document.getElementById("editFotoPreview")) document.getElementById("editFotoPreview").style.display = "none";
+        if(document.getElementById("editFotoElement")) document.getElementById("editFotoElement").src = "";
 
         if (data.data.video) {
             document.getElementById(
@@ -967,8 +1018,15 @@ async function submitUpdateStok() {
     formData.append("tinggi", document.getElementById("editTinggi").value);
     formData.append("berat", document.getElementById("editBerat").value);
 
-    const foto = document.getElementById("editUploadFoto")?.files[0];
-    if (foto) formData.append("foto", foto);
+    // [FIX] Multiple images upload for Edit
+    if (selectedEditFotoFiles.length > 0) {
+        // Send singular 'foto' for validation (using first new file)
+        formData.append("foto", selectedEditFotoFiles[0]);
+        
+        selectedEditFotoFiles.forEach((file, index) => {
+             formData.append("fotos[]", file); 
+        });
+    }
 
     const video = document.getElementById("editUploadVideo")?.files[0];
     if (video) formData.append("video", video);
@@ -1067,8 +1125,16 @@ function submitTambahStok() {
     formData.append("tinggi", document.getElementById("tinggi")?.value || "");
     formData.append("berat", document.getElementById("berat")?.value || "");
 
-    const foto = document.getElementById("uploadFoto").files[0];
-    if (foto) formData.append("foto", foto);
+    // [FIX] Multiple images upload
+    if (selectedFotoFiles.length > 0) {
+        // Send the first file as 'foto' (singular) to satisfy backend validation
+        formData.append("foto", selectedFotoFiles[0]);
+
+        // Send all files as 'foto[]' for multiple support
+        selectedFotoFiles.forEach((file, index) => {
+            formData.append("fotos[]", file); 
+        });
+    }
 
     const video = document.getElementById("uploadVideo").files[0];
     if (video) formData.append("video", video);
@@ -1093,6 +1159,10 @@ function submitTambahStok() {
             alertSuccess(res.message || "Stok berhasil ditambahkan!");
 
             document.getElementById("formTambahStok").reset();
+            selectedFotoFiles = []; // Clear stored files
+            document.getElementById("fotoPreviewContainer").innerHTML = "";
+            document.getElementById("fotoPreviewContainer").style.display = "none";
+            document.getElementById("fotoPlaceholder").style.display = "block";
 
             const modal = bootstrap.Modal.getInstance(
                 document.getElementById("modalTambahStok")
@@ -1193,16 +1263,107 @@ function setFilter(filterName) {
     renderTable(1);
 }
 
+// Global array for Edit Modal files
+let selectedEditFotoFiles = [];
 
+function handleEditFotoUpload(input) {
+    const files = Array.from(input.files);
+    const validFormats = ["image/jpeg", "image/png", "image/webp"];
+    
+    if (files.length === 0) return;
 
+    files.forEach(file => {
+        if (file.size > 5 * 1024 * 1024) {
+            alert(`File ${file.name} terlalu besar! Maksimal 5MB.`);
+            return;
+        }
+        if (!validFormats.includes(file.type)) {
+            alert(`Format file ${file.name} tidak valid! Gunakan JPG, PNG, atau WEBP.`);
+            return;
+        }
+        selectedEditFotoFiles.push(file);
+    });
 
+    renderEditFotoPreviews();
+    input.value = "";
+}
 
+function renderEditFotoPreviews() {
+    const container = document.getElementById("editFotoPreviewContainer");
+    const placeholder = document.getElementById("editFotoPlaceholder");
+    
+    // Preserve existing items
+    const existingItems = [...container.querySelectorAll('.existing-image-item')];
+    container.innerHTML = "";
+    existingItems.forEach(item => container.appendChild(item));
 
+    if (selectedEditFotoFiles.length > 0 || existingItems.length > 0) {
+        placeholder.style.display = "none";
+        container.style.display = "flex";
 
+        selectedEditFotoFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const col = document.createElement("div");
+                col.className = "col-4 position-relative new-image-item";
+                col.innerHTML = `
+                    <div class="border rounded p-1" style="height: 100px; overflow: hidden; position: relative;">
+                        <img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;" class="rounded">
+                        <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 p-0 d-flex justify-content-center align-items-center" 
+                                style="width: 20px; height: 20px; border-radius: 50%; font-size: 12px; margin: 2px;"
+                                onclick="removeEditFotoByIndex(${index})">×</button>
+                        <span class="badge bg-info position-absolute bottom-0 start-0 m-1" style="font-size: 10px;">Baru</span>
+                    </div>
+                    <small class="d-block text-truncate mt-1" style="font-size: 10px;">${file.name}</small>
+                `;
+                container.appendChild(col);
+            };
+            reader.readAsDataURL(file);
+        });
+    } else {
+        container.style.display = "none";
+        placeholder.style.display = "block";
+    }
+}
 
+function removeEditFotoByIndex(index) {
+    selectedEditFotoFiles.splice(index, 1);
+    renderEditFotoPreviews();
+}
 
+function removeEditFoto(event) {
+    event.stopPropagation();
+    selectedEditFotoFiles = [];
+    renderEditFotoPreviews();
+}
 
+function deleteStokImage(imageId) {
+    if(!confirm("Apakah Anda yakin ingin menghapus foto ini secara permanen?")) return;
 
-
-
-
+    const token = getToken();
+    // Assuming endpoint: DELETE /api/stoks/images/{id}
+    fetch(`${API_URL}/images/${imageId}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Accept": "application/json"
+        }
+    })
+    .then(async res => {
+        if (!res.ok) {
+           const text = await res.text();
+           throw new Error(text || "Gagal hapus foto");
+        }
+        return res.json();
+    })
+    .then(res => {
+        alertSuccess(res.message || "Foto berhasil dihapus");
+        const el = document.getElementById(`existing-img-${imageId}`);
+        if(el) el.remove();
+        renderEditFotoPreviews(); // Check placeholder
+    })
+    .catch(err => {
+        console.error(err);
+        alertError("Gagal menghapus foto. " + err.message);
+    });
+}
