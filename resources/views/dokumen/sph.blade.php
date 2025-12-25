@@ -9,13 +9,13 @@
     <meta name="author" content="Zoyothemes" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    
+
     <link rel="shortcut icon" href="assets/images/favicon.ico">
 
-    
+
     <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
 
-    
+
     <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
 
     <script src="assets/js/head.js"></script>
@@ -25,11 +25,11 @@
 
 <body data-menu-color="light" data-sidebar="default">
     @include('navbar.navbar')
-    
+
     <div id="app-layout">
         <div class="content-page">
             <div class="content">
-                
+
                 <div class="container-fluid">
                     <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
                         <div class="flex-grow-1">
@@ -43,9 +43,9 @@
                             </ol>
                         </div>
                     </div>
-                </div> 
+                </div>
 
-                
+
                 <div class="row">
                     <div class="container-fluid">
                         <div class="card shadow-sm border-0">
@@ -56,9 +56,9 @@
                                         <p class="text-muted mb-0">Kelola dan pantau seluruh surat penawaran Anda</p>
                                     </div>
 
-                                    
+
                                     <div class="d-flex align-items-center gap-2">
-                                        
+
                                         <div class="dropdown">
                                             <button class="btn btn-light border dropdown-toggle" type="button"
                                                 id="filterWaktu" data-bs-toggle="dropdown" aria-expanded="false">
@@ -80,7 +80,7 @@
                                             </ul>
                                         </div>
 
-                                        
+
                                         <form class="app-search">
                                             <div class="position-relative topbar-search">
                                                 <input type="text" class="form-control ps-4" placeholder="Cari SPH..."
@@ -106,9 +106,9 @@
                                             </tr>
                                         </thead>
 
-                                        
+
                                         <tbody id="sph-table-body">
-                                            
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -128,10 +128,10 @@
                         </div>
                     </div>
                 </div>
-                
-            </div> 
 
-            
+            </div>
+
+
             <footer class="footer">
                 <div class="container-fluid">
                     <div class="row">
@@ -144,9 +144,9 @@
                     </div>
                 </div>
             </footer>
-            
 
-            
+
+
             <div class="modal fade" id="modalTambahSPH" tabindex="-1" aria-labelledby="modalTambahSPHLabel"
                 aria-hidden="true">
                 <div class="modal-dialog modal-xl">
@@ -160,8 +160,10 @@
                         </div>
                         <div class="modal-body">
                             <form id="formTambahSPH">
+                                <!-- Hidden field to track edit mode -->
+                                <input type="hidden" id="sphEditId" value="">
 
-                                
+
                                 <div class="card border-0 shadow-sm mb-3">
                                     <div class="card-header bg-light">
                                         <h6 class="mb-0 fw-semibold"><i
@@ -200,7 +202,7 @@
                                             <div class="col-md-4">
                                                 <label class="form-label">Lampiran</label>
                                                 <input type="text" class="form-control" name="lampiran"
-                                                    placeholder="Contoh: - atau 1 Lembar">
+                                                    value="Otomatis dari sistem" disabled>
                                             </div>
                                             <div class="col-md-8">
                                                 <label class="form-label">Hal <span class="text-danger">*</span></label>
@@ -211,7 +213,7 @@
                                     </div>
                                 </div>
 
-                                
+
                                 <div class="card border-0 shadow-sm mb-3">
                                     <div class="card-header bg-light">
                                         <h6 class="mb-0 fw-semibold"><i
@@ -222,8 +224,8 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Kepada (Jabatan) <span
                                                         class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="kepada" value="Direktur"
-                                                    placeholder="Direktur" required>
+                                                <input type="text" class="form-control" name="jabatan_tujuan"
+                                                    value="Direktur" placeholder="Direktur" required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Nama Perusahaan/Instansi <span
@@ -235,7 +237,7 @@
                                     </div>
                                 </div>
 
-                                
+
                                 <div class="card border-0 shadow-sm mb-3">
                                     <div class="card-header bg-light d-flex justify-content-between align-items-center">
                                         <h6 class="mb-0 fw-semibold"><i
@@ -307,7 +309,225 @@
                                     </div>
                                 </div>
 
-                                
+
+                                <div class="card border-0 shadow-sm mb-3">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0 fw-semibold"><i
+                                                class="mdi mdi-text-box-outline me-2"></i>Keterangan Tambahan</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label class="form-label">Keterangan / Catatan</label>
+
+                                                <!-- Rich Text Editor Toolbar -->
+                                                <div
+                                                    class="border rounded-top p-2 bg-light d-flex gap-2 align-items-center">
+                                                    <button type="button" id="btnBold"
+                                                        class="btn btn-sm btn-outline-primary fw-bold"
+                                                        onclick="formatDoc('bold')" title="Bold">B</button>
+                                                    <button type="button" id="btnItalic"
+                                                        class="btn btn-sm btn-outline-primary fst-italic"
+                                                        onclick="formatDoc('italic')" title="Italic">I</button>
+                                                    <button type="button" id="btnUnderline"
+                                                        class="btn btn-sm btn-outline-primary text-decoration-underline"
+                                                        onclick="formatDoc('underline')" title="Underline">U</button>
+                                                    <div class="vr"></div>
+                                                    <select id="fontSizeSelect"
+                                                        class="form-select form-select-sm w-auto"
+                                                        onchange="setFontSize(this.value);" title="Ukuran Font">
+                                                        <option value="">Ukuran</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                        <option value="10">10</option>
+                                                        <option value="11">11</option>
+                                                        <option value="12">12</option>
+                                                        <option value="14">14</option>
+                                                        <option value="16">16</option>
+                                                        <option value="18">18</option>
+                                                        <option value="20">20</option>
+                                                        <option value="22">22</option>
+                                                        <option value="24">24</option>
+                                                        <option value="26">26</option>
+                                                        <option value="28">28</option>
+                                                        <option value="36">36</option>
+                                                        <option value="48">48</option>
+                                                        <option value="72">72</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- Editable Area -->
+                                                <div id="editor" class="form-control rounded-0 rounded-bottom"
+                                                    style="min-height: 200px; overflow-y: auto;" contenteditable="true">
+                                                    Catatan :<br>
+                                                    - Kondisi alat second layak pakai dan masih sangat bagus.<br>
+                                                    - Harga sudah termasuk ongkir, Instal, Uji Fungsi, Uji Kesesuaian,
+                                                    Uji Paparan Ruangan dan Perijinan<br>
+                                                    - Garansi service X-Ray 3 Bulan, Garansi tidak berlaku, jika terjadi
+                                                    keadaan memaksa (force majeure), yaitu keadaan di luar kemampuan
+                                                    seperti bencana alam, konsleting listrik, banjir, kebakaran,
+                                                    mobilisasi, pemogokan, blokade, revolusi, huru hara, sabotase<br>
+                                                    - Cara pembayaran:<br>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;Pembayaran Pertama DP 50% Setelah PO atau
+                                                    SPK kami terima<br>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;Pembayaran Ke Dua 50% Setelah Alat terinstal
+                                                    dengan baik Pelunasan.<br><br>
+                                                    Pembayaran Bisa Di Tranfer Melalui Rek Bank BSI (BANK SYARIAH
+                                                    INDONESIA) :<br><br>
+                                                    No Rek : 1101198975<br>
+                                                    Atas Nama : PT RANAY NUSANTARA SEJAHTERA<br>
+                                                    Kode bank : 451
+                                                </div>
+
+                                                <!-- Hidden Input for Form Submission -->
+                                                <textarea name="keterangan" id="keteranganInput"
+                                                    style="display:none;"></textarea>
+
+                                                <script>
+                                                    function formatDoc(cmd, value = null) {
+                                                        if (value) {
+                                                            document.execCommand(cmd, false, value);
+                                                        } else {
+                                                            document.execCommand(cmd);
+                                                        }
+                                                        document.getElementById('editor').focus();
+                                                        updateToolbar(); // Update state immediately
+                                                        updateHiddenInput();
+                                                    }
+
+                                                    function setFontSize(size) {
+                                                        if (!size) return;
+                                                        // Use a marker size (7) that we can easily find and replace
+                                                        document.execCommand("fontSize", false, "7");
+
+                                                        const fontElements = document.getElementById("editor").getElementsByTagName("font");
+                                                        // Convert live list to array to avoid skipping elements as we modify them (if any)
+                                                        // changing an attribute might affect the live collection in some browsers
+                                                        for (let i = 0; i < fontElements.length; i++) {
+                                                            if (fontElements[i].size == "7") {
+                                                                fontElements[i].removeAttribute("size");
+                                                                fontElements[i].style.fontSize = size + "pt";
+                                                            }
+                                                        }
+                                                        updateHiddenInput();
+                                                        updateToolbar();
+                                                    }
+
+                                                    function updateToolbar() {
+                                                        const selection = window.getSelection();
+
+                                                        // 1. Check if selection is inside editor
+                                                        let isInside = false;
+                                                        if (selection.rangeCount > 0) {
+                                                            const anchorNode = selection.anchorNode;
+                                                            if (anchorNode) {
+                                                                const parent = anchorNode.nodeType === 3 ? anchorNode.parentElement : anchorNode;
+                                                                const editor = document.getElementById('editor');
+                                                                if (editor.contains(parent) || editor === parent) {
+                                                                    isInside = true;
+                                                                }
+                                                            }
+                                                        }
+
+                                                        if (!isInside) {
+                                                            // Clicked outside: Reset everything
+                                                            toggleButtonState('btnBold', false);
+                                                            toggleButtonState('btnItalic', false);
+                                                            toggleButtonState('btnUnderline', false);
+                                                            document.getElementById('fontSizeSelect').value = "";
+                                                            return;
+                                                        }
+
+                                                        // 2. UPDATE BUTTON STATES (B, I, U)
+                                                        toggleButtonState('btnBold', document.queryCommandState('bold'));
+                                                        toggleButtonState('btnItalic', document.queryCommandState('italic'));
+                                                        toggleButtonState('btnUnderline', document.queryCommandState('underline'));
+
+                                                        const anchorNode = selection.anchorNode;
+                                                        const parent = anchorNode.nodeType === 3 ? anchorNode.parentElement : anchorNode;
+
+                                                        // 3. UPDATE FONT SIZE DROPDOWN
+                                                        const computedStyle = window.getComputedStyle(parent);
+                                                        const fontSizePx = parseFloat(computedStyle.fontSize);
+
+                                                        // Convert px to pt
+                                                        const fontSizePt = Math.round(fontSizePx * 0.75);
+
+                                                        const select = document.getElementById('fontSizeSelect');
+                                                        let found = false;
+                                                        for (let i = 0; i < select.options.length; i++) {
+                                                            if (parseInt(select.options[i].value) === fontSizePt) {
+                                                                select.value = select.options[i].value;
+                                                                found = true;
+                                                                break;
+                                                            }
+                                                        }
+                                                        if (!found) select.value = "";
+                                                    }
+
+                                                    function toggleButtonState(btnId, isActive) {
+                                                        const btn = document.getElementById(btnId);
+                                                        if (btn) {
+                                                            if (isActive) {
+                                                                btn.classList.remove('btn-outline-primary');
+                                                                btn.classList.add('btn-primary'); // Blue color
+                                                            } else {
+                                                                btn.classList.remove('btn-primary');
+                                                                btn.classList.add('btn-outline-primary');
+                                                            }
+                                                        }
+                                                    }
+
+                                                    // Sync content
+                                                    const editor = document.getElementById('editor');
+                                                    editor.addEventListener('input', updateHiddenInput);
+                                                    editor.addEventListener('keyup', updateToolbar);
+                                                    editor.addEventListener('mouseup', updateToolbar);
+                                                    editor.addEventListener('click', updateToolbar);
+
+                                                    // Global selection change to catch clicking outside
+                                                    document.addEventListener('selectionchange', updateToolbar);
+
+                                                    function updateHiddenInput() {
+                                                        document.getElementById('keteranganInput').value = editor.innerHTML;
+                                                    }
+
+                                                    // Initialize
+                                                    window.addEventListener('load', function () {
+                                                        updateHiddenInput();
+                                                        updateToolbar();
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card border-0 shadow-sm mb-3">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0 fw-semibold"><i
+                                                class="mdi mdi-image-multiple-outline me-2"></i>Lampiran Foto</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="form-label">Upload Foto</label>
+                                                    <div id="foto-container">
+                                                        <!-- Dynamic Photo Inputs will appear here -->
+                                                    </div>
+                                                    <button type="button" class="btn btn-outline-primary btn-sm mt-2"
+                                                        id="btnTambahFoto">
+                                                        <i class="mdi mdi-plus"></i> Tambah Foto
+                                                    </button>
+                                                    <small class="text-muted d-block mt-2">Format: JPG, PNG,
+                                                        JPEG.</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="card border-0 shadow-sm">
                                     <div class="card-header bg-light">
                                         <h6 class="mb-0 fw-semibold"><i
@@ -343,7 +563,7 @@
                 </div>
             </div>
 
-            
+
             <div class="content position-relative">
                 <button type="button" class="btn btn-primary rounded-circle shadow-lg"
                     style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; z-index: 999;"
@@ -355,7 +575,7 @@
         </div>
     </div>
 
-    
+
     <script src="assets/libs/jquery/jquery.min.js"></script>
     <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/libs/simplebar/simplebar.min.js"></script>
@@ -364,10 +584,10 @@
     <script src="assets/libs/jquery.counterup/jquery.counterup.min.js"></script>
     <script src="assets/libs/feather-icons/feather.min.js"></script>
 
-    
+
     <script src="assets/js/app.js"></script>
 
-    
+
     <script>
         // Fungsi untuk set filter waktu
         function setFilter(filterName) {
@@ -388,7 +608,7 @@
                 const token = localStorage.getItem("token"); // Use global getToken if available or this
                 // If API_URL is not defined in this scope, we can reconstruct it or use the one from stok.js if loaded.
                 // Assuming standard API path:
-                const API_STOK = "http://127.0.0.1:8000/api/stoks"; 
+                const API_STOK = "http://127.0.0.1:8000/api/stoks";
 
                 fetch(API_STOK, {
                     method: "GET",
@@ -397,29 +617,29 @@
                         "Accept": "application/json"
                     }
                 })
-                .then(response => {
-                    if (!response.ok) throw new Error("Gagal mengambil data stok");
-                    return response.json();
-                })
-                .then(data => {
-                    const stoks = data.data || [];
-                    stokOptionsHTML = '<option value="">Pilih barang...</option>';
-                    
-                    stoks.forEach(item => {
-                        // Assuming item has nama_barang and harga
-                        const nama = item.nama_barang || "Unnamed Item";
-                        const harga = item.harga || 0;
-                        stokOptionsHTML += `<option value="${nama}" data-harga="${harga}">${nama}</option>`;
-                    });
+                    .then(response => {
+                        if (!response.ok) throw new Error("Gagal mengambil data stok");
+                        return response.json();
+                    })
+                    .then(data => {
+                        const stoks = data.data || [];
+                        stokOptionsHTML = '<option value="">Pilih barang...</option>';
 
-                    // Update existing dropdowns
-                    $('.select-barang').each(function() {
-                       const currentVal = $(this).val();
-                       $(this).html(stokOptionsHTML);
-                       if(currentVal) $(this).val(currentVal);
-                    });
-                })
-                .catch(err => console.error("Error loading stok:", err));
+                        stoks.forEach(item => {
+                            // Assuming item has nama_barang and harga
+                            const nama = item.nama_barang || "Unnamed Item";
+                            const harga = item.harga || 0;
+                            stokOptionsHTML += `<option value="${nama}" data-harga="${harga}">${nama}</option>`;
+                        });
+
+                        // Update existing dropdowns
+                        $('.select-barang').each(function () {
+                            const currentVal = $(this).val();
+                            $(this).html(stokOptionsHTML);
+                            if (currentVal) $(this).val(currentVal);
+                        });
+                    })
+                    .catch(err => console.error("Error loading stok:", err));
             }
 
             // Call loadStok initially
@@ -614,39 +834,126 @@
                 }
             });
 
-            // Reset form saat modal ditutup
+
+            // ==========================================
+            // DYNAMIC PHOTO INPUTS (Logic Baru)
+            // ==========================================
+
+            let photoCounter = 0;
+
+            function addPhotoRow() {
+                photoCounter++;
+                const rowId = `photo-row-${photoCounter}`;
+
+                const html = `
+                    <div class="photo-row border rounded p-2 mb-2 bg-white" id="${rowId}" style="transition: all 0.3s;">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="flex-grow-1">
+                                <input type="file" class="form-control photo-input" name="lampiran_gambar[]" accept="image/*" onchange="previewPhoto(this)">
+                            </div>
+                            <div style="width: 60px; height: 60px; background: #f8f9fa; border: 1px dashed #ced4da; border-radius: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                <img src="" class="img-preview" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                                <i class="mdi mdi-image text-muted icon-placeholder"></i>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-danger btn-sm btn-hapus-foto" onclick="removePhotoRow('${rowId}')">
+                                    <i class="mdi mdi-trash-can-outline"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                $('#foto-container').append(html);
+                updatePhotoRemoveButtons();
+            }
+
+            window.removePhotoRow = function (rowId) {
+                if ($('#foto-container .photo-row').length > 1) {
+                    $(`#${rowId}`).remove();
+                } else {
+                    // Jika cuma 1, reset value-nya saja, jangan dihapus row-nya
+                    const row = $(`#${rowId}`);
+                    row.find('input').val('');
+                    row.find('.img-preview').attr('src', '').hide();
+                    row.find('.icon-placeholder').show();
+                }
+                updatePhotoRemoveButtons();
+            }
+
+            window.previewPhoto = function (input) {
+                const row = $(input).closest('.photo-row');
+                const file = input.files[0];
+                const imgPreview = row.find('.img-preview');
+                const iconPlaceholder = row.find('.icon-placeholder');
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        imgPreview.attr('src', e.target.result).show();
+                        iconPlaceholder.hide();
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    imgPreview.attr('src', '').hide();
+                    iconPlaceholder.show();
+                }
+            }
+
+            function updatePhotoRemoveButtons() {
+                const rows = $('#foto-container .photo-row');
+                if (rows.length === 1) {
+                    rows.find('.btn-hapus-foto').prop('disabled', true); // Disable hapus jika cuma 1
+                } else {
+                    rows.find('.btn-hapus-foto').prop('disabled', false);
+                }
+            }
+
+            // Event Listener Tombol Tambah
+            $('#btnTambahFoto').click(function () {
+                addPhotoRow();
+            });
+
+            // Reset form & init photo row saat modal dibuka/tutup
             $('#modalTambahSPH').on('hidden.bs.modal', function () {
                 $('#formTambahSPH')[0].reset();
-                // Reset ke 1 item saja
+
+                // Reset Barang
+                itemCounter = 1;
                 $('#itemContainer .item-row').not(':first').remove();
-                
-                // Re-populate options just in case, or reset value
                 const firstRow = $('#itemContainer .item-row:first');
                 firstRow.find('.select-barang').val('');
                 firstRow.find('.harga-satuan').val('');
                 firstRow.find('.jumlah-barang').val('1');
                 firstRow.find('.total-item').val('');
-                
-                itemCounter = 1;
                 $('#totalKeseluruhan').text('Rp 0');
                 updateRemoveButtons();
+
+                // Reset Foto
+                $('#foto-container').empty();
+                addPhotoRow(); // Tambah 1 baris kosong
             });
 
-            // Set tanggal hari ini sebagai default dan minimum
+            // Init pertama kali (saat halaman load, atau saat modal shown pertama kali)
+            // Kita panggil saat modal shown saja biar fresh
             $('#modalTambahSPH').on('shown.bs.modal', function () {
                 const today = new Date().toISOString().split('T')[0];
                 const tanggalInput = $('input[name="tanggal"]');
-                tanggalInput.attr('min', today); // Set tanggal minimum = hari ini
-                tanggalInput.val(today); // Set default value = hari ini
-                
-                // Refresh stock options (real-time data)
-                loadStokForDropdown(); 
+                tanggalInput.attr('min', today);
+                tanggalInput.val(today);
+
+                loadStokForDropdown();
+
+                // Pastikan ada minimal 1 row foto
+                if ($('#foto-container .photo-row').length === 0) {
+                    addPhotoRow();
+                }
             });
 
         });
     </script>
 
-    
+
     <script src="{{ asset('assets/js/surat-penawaran.js') }}?v={{ time() }}"></script>
 
 </body>

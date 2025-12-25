@@ -9,6 +9,17 @@ function getToken() {
     return localStorage.getItem("token");
 }
 
+// Safe helper to set value without crashing if element doesn't exist
+function setValue(selector, value) {
+    const el = document.querySelector(selector);
+    if (el) {
+        el.value = value ?? '';
+    } else {
+        console.warn('Element tidak ditemukan:', selector);
+    }
+}
+
+
 
 
 let currentPage = 1;
@@ -44,10 +55,18 @@ function loadSPH() {
             allSPHData = res.data || res;
 
 
-            
+
             filteredSPHData = [...allSPHData];
 
-            currentPage = 1;
+            // ✅ SOLUSI FINAL (POSISI HALAMAN TETAP)
+            const totalItems = filteredSPHData.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            // Jika halaman saat ini kosong (misal setelah hapus item), mundur 1 halaman
+            if (currentPage > totalPages) {
+                currentPage = totalPages || 1;
+            }
+
             renderSPH(currentPage);
         })
         .catch(err => {
@@ -84,7 +103,7 @@ function renderSPH(page = 1) {
 
     body.innerHTML = "";
 
-    
+
     const dataToRender = filteredSPHData.length > 0 || document.getElementById('searchInput')?.value
         ? filteredSPHData
         : allSPHData;
@@ -104,26 +123,26 @@ function renderSPH(page = 1) {
     let no = startIndex + 1;
 
     paginatedData.forEach(item => {
-        
+
         const totalRaw = item.total_keseluruhan || 0;
         const total = parseInt(totalRaw.toString().replace(/\D/g, "")) || 0;
 
-        
+
         const currentStatus = item.status || "Menunggu";
 
-        
+
         let bgStyle = "";
         let textStyle = "";
 
         if (currentStatus === "Diterima") {
-            bgStyle = "#d1fae5"; 
-            textStyle = "#065f46"; 
+            bgStyle = "#d1fae5";
+            textStyle = "#065f46";
         } else if (currentStatus === "Ditolak") {
-            bgStyle = "#fee2e2"; 
-            textStyle = "#991b1b"; 
+            bgStyle = "#fee2e2";
+            textStyle = "#991b1b";
         } else {
-            bgStyle = "#fef3c7"; 
-            textStyle = "#92400e"; 
+            bgStyle = "#fef3c7";
+            textStyle = "#92400e";
         }
 
         body.innerHTML += `
@@ -158,12 +177,23 @@ function renderSPH(page = 1) {
                 </select>
             </td>
             <td class="text-center">
-                <div class="d-flex justify-content-center gap-1">
-                    <button class="btn btn-sm btn-primary" onclick="printSPH(${item.id})" title="Print">
-                        <i class="mdi mdi-printer text-white"></i>
+                <div class="d-flex justify-content-center gap-2">
+                    <!-- EDIT: Blue Soft -->
+                    <button class="btn btn-sm" onclick="editSPH(${item.id})" title="Edit" 
+                        style="background-color: #e0f2fe; color: #0284c7; border: none; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+                        <i class="mdi mdi-square-edit-outline" style="font-size: 14px;"></i>
                     </button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteSPH(${item.id})" title="Hapus">
-                        <i class="mdi mdi-delete text-white"></i>
+                    
+                    <!-- PRINT: Dark/Black Soft -->
+                    <button class="btn btn-sm" onclick="printSPH(${item.id})" title="Print" 
+                        style="background-color: #f3f4f6; color: #1f2937; border: none; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+                        <i class="mdi mdi-printer" style="font-size: 14px;"></i>
+                    </button>
+
+                    <!-- DELETE: Red Soft -->
+                    <button class="btn btn-sm" onclick="deleteSPH(${item.id})" title="Hapus" 
+                        style="background-color: #fee2e2; color: #dc2626; border: none; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+                        <i class="mdi mdi-delete" style="font-size: 14px;"></i>
                     </button>
                 </div>
             </td>
@@ -232,10 +262,10 @@ function searchSPH() {
     const searchTerm = document.getElementById('searchInput')?.value?.toLowerCase() || '';
 
     if (!searchTerm) {
-        
+
         filteredSPHData = allSPHData;
     } else {
-        
+
         filteredSPHData = allSPHData.filter(item => {
             const nomorSph = (item.nomor_sph || '').toLowerCase();
             const namaPerusahaan = (item.nama_perusahaan || '').toLowerCase();
@@ -319,24 +349,125 @@ window.printSPH = function (id) {
     window.location.href = '/print-sph/' + id;
 }
 
+// Edit SPH Function
+window.editSPH = function (id) {
+    const token = getToken();
+    if (!token) {
+        alert("Token tidak ditemukan! Silakan login kembali.");
+        return;
+    }
+
+    // Fetch SPH data by ID
+    fetch(`${API_SPH}/${id}`, {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Accept": "application/json"
+        },
+        mode: "cors"
+    })
+        .then(async res => {
+            if (!res.ok) throw new Error("Gagal memuat data SPH");
+            return res.json();
+        })
+        .then(response => {
+            const data = response.data || response;
+            console.log("Data SPH untuk edit:", data);
+
+            // Set edit ID
+            document.getElementById('sphEditId').value = id;
+
+            // Change modal title
+            document.getElementById('modalTambahSPHLabel').innerHTML =
+                '<i class="mdi mdi-pencil me-2"></i>Edit Surat Penawaran Harga';
+
+            // Populate form fields using safe setValue
+            setValue('input[name="tanggal"]', data.tanggal);
+            setValue('input[name="tempat"]', data.tempat || 'Banten');
+            setValue('input[name="jabatan_tujuan"]', data.jabatan_tujuan || 'Direktur');
+            setValue('input[name="nama_perusahaan"]', data.nama_perusahaan);
+            setValue('select[name="penandatangan"]', data.penandatangan);
+
+
+            // Populate rich text editor (keterangan)
+            const editor = document.getElementById('editor');
+            const keteranganInput = document.getElementById('keteranganInput');
+            if (data.keterangan) {
+                editor.innerHTML = data.keterangan;
+                keteranganInput.value = data.keterangan;
+            }
+
+            // Clear existing items and populate with data
+            $('#itemContainer .item-row').not(':first').remove();
+
+            if (data.detail_barang && data.detail_barang.length > 0) {
+                // Clear first row if it's empty
+                const firstRow = $('#itemContainer .item-row:first');
+                firstRow.find('.select-barang').val('');
+                firstRow.find('.jumlah-barang').val('');
+
+                // Populate first row with first item
+                if (data.detail_barang.length > 0) {
+                    const firstItem = data.detail_barang[0];
+                    firstRow.find('.select-barang').val(firstItem.nama).trigger('change');
+                    // Trigger input because the calculation listener is on 'input'
+                    firstRow.find('.jumlah-barang').val(firstItem.jumlah).trigger('input').trigger('change');
+                }
+
+                // Add remaining items
+                for (let i = 1; i < data.detail_barang.length; i++) {
+                    const item = data.detail_barang[i];
+                    // Trigger add item button
+                    $('#btnTambahItem').click();
+
+                    // Populate the newly added row
+                    setTimeout(() => {
+                        const newRow = $('#itemContainer .item-row').eq(i);
+                        newRow.find('.select-barang').val(item.nama).trigger('change');
+                        // Trigger input because the calculation listener is on 'input'
+                        newRow.find('.jumlah-barang').val(item.jumlah).trigger('input').trigger('change');
+                    }, 100 * i); // Small delay to ensure row is added
+                }
+            }
+
+            // Handle existing photos
+            // Note: We'll display existing photos but for simplicity, 
+            // user will need to re-upload if they want to change them
+            // You could enhance this to show existing photos with delete option
+
+            // Open modal
+            const modal = new bootstrap.Modal(document.getElementById('modalTambahSPH'));
+            modal.show();
+        })
+        .catch(err => {
+            console.error("Error fetching SPH:", err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Gagal memuat data SPH untuk diedit!'
+            });
+        });
+}
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
     loadSPH();
 
-    
+
     const tableBody = document.getElementById("sph-table-body");
     if (tableBody) {
         tableBody.addEventListener("click", function (e) {
             const target = e.target.closest("button");
             if (!target) return;
 
-            
+
             const row = target.closest("tr");
             const deleteBtn = target.closest(".btn-danger");
             const printBtn = target.closest(".btn-primary");
 
             if (deleteBtn) {
-                
+
                 const onclickAttr = deleteBtn.getAttribute("onclick");
                 const match = onclickAttr?.match(/deleteSPH\((\d+)\)/);
                 if (match) {
@@ -376,11 +507,11 @@ window.updateStatusDropdown = function (selectElement) {
             title: 'Akses Ditolak',
             text: 'Token tidak ditemukan! Silakan login kembali.'
         });
-        selectElement.value = originalStatus; 
+        selectElement.value = originalStatus;
         return;
     }
 
-    
+
     Swal.fire({
         title: 'Ubah Status SPH?',
         text: `Anda akan mengubah status menjadi "${newStatus}".`,
@@ -392,15 +523,15 @@ window.updateStatusDropdown = function (selectElement) {
         cancelButtonText: 'Batal'
     }).then((result) => {
         if (!result.isConfirmed) {
-            selectElement.value = originalStatus; 
+            selectElement.value = originalStatus;
             return;
         }
 
-        
+
         selectElement.disabled = true;
         selectElement.style.opacity = "0.6";
 
-        
+
         fetch(`${API_SPH}/${id}`, {
             method: "PUT",
             headers: {
@@ -413,8 +544,8 @@ window.updateStatusDropdown = function (selectElement) {
         })
             .then(async res => {
                 const text = await res.text();
-                
-                
+
+
 
                 if (!res.ok) {
                     throw new Error(text || "Gagal mengupdate status SPH");
@@ -422,13 +553,13 @@ window.updateStatusDropdown = function (selectElement) {
                 return text ? JSON.parse(text) : {};
             })
             .then(() => {
-                
+
                 const sphIndex = allSPHData.findIndex(item => item.id === id);
                 if (sphIndex !== -1) {
                     allSPHData[sphIndex].status = newStatus;
                 }
 
-                
+
                 if (newStatus === "Diterima") {
                     selectElement.style.backgroundColor = "#d1fae5";
                     selectElement.style.color = "#065f46";
@@ -452,7 +583,7 @@ window.updateStatusDropdown = function (selectElement) {
             })
             .catch(err => {
                 console.error("UPDATE ERROR:", err);
-                selectElement.value = originalStatus; 
+                selectElement.value = originalStatus;
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal',
@@ -467,28 +598,42 @@ window.updateStatusDropdown = function (selectElement) {
 }
 
 
-window.submitFormSPH = function (formData) {
+window.submitFormSPH = function (formElement) {
     const token = getToken();
     if (!token) {
         alert("Token tidak ditemukan! Silakan login kembali.");
         return;
     }
 
-    
-    const tanggal = document.querySelector('[name="tanggal"]').value;
-    const tempat = document.querySelector('[name="tempat"]').value;
-    const lampiran = document.querySelector('[name="lampiran"]').value;
-    const hal = document.querySelector('[name="hal"]').value;
-    const jabatan_tujuan = document.querySelector('[name="kepada"]').value; 
-    const nama_perusahaan = document.querySelector('[name="nama_perusahaan"]').value;
-    const penandatangan = document.querySelector('[name="penandatangan"]').value;
+    // Check if we're in edit mode
+    const editId = document.getElementById('sphEditId').value;
+    const isEditMode = editId && editId !== '';
 
-    
+    // RE-CONSTRUCT FormData to ensure everything is correct specially the nested items
+    const formData = new FormData();
+
+    // Basic fields
+    formData.append('tanggal', document.querySelector('[name="tanggal"]').value);
+    formData.append('tempat', document.querySelector('[name="tempat"]').value);
+    formData.append('lampiran', document.querySelector('[name="lampiran"]').value);
+    formData.append('hal', document.querySelector('[name="hal"]').value);
+    formData.append('jabatan_tujuan', document.querySelector('[name="jabatan_tujuan"]').value);
+    formData.append('nama_perusahaan', document.querySelector('[name="nama_perusahaan"]').value);
+    formData.append('penandatangan', document.querySelector('[name="penandatangan"]').value);
+    formData.append('keterangan', document.querySelector('[name="keterangan"]').value);
+
+    // Only set default status if creating new SPH
+    if (!isEditMode) {
+        formData.append('status', 'Menunggu');
+    }
+
+
+    // Total
     const totalKeseluruhanInput = document.getElementById('totalKeseluruhanValue');
-    const total_keseluruhan = totalKeseluruhanInput ? parseInt(totalKeseluruhanInput.value) : 0;
+    formData.append('total_keseluruhan', totalKeseluruhanInput ? parseInt(totalKeseluruhanInput.value) : 0);
 
-    
-    const items = [];
+    // Items (Manual Construction to ensure index continuity)
+    let itemIndex = 0;
     document.querySelectorAll("#itemContainer .item-row").forEach((row) => {
         const namaSelect = row.querySelector(".select-barang");
         const hargaInput = row.querySelector(".harga-satuan-value");
@@ -498,32 +643,30 @@ window.submitFormSPH = function (formData) {
         const nama = namaSelect ? namaSelect.value : "";
         const jumlah = jumlahInput ? parseInt(jumlahInput.value) || 0 : 0;
 
-        
+        // Logic harga (same as before)
         let harga = hargaInput ? parseInt(hargaInput.value) || 0 : 0;
         if (harga === 0 && namaSelect) {
             const selectedOption = namaSelect.options[namaSelect.selectedIndex];
             harga = selectedOption ? parseInt(selectedOption.getAttribute('data-harga')) || 0 : 0;
         }
 
-        
+        // Logic total (same as before)
         let total = totalInput ? parseInt(totalInput.value) || 0 : 0;
         if (total === 0) {
             total = harga * jumlah;
         }
 
-        console.log("Item debug:", { nama, harga, jumlah, total, hargaInputValue: hargaInput?.value, totalInputValue: totalInput?.value });
-
         if (nama && jumlah > 0) {
-            items.push({
-                nama: nama,
-                harga_satuan: harga,
-                jumlah: jumlah,
-                total: total
-            });
+            // Append formatted for Laravel array validation
+            formData.append(`detail_barang[${itemIndex}][nama]`, nama);
+            formData.append(`detail_barang[${itemIndex}][harga_satuan]`, harga);
+            formData.append(`detail_barang[${itemIndex}][jumlah]`, jumlah);
+            formData.append(`detail_barang[${itemIndex}][total]`, total);
+            itemIndex++;
         }
     });
 
-    if (items.length === 0) {
+    if (itemIndex === 0) {
         Swal.fire({
             icon: 'warning',
             title: 'Peringatan',
@@ -532,54 +675,58 @@ window.submitFormSPH = function (formData) {
         return;
     }
 
-    const payload = {
-        tanggal: tanggal,
-        tempat: tempat,
-        lampiran: lampiran,
-        hal: hal,
-        jabatan_tujuan: jabatan_tujuan,
-        nama_perusahaan: nama_perusahaan,
-        penandatangan: penandatangan,
-        detail_barang: items,
-        total_keseluruhan: total_keseluruhan, 
-        status: "Menunggu" 
-    };
+    // Files (Fotos)
+    const fileInputs = document.querySelectorAll('input[name="lampiran_gambar[]"]');
+    fileInputs.forEach(input => {
+        if (input.files.length > 0) {
+            formData.append('lampiran_gambar[]', input.files[0]);
+        }
+    });
 
-    console.log("Sending Payload:", payload);
+    // For Laravel PUT method workaround
+    if (isEditMode) {
+        formData.append('_method', 'PUT');
+    }
 
-    fetch(API_SPH, {
-        method: "POST",
+    console.log("Sending FormData...", isEditMode ? "UPDATE MODE" : "CREATE MODE");
+
+    // Determine URL and method
+    const url = isEditMode ? `${API_SPH}/${editId}` : API_SPH;
+    const method = "POST"; // Always POST, but with _method=PUT for update
+
+    // Fetch call with FormData
+    fetch(url, {
+        method: method,
         headers: {
             "Authorization": "Bearer " + token,
-            "Accept": "application/json",
-            "Content-Type": "application/json"
+            "Accept": "application/json"
         },
         mode: "cors",
-        body: JSON.stringify(payload)
+        body: formData
     })
         .then(async res => {
             if (!res.ok) {
                 const text = await res.text();
                 console.error("API Error Response:", text);
-                throw new Error(text);
+                let textParsed;
+                try { textParsed = JSON.parse(text); } catch (e) { }
+                throw new Error(textParsed?.message || text || `Gagal ${isEditMode ? 'mengupdate' : 'menyimpan'} SPH`);
             }
             return res.json();
         })
         .then((response) => {
-            
+
             const modalEl = document.getElementById('modalTambahSPH');
             const modal = bootstrap.Modal.getInstance(modalEl);
             if (modal) modal.hide();
 
-            
             $('#modalTambahSPH').trigger('hidden.bs.modal');
 
-            
             const nomorSPH = response?.data?.nomor_sph || response?.nomor_sph || "Baru";
 
             Swal.fire({
                 icon: 'success',
-                title: 'Surat Penawaran Harga Berhasil Dibuat!',
+                title: isEditMode ? 'SPH Berhasil Diperbarui!' : 'SPH Berhasil Dibuat!',
                 html: `<span style="color:#6b7280;">Nomor Surat:</span><br><strong style="font-size:18px; color:#1f2937;">${nomorSPH}</strong>`,
                 confirmButtonText: 'OK, Mengerti'
             });
@@ -591,18 +738,16 @@ window.submitFormSPH = function (formData) {
             Swal.fire({
                 icon: 'error',
                 title: 'Gagal',
-                text: 'Gagal menambahkan SPH: ' + err.message
+                text: `Gagal ${isEditMode ? 'mengupdate' : 'menambahkan'} SPH: ` + err.message
             });
         });
 }
 
-
 window.showSuccessModal = function (title, identifier) {
-    
     const oldModal = document.getElementById('successModalOverlay');
     if (oldModal) oldModal.remove();
 
-    
+
     const overlay = document.createElement('div');
     overlay.id = 'successModalOverlay';
     Object.assign(overlay.style, {
@@ -612,7 +757,7 @@ window.showSuccessModal = function (title, identifier) {
         animation: 'fadeIn 0.3s'
     });
 
-    
+
     const content = document.createElement('div');
     Object.assign(content.style, {
         background: 'white', borderRadius: '16px', padding: '32px',
@@ -620,7 +765,7 @@ window.showSuccessModal = function (title, identifier) {
         textAlign: 'center'
     });
 
-    
+
     const iconContainer = document.createElement('div');
     iconContainer.innerHTML = `
         <svg class="success-checkmark" xmlns="http:
@@ -629,7 +774,7 @@ window.showSuccessModal = function (title, identifier) {
         </svg>
     `;
 
-    
+
     const animationStyle = document.createElement('style');
     animationStyle.textContent = `
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
@@ -664,7 +809,7 @@ window.showSuccessModal = function (title, identifier) {
     `;
     overlay.appendChild(animationStyle);
 
-    
+
     const header = document.createElement('h5');
     header.textContent = `${title} Berhasil Dibuat!`;
     Object.assign(header.style, {
@@ -672,7 +817,7 @@ window.showSuccessModal = function (title, identifier) {
         color: '#065f46'
     });
 
-    
+
     const sphNumber = document.createElement('div');
     sphNumber.innerHTML = `<span style="color:#6b7280;">Nomor Surat:</span><br><strong style="font-size:18px; color:#1f2937;">${identifier}</strong>`;
     Object.assign(sphNumber.style, {
@@ -680,7 +825,7 @@ window.showSuccessModal = function (title, identifier) {
         margin: '16px 0 24px 0', border: '1px solid #bbf7d0'
     });
 
-    
+
     const btnOK = document.createElement('button');
     btnOK.textContent = 'OK, Mengerti';
     btnOK.type = 'button';
@@ -695,17 +840,66 @@ window.showSuccessModal = function (title, identifier) {
         overlay.remove();
     });
 
-    
+
     content.appendChild(iconContainer);
     content.appendChild(header);
     content.appendChild(sphNumber);
     content.appendChild(btnOK);
     overlay.appendChild(content);
 
-    
+
     overlay.addEventListener('click', function (e) {
         if (e.target === overlay) overlay.remove();
     });
 
     document.body.appendChild(overlay);
 }
+
+// Reset modal when closed
+document.addEventListener('DOMContentLoaded', function () {
+    const modalElement = document.getElementById('modalTambahSPH');
+    if (modalElement) {
+        modalElement.addEventListener('hidden.bs.modal', function () {
+            // Clear edit ID
+            document.getElementById('sphEditId').value = '';
+
+            // Reset modal title
+            document.getElementById('modalTambahSPHLabel').innerHTML =
+                '<i class="mdi mdi-file-document-edit-outline me-2"></i>Tambah Surat Penawaran Harga';
+
+            // Reset form
+            document.getElementById('formTambahSPH').reset();
+
+            // Clear rich text editor
+            const editor = document.getElementById('editor');
+            const keteranganInput = document.getElementById('keteranganInput');
+            if (editor && keteranganInput) {
+                editor.innerHTML = `Catatan :<br>
+                    - Kondisi alat second layak pakai dan masih sangat bagus.<br>
+                    - Harga sudah termasuk ongkir, Instal, Uji Fungsi, Uji Kesesuaian,
+                    Uji Paparan Ruangan dan Perijinan<br>
+                    - Garansi service X-Ray 3 Bulan, Garansi tidak berlaku, jika terjadi
+                    keadaan memaksa (force majeure), yaitu keadaan di luar kemampuan
+                    seperti bencana alam, konsleting listrik, banjir, kebakaran,
+                    mobilisasi, pemogokan, blokade, revolusi, huru hara, sabotase<br>
+                    - Cara pembayaran:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Pembayaran Pertama DP 50% Setelah PO atau
+                    SPK kami terima<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Pembayaran Ke Dua 50% Setelah Alat terinstal
+                    dengan baik Pelunasan.<br><br>
+                    Pembayaran Bisa Di Tranfer Melalui Rek Bank BSI (BANK SYARIAH
+                    INDONESIA) :<br><br>
+                    No Rek : 1101198975<br>
+                    Atas Nama : PT RANAY NUSANTARA SEJAHTERA<br>
+                    Kode bank : 451`;
+                keteranganInput.value = editor.innerHTML;
+            }
+
+            // Clear items - remove all except first row and reset it
+            $('#itemContainer .item-row').not(':first').remove();
+            const firstRow = $('#itemContainer .item-row:first');
+            firstRow.find('.select-barang').val('').trigger('change');
+            firstRow.find('.jumlah-barang').val('').trigger('change');
+        });
+    }
+});
