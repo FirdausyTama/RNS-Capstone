@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    
+
     const pathArray = window.location.pathname.split('/');
     const id = pathArray[pathArray.length - 1];
 
@@ -52,13 +52,13 @@ function renderPrintSuratJalan(data) {
     setText("printTelpPenerima", data.telp_penerima);
     setText("printTanggal", formatDate(data.tanggal));
 
-    
+
     setText("printNamaBarang", data.nama_barang_jasa);
     setText("printQty", data.qty);
-    setText("printJumlah", data.qty); 
+    setText("printJumlah", data.qty);
     setText("printNamaPenerimaSign", data.nama_penerima);
 
-    
+
     let signer = data.penandatangan;
     let cleanKeterangan = data.keterangan || "";
 
@@ -72,21 +72,21 @@ function renderPrintSuratJalan(data) {
 
     setText("printKeterangan", cleanKeterangan);
 
-    
+
     const signatureImg = document.getElementById('printSignature');
     if (signatureImg) {
         signatureImg.style.display = 'none';
         signatureImg.src = '';
     }
 
-    
+
     const signerName = data.penandatangan || data.nama_pengirim || "PENGIRIM";
     setText("printSignerName", signerName);
 
 
 
-    
-    setTimeout(() => window.print(), 1000);
+
+    // setTimeout(() => window.print(), 1000);
 }
 
 function setText(id, value) {

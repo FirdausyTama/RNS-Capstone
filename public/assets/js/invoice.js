@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 const API_INVOICE = "http://127.0.0.1:8000/api/invoice";
-const API_PEMBELIAN_LIST = "http://127.0.0.1:8000/api/pembelians";
+const API_PEMBELIAN_LIST = "http://127.0.0.1:8000/api/invoice/pembelian-list";
 
 function getToken() {
     const token = localStorage.getItem("token");
@@ -14,6 +14,8 @@ function getToken() {
 
 
 let pembelianData = [];
+
+
 
 
 function loadPembelianList() {
@@ -34,7 +36,7 @@ function loadPembelianList() {
             const select = document.getElementById('pembelianId');
             if (select) {
                 select.innerHTML = '<option value="">-- Pilih Pembelian --</option>';
-                
+
                 const availablePurchases = data.filter(item =>
                     (item.status_pembayaran || '').toLowerCase() !== 'lunas'
                 );
@@ -43,7 +45,8 @@ function loadPembelianList() {
                     const tanggal = item.tgl_transaksi ? new Date(item.tgl_transaksi).toLocaleDateString('id-ID') : '-';
                     const nama = item.penerima_nama || item.nama_perusahaan || 'Tanpa Nama';
                     const noOrder = item.no_order || `Order #${item.id}`;
-                    const totalItems = item.items ? item.items.length : 0;
+                    const items = item.items || item.detail_barang || [];
+                    const totalItems = items.length;
                     select.innerHTML += `<option value="${item.id}">${noOrder} - ${nama} - ${tanggal} (${totalItems} item)</option>`;
                 });
             }
@@ -54,13 +57,17 @@ function loadPembelianList() {
 }
 
 
+// Event listener for modal trigger
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const pembelianSelect = document.getElementById('pembelianId');
     if (pembelianSelect) {
         pembelianSelect.addEventListener('change', function () {
             const pembelianId = this.value;
             if (pembelianId) {
-                
+
                 const selectedPembelian = pembelianData.find(p => p.id == pembelianId);
                 if (selectedPembelian && selectedPembelian.items) {
                     autoFillItemsFromPembelian(selectedPembelian);
@@ -79,21 +86,21 @@ function autoFillItemsFromPembelian(pembelian) {
 
     if (!container || !pembelian.items || pembelian.items.length === 0) return;
 
-    
+
     if (placeholder) placeholder.style.display = 'none';
     if (tableContainer) tableContainer.style.display = 'block';
 
-    
+
     if (namaPerusahaanInput) {
         const namaPerusahaan = pembelian.penerima_nama || pembelian.nama_perusahaan || '';
         namaPerusahaanInput.value = namaPerusahaan;
         namaPerusahaanInput.setAttribute('readonly', true);
     }
 
-    
+
     container.innerHTML = '';
 
-    
+
     pembelian.items.forEach((item, index) => {
         const harga = item.harga_satuan || item.harga || 0;
         const qty = item.jumlah || item.qty || 1;
@@ -117,10 +124,10 @@ function autoFillItemsFromPembelian(pembelian) {
         container.innerHTML += row;
     });
 
-    
+
     recalculateTotals();
 
-    
+
     console.log(`Loaded ${pembelian.items.length} items from Pembelian ID: ${pembelian.id}`);
 }
 
@@ -173,11 +180,11 @@ function loadInvoice() {
         .then(res => {
             console.log("Response dari API:", res);
 
-            
+
             if (res && res.length > 0) {
                 const numbers = res.map(item => {
-                    
-                    
+
+
                     const match = item.nomor_invoice.match(/(\d+)/);
                     return match ? parseInt(match[0]) : 0;
                 });
@@ -186,7 +193,7 @@ function loadInvoice() {
                 latestInvoiceNumber = 0;
             }
 
-            allInvoiceData = res; 
+            allInvoiceData = res;
             renderInvoice(res);
         })
         .catch(err => {
@@ -199,10 +206,10 @@ function loadInvoice() {
 function generateNextInvoiceNumber() {
     const nextNumber = latestInvoiceNumber + 1;
     const year = new Date().getFullYear();
-    
-    
-    
-    
+
+
+
+
     const paddedNumber = String(nextNumber).padStart(3, '0');
     return `INV/${paddedNumber}/RNS/${year}`;
 }
@@ -240,7 +247,7 @@ const itemsPerPage = 10;
 let filteredInvoiceData = [];
 
 function renderInvoice(data) {
-    
+
     filteredInvoiceData = data || [];
     currentPage = 1;
     renderPaginatedInvoice();
@@ -257,17 +264,17 @@ function renderPaginatedInvoice() {
         return;
     }
 
-    
+
     const totalItems = filteredInvoiceData.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
     const paginatedData = filteredInvoiceData.slice(startIndex, endIndex);
 
-    
+
     let no = startIndex + 1;
     paginatedData.forEach(item => {
-        
+
         const nama = item.nama_perusahaan || item.nama_penerima || item.penerima_nama || "-";
         const total = item.total_pembayaran || item.total_tagihan || item.grand_total || item.total_harga || 0;
 
@@ -294,7 +301,7 @@ function renderPaginatedInvoice() {
         `;
     });
 
-    
+
     updatePaginationInfo(startIndex + 1, endIndex, totalItems);
     renderPaginationControls(totalPages);
 }
@@ -316,17 +323,17 @@ function renderPaginationControls(totalPages) {
 
     container.innerHTML = '';
 
-    
+
     const pages = totalPages || 1;
 
-    
+
     container.innerHTML += `
         <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
             <a class="page-link" href="#" onclick="goToPage(${currentPage - 1}); return false;">‹</a>
         </li>
     `;
 
-    
+
     const maxVisiblePages = 5;
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(pages, startPage + maxVisiblePages - 1);
@@ -343,7 +350,7 @@ function renderPaginationControls(totalPages) {
         `;
     }
 
-    
+
     container.innerHTML += `
         <li class="page-item ${currentPage === pages ? 'disabled' : ''}">
             <a class="page-link" href="#" onclick="goToPage(${currentPage + 1}); return false;">›</a>
@@ -475,23 +482,23 @@ function submitFormInvoice() {
         }
     });
 
-    
+
     const pembelianIdSelect = document.getElementById('pembelianId');
     const pembelianId = pembelianIdSelect?.value ? parseInt(pembelianIdSelect.value) : null;
 
-    
+
     const data = {
         tanggal_invoice: document.getElementById('tanggalInvoice')?.value || null,
         nama_penerima: document.getElementById('namaPerusahaan')?.value || '',
-        pembelian_id: pembelianId, 
-        
-        
+        pembelian_id: pembelianId,
+
+
         items: pembelianId ? [] : items.map(item => ({
             nama_barang: item.nama_barang || '',
             qty: parseInt(item.qty) || 0,
             harga_satuan: parseInt(item.harga_satuan) || 0
         })),
-        
+
         nomor_invoice: document.getElementById('nomorInvoice')?.value || '',
         nama_perusahaan: document.getElementById('namaPerusahaan')?.value || '',
         penandatangan: document.querySelector('select[name="penandatangan"]')?.value || 'Dewi Sulistiowati',
@@ -526,7 +533,7 @@ function submitFormInvoice() {
             const modal = bootstrap.Modal.getInstance(modalEl);
             if (modal) modal.hide();
 
-            
+
             const nomorInvoice = response?.data?.nomor_invoice || response?.nomor_invoice || document.getElementById('nomorInvoice').value;
 
             Swal.fire({
@@ -559,10 +566,10 @@ function searchInvoice() {
     const searchTerm = document.getElementById('searchInput')?.value?.toLowerCase() || '';
 
     if (!searchTerm) {
-        
+
         filteredInvoiceData = allInvoiceData;
     } else {
-        
+
         filteredInvoiceData = allInvoiceData.filter(item => {
             const nomorInvoice = (item.nomor_invoice || '').toLowerCase();
             const namaPerusahaan = (item.nama_perusahaan || '').toLowerCase();

@@ -679,7 +679,9 @@ window.submitFormSPH = function (formElement) {
     const fileInputs = document.querySelectorAll('input[name="lampiran_gambar[]"]');
     fileInputs.forEach(input => {
         if (input.files.length > 0) {
-            formData.append('lampiran_gambar[]', input.files[0]);
+            for (let i = 0; i < input.files.length; i++) {
+                formData.append('lampiran_gambar[]', input.files[i]);
+            }
         }
     });
 

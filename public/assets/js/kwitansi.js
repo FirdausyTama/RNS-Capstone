@@ -1,8 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
     loadKwitansi();
     loadPembelianList();
+    loadInvoices();
 
-    
+
     const btnSimpan = document.getElementById("btnSimpanKwitansi");
     if (btnSimpan) {
         btnSimpan.addEventListener("click", function () {
@@ -16,25 +17,40 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    
+
     const pembelianSelect = document.getElementById('pembelianId');
     if (pembelianSelect) {
         pembelianSelect.addEventListener('change', function () {
             const pembelianId = this.value;
             if (pembelianId) {
-                
+
                 const selected = pembelianData.find(p => p.id == pembelianId);
                 if (selected) {
-                    
+
                     const nama = selected.penerima_nama || selected.nama_perusahaan || '';
                     const alamat = selected.penerima_alamat || selected.alamat_perusahaan || '';
 
+                    // Cari data invoice yang sesuai dengan pembelian (pembelian_id)
+                    const invoice = allInvoiceData.find(inv => inv.pembelian_id == pembelianId);
+
+                    // Gunakan total dari invoice jika ada, jika tidak fallback ke grand_total pembelian
+                    // Prioritas: total_tagihan (invoice) > total_pembayaran (invoice) > grand_total (pembelian)
+                    let total = 0;
+                    if (invoice) {
+                        total = invoice.total_tagihan || invoice.total_pembayaran || invoice.grand_total || 0;
+                    } else {
+                        // Jika tidak ada invoice, tetap gunakan pembelian (opsional, bisa di-set 0 jika mau strict)
+                        total = selected.grand_total || 0;
+                    }
+
                     document.getElementById('namaPenerima').value = nama;
                     document.getElementById('alamatPenerima').value = alamat;
+                    document.getElementById('totalPembayaran').value = parseInt(total).toLocaleString('id-ID');
                 }
             } else {
                 document.getElementById('namaPenerima').value = '';
                 document.getElementById('alamatPenerima').value = '';
+                document.getElementById('totalPembayaran').value = '';
             }
         });
     }
@@ -51,6 +67,8 @@ let currentSearch = '';
 
 const API_KWITANSI = "http://127.0.0.1:8000/api/kwitansi";
 const API_PEMBELIAN_LIST = "http://127.0.0.1:8000/api/pembelians";
+const API_INVOICE = "http://127.0.0.1:8000/api/invoice";
+let allInvoiceData = [];
 
 function loadPembelianList() {
     const token = getToken();
@@ -70,7 +88,7 @@ function loadPembelianList() {
             if (select) {
                 select.innerHTML = '<option value="">-- Pilih Pembelian --</option>';
 
-                
+
                 const availablePurchases = data.filter(item =>
                     (item.status_pembayaran || '').toLowerCase() === 'lunas'
                 );
@@ -88,6 +106,24 @@ function loadPembelianList() {
         .catch(err => console.error("Error loading pembelian list:", err));
 }
 
+function loadInvoices() {
+    const token = getToken();
+    if (!token) return;
+
+    fetch(API_INVOICE, {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Accept": "application/json"
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            allInvoiceData = data;
+        })
+        .catch(err => console.error("Error loading invoice list:", err));
+}
+
 function setFilter(filter) {
     currentFilter = filter;
     document.getElementById('selectedFilter').innerText = filter;
@@ -102,9 +138,9 @@ function searchKwitansi() {
 }
 
 function applyFilterAndRender() {
-    
+
     filteredData = allData.filter(item => {
-        
+
         let passTime = true;
         const itemDate = new Date(item.tanggal);
         const today = new Date();
@@ -117,7 +153,7 @@ function applyFilterAndRender() {
             passTime = isSameMonth(itemDate, today);
         }
 
-        
+
         let passSearch = true;
         if (currentSearch) {
             const searchLower = currentSearch.toLowerCase();
@@ -130,7 +166,7 @@ function applyFilterAndRender() {
         return passTime && passSearch;
     });
 
-    
+
     renderCurrentPage();
 }
 
@@ -158,7 +194,7 @@ function isSameMonth(d1, d2) {
 function isSameWeek(d1, d2) {
     const oneDay = 24 * 60 * 60 * 1000;
     const diffDays = Math.round(Math.abs((d1 - d2) / oneDay));
-    return diffDays <= 7; 
+    return diffDays <= 7;
 }
 
 
@@ -195,8 +231,8 @@ function loadKwitansi() {
         headers["X-CSRF-TOKEN"] = csrfToken;
     }
 
-    
-    
+
+
     const params = new URLSearchParams();
     params.append('per_page', 1000);
 
@@ -213,7 +249,7 @@ function loadKwitansi() {
         })
         .then(res => {
             console.log("Response dari API:", res);
-            
+
             let data = [];
             if (Array.isArray(res)) {
                 data = res;
@@ -221,8 +257,11 @@ function loadKwitansi() {
                 data = res.data;
             }
 
+            // Sort by ID descending (latest first)
+            data.sort((a, b) => b.id - a.id);
+
             allData = data;
-            
+
             applyFilterAndRender();
         })
         .catch(err => {
@@ -293,7 +332,7 @@ function renderPagination() {
 
     if (totalPages <= 1) return;
 
-    
+
     const prevDisabled = currentPage === 1 ? 'disabled' : '';
     container.innerHTML += `
         <li class="page-item ${prevDisabled}">
@@ -303,7 +342,7 @@ function renderPagination() {
         </li>
     `;
 
-    
+
     for (let i = 1; i <= totalPages; i++) {
         if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
             const active = i === currentPage ? 'active' : '';
@@ -317,7 +356,7 @@ function renderPagination() {
         }
     }
 
-    
+
     const nextDisabled = currentPage === totalPages ? 'disabled' : '';
     container.innerHTML += `
         <li class="page-item ${nextDisabled}">
@@ -355,7 +394,7 @@ function submitFormKwitansi(formData) {
         data[key] = value;
     });
 
-    
+
     if (data.penandatangan && data.penandatangan.includes('Dewi')) {
         data.keterangan = (data.keterangan || '') + ' [SIG:Dewi]';
     }

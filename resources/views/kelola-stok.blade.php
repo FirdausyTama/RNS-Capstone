@@ -79,20 +79,22 @@
 
                         <div class="text-end">
                             <ol class="breadcrumb m-0 py-0">
-                                <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Halaman</a></li>
                                 <li class="breadcrumb-item active">Kelola Stok</li>
                             </ol>
                         </div>
                     </div>
 
                     <div class="row">
-                        
+
                         <div class="col-md-6 col-lg-4">
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center mb-2">
-                                        <div class="p-2 border border-success border-opacity-10 bg-success-subtle rounded-2 me-2">
-                                            <div class="bg-success rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
+                                        <div
+                                            class="p-2 border border-success border-opacity-10 bg-success-subtle rounded-2 me-2">
+                                            <div class="bg-success rounded-circle d-flex align-items-center justify-content-center"
+                                                style="width:40px;height:40px;">
                                                 <i class="mdi mdi-check-circle-outline text-white fs-5"></i>
                                             </div>
                                         </div>
@@ -105,13 +107,15 @@
                             </div>
                         </div>
 
-                        
+
                         <div class="col-md-6 col-lg-4">
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center mb-2">
-                                        <div class="p-2 border border-warning border-opacity-10 bg-warning-subtle rounded-2 me-2">
-                                            <div class="bg-warning rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
+                                        <div
+                                            class="p-2 border border-warning border-opacity-10 bg-warning-subtle rounded-2 me-2">
+                                            <div class="bg-warning rounded-circle d-flex align-items-center justify-content-center"
+                                                style="width:40px;height:40px;">
                                                 <i class="mdi mdi-alert-outline text-white fs-5"></i>
                                             </div>
                                         </div>
@@ -124,13 +128,15 @@
                             </div>
                         </div>
 
-                        
+
                         <div class="col-md-6 col-lg-4">
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center mb-2">
-                                        <div class="p-2 border border-primary border-opacity-10 bg-primary-subtle rounded-2 me-2">
-                                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
+                                        <div
+                                            class="p-2 border border-primary border-opacity-10 bg-primary-subtle rounded-2 me-2">
+                                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
+                                                style="width:40px;height:40px;">
                                                 <i class="mdi mdi-package-variant-closed text-white fs-5"></i>
                                             </div>
                                         </div>
@@ -153,24 +159,31 @@
                                 </div>
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="dropdown">
-                                        <button class="btn btn-light border dropdown-toggle" type="button" id="filterWaktu" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button class="btn btn-light border dropdown-toggle" type="button"
+                                            id="filterWaktu" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="mdi mdi-calendar-range me-1"></i>
                                             <span id="selectedFilter">Semua Waktu</span>
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="filterWaktu">
-                                            <li><a class="dropdown-item" href="#" onclick="setFilter('Hari Ini')">Hari Ini</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="setFilter('Minggu Ini')">Minggu Ini</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="setFilter('Bulan Ini')">Bulan Ini</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="setFilter('Hari Ini')">Hari
+                                                    Ini</a></li>
+                                            <li><a class="dropdown-item" href="#"
+                                                    onclick="setFilter('Minggu Ini')">Minggu Ini</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="setFilter('Bulan Ini')">Bulan
+                                                    Ini</a></li>
                                             <li>
                                                 <hr class="dropdown-divider">
                                             </li>
-                                            <li><a class="dropdown-item" href="#" onclick="setFilter('Semua Waktu')">Semua Waktu</a></li>
+                                            <li><a class="dropdown-item" href="#"
+                                                    onclick="setFilter('Semua Waktu')">Semua Waktu</a></li>
                                         </ul>
                                     </div>
                                     <form class="app-search">
                                         <div class="position-relative topbar-search">
-                                            <input type="text" class="form-control ps-4" placeholder="Search..." style="min-width: 200px;" id="searchInput" onkeyup="searchProduct()" />
-                                            <i class="mdi mdi-magnify fs-16 position-absolute text-muted top-50 translate-middle-y ms-2"></i>
+                                            <input type="text" class="form-control ps-4" placeholder="Search..."
+                                                style="min-width: 200px;" id="searchInput" onkeyup="searchProduct()" />
+                                            <i
+                                                class="mdi mdi-magnify fs-16 position-absolute text-muted top-50 translate-middle-y ms-2"></i>
                                         </div>
                                     </form>
                                 </div>
@@ -196,15 +209,16 @@
                                     </tbody>
                                 </table>
                             </div>
-                            
-                            
+
+
                             <div class="row align-items-center mt-3" id="pagination-container" style="display: none;">
                                 <div class="col-sm-6">
                                     <p class="text-muted mb-0" id="pagination-info">Menampilkan 0-0 dari 0 transaksi</p>
                                 </div>
                                 <div class="col-sm-6">
-                                    <ul class="pagination pagination-rounded justify-content-end mb-0" id="pagination-controls">
-                                        
+                                    <ul class="pagination pagination-rounded justify-content-end mb-0"
+                                        id="pagination-controls">
+
                                     </ul>
                                 </div>
                             </div>
@@ -217,9 +231,11 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col fs-13 text-muted text-center">
-                            &copy; <script>
+                            &copy;
+                            <script>
                                 document.write(new Date().getFullYear())
-                            </script> - Made with <span class="mdi mdi-heart text-danger"></span> by <a href="#!" class="text-reset fw-semibold">TI UMY 22</a>
+                            </script> - Made with <span class="mdi mdi-heart text-danger"></span> by <a href="#!"
+                                class="text-reset fw-semibold">TI UMY 22</a>
                         </div>
                     </div>
                 </div>
@@ -227,15 +243,15 @@
 
             <button type="button" class="btn btn-primary rounded-circle shadow-lg"
                 style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; z-index: 1000;"
-                data-bs-toggle="modal" data-bs-target="#modalTambahStok"
-                title="Tambah Stok">
+                data-bs-toggle="modal" data-bs-target="#modalTambahStok" title="Tambah Stok">
                 <i class="mdi mdi-plus fs-3 text-white"></i>
             </button>
         </div>
     </div>
 
-    
-    <div class="modal fade" id="modalTambahStok" tabindex="-1" aria-labelledby="modalTambahStokLabel" aria-hidden="true">
+
+    <div class="modal fade" id="modalTambahStok" tabindex="-1" aria-labelledby="modalTambahStokLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-light border-0">
@@ -250,8 +266,10 @@
                             <h6 class="fw-semibold mb-3 text-muted">Informasi Dasar</h6>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label for="namaBarang" class="form-label">Nama Barang <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="namaBarang" placeholder="Masukkan nama barang">
+                                    <label for="namaBarang" class="form-label">Nama Barang <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="namaBarang"
+                                        placeholder="Masukkan nama barang">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="kodeSKU" class="form-label">Kode SKU</label>
@@ -261,7 +279,7 @@
                                     <label for="merek" class="form-label">Merek</label>
                                     <input type="text" class="form-control" id="merek" placeholder="Nama merek">
                                 </div>
-                                                                <div class="col-md-6">
+                                <div class="col-md-6">
                                     <label for="satuan" class="form-label">Satuan</label>
                                     <select class="form-select" id="satuan">
                                         <option selected>Pilih satuan</option>
@@ -280,14 +298,19 @@
                             <h6 class="fw-semibold mb-3 text-muted">Foto/Video Barang</h6>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <div class="border border-2 border-dashed rounded p-4 text-center upload-box" onclick="document.getElementById('uploadVideo').click()" style="cursor: pointer;">
-                                        <input type="file" id="uploadVideo" name="video" accept="video/mp4,video/avi,video/mov" style="display: none;" onchange="handleVideoUpload(this)">
+                                    <div class="border border-2 border-dashed rounded p-4 text-center upload-box"
+                                        onclick="document.getElementById('uploadVideo').click()"
+                                        style="cursor: pointer;">
+                                        <input type="file" id="uploadVideo" name="video"
+                                            accept="video/mp4,video/avi,video/mov" style="display: none;"
+                                            onchange="handleVideoUpload(this)">
                                         <div id="videoPlaceholder">
                                             <i class="mdi mdi-video-outline fs-1 text-muted d-block mb-2"></i>
                                             <span class="text-muted" id="videoFileName">Tambah Video</span>
                                         </div>
                                         <div class="preview-video" id="videoPreview">
-                                            <button type="button" class="remove-media" onclick="removeVideo(event)">×</button>
+                                            <button type="button" class="remove-media"
+                                                onclick="removeVideo(event)">×</button>
                                             <video id="videoElement" controls style="width: 100%;"></video>
                                             <small class="text-muted d-block mt-2" id="videoFileNamePreview"></small>
                                         </div>
@@ -295,16 +318,16 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <div class="border border-2 border-dashed rounded p-4 text-center upload-box" onclick="document.getElementById('uploadFoto').click()" style="cursor: pointer;">
-                                        <input type="file" id="uploadFoto" name="foto" accept="image/jpeg,image/png,image/webp" style="display: none;" onchange="handleFotoUpload(this)">
+                                    <div class="border border-2 border-dashed rounded p-4 text-center upload-box"
+                                        onclick="document.getElementById('uploadFoto').click()"
+                                        style="cursor: pointer;">
+                                        <input type="file" id="uploadFoto" name="fotos[]" accept="image/*" multiple
+                                            style="display: none;" onchange="handleFotoUpload(this)">
                                         <div id="fotoPlaceholder">
                                             <i class="mdi mdi-camera-outline fs-1 text-muted d-block mb-2"></i>
-                                            <span class="text-muted" id="fotoFileName">Tambah Foto</span>
+                                            <span class="text-muted" id="fotoFileName">Tambah Foto (Bisa banyak)</span>
                                         </div>
-                                        <div class="preview-image" id="fotoPreview">
-                                            <button type="button" class="remove-media" onclick="removeFoto(event)">×</button>
-                                            <img id="fotoElement" src="" alt="Preview">
-                                            <small class="text-muted d-block mt-2" id="fotoFileNamePreview"></small>
+                                        <div class="row g-2 mt-2" id="fotoPreviewContainer" style="display: none;">
                                         </div>
                                     </div>
                                 </div>
@@ -319,10 +342,12 @@
                                     <input type="date" class="form-control" id="tgl_masuk">
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="hargaJual" class="form-label">Harga Jual <span class="text-danger">*</span></label>
+                                    <label for="hargaJual" class="form-label">Harga Jual <span
+                                            class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text">Rp</span>
-                                        <input type="text" class="form-control" oninput="formatRupiahInput(this)" id="hargaJual" placeholder="0">
+                                        <input type="text" class="form-control" oninput="formatRupiahInput(this)"
+                                            id="hargaJual" placeholder="0">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -331,7 +356,8 @@
                                         <button class="btn btn-outline-secondary" type="button" onclick="decreaseQty()">
                                             <i class="mdi mdi-minus"></i>
                                         </button>
-                                        <input type="number" class="form-control text-center" id="jumlah" value="0" min="0">
+                                        <input type="number" class="form-control text-center" id="jumlah" value="0"
+                                            min="0">
                                         <button class="btn btn-outline-secondary" type="button" onclick="increaseQty()">
                                             <i class="mdi mdi-plus"></i>
                                         </button>
@@ -373,7 +399,7 @@
         </div>
     </div>
 
-    
+
     <div class="modal fade" id="modalEditStok" tabindex="-1" aria-labelledby="modalEditStokLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -403,7 +429,7 @@
                                     <label class="form-label">Merek</label>
                                     <input type="text" class="form-control" id="editMerek">
                                 </div>
-                                    <div class="col-md-6">
+                                <div class="col-md-6">
                                     <label class="form-label">Satuan</label>
                                     <select class="form-select" id="editSatuan">
                                         <option>Pilih satuan</option>
@@ -432,7 +458,8 @@
                                             <span class="text-muted">Edit Video</span>
                                         </div>
                                         <div class="preview-video" id="editVideoPreview">
-                                            <button type="button" class="remove-media" onclick="removeEditVideo(event)">×</button>
+                                            <button type="button" class="remove-media"
+                                                onclick="removeEditVideo(event)">×</button>
                                             <video id="editVideoElement" controls style="width: 100%;"></video>
                                             <small class="text-muted d-block mt-2" id="editVideoName"></small>
                                         </div>
@@ -442,18 +469,15 @@
                                 <div class="col-md-6">
                                     <div class="border border-2 border-dashed rounded p-4 text-center upload-box"
                                         onclick="document.getElementById('editUploadFoto').click()">
-                                        <input type="file" id="editUploadFoto" accept="image/*" style="display:none;"
-                                            onchange="handleEditFotoUpload(this)">
+                                        <input type="file" id="editUploadFoto" name="fotos[]" accept="image/*" multiple
+                                            style="display:none;" onchange="handleEditFotoUpload(this)">
 
                                         <div id="editFotoPlaceholder">
                                             <i class="mdi mdi-camera-outline fs-1 text-muted d-block mb-2"></i>
-                                            <span class="text-muted">Edit Foto</span>
+                                            <span class="text-muted">Edit Foto (Bisa banyak)</span>
                                         </div>
 
-                                        <div class="preview-image" id="editFotoPreview">
-                                            <button type="button" class="remove-media" onclick="removeEditFoto(event)">×</button>
-                                            <img id="editFotoElement" src="">
-                                            <small class="text-muted d-block mt-2" id="editFotoName"></small>
+                                        <div class="row g-2 mt-2" id="editFotoPreviewContainer" style="display: none;">
                                         </div>
                                     </div>
                                 </div>
@@ -471,17 +495,20 @@
                                     <label class="form-label">Harga Jual</label>
                                     <div class="input-group">
                                         <span class="input-group-text">Rp</span>
-                                        <input type="text" class="form-control" id="editHargaJual" oninput="formatRupiahInput(this)">
+                                        <input type="text" class="form-control" id="editHargaJual"
+                                            oninput="formatRupiahInput(this)">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Jumlah</label>
                                     <div class="input-group">
-                                        <button class="btn btn-outline-secondary" type="button" onclick="editDecreaseQty()">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            onclick="editDecreaseQty()">
                                             <i class="mdi mdi-minus"></i>
                                         </button>
                                         <input type="number" class="form-control text-center" id="editJumlah" value="0">
-                                        <button class="btn btn-outline-secondary" type="button" onclick="editIncreaseQty()">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            onclick="editIncreaseQty()">
                                             <i class="mdi mdi-plus"></i>
                                         </button>
                                     </div>
@@ -522,7 +549,7 @@
         </div>
     </div>
 
-    
+
     <div class="modal fade" id="detailStokModal" tabindex="-1" aria-labelledby="detailStokLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
@@ -531,7 +558,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4" id="detailStokContent">
-                    
+
                 </div>
             </div>
         </div>
@@ -576,7 +603,7 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    callback(); 
+                    callback();
                 }
             });
         }

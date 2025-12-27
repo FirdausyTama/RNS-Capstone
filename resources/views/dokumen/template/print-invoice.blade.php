@@ -515,12 +515,14 @@
 
                 <!-- Total Row - Outside Table -->
                 <div style="display: flex; justify-content: flex-end; margin-top: 5px; padding-right: 5px;">
-                    <table style="width: auto; border-collapse: collapse;">
-                         <tr>
-                             <td style="text-align: right; padding-right: 15px; font-weight: bold;">Total Pembayaran</td>
-                             <td id="total-pembayaran" style="text-align: right; font-weight: bold; min-width: 120px; border-bottom: 1px solid #000;">Rp. 0,-</td>
-                         </tr>
-                    </table>
+                  <table style="width: auto; border-collapse: collapse;">
+                    <tr>
+                      <td style="text-align: right; padding-right: 15px; font-weight: bold;">Total Pembayaran</td>
+                      <td id="total-pembayaran"
+                        style="text-align: right; font-weight: bold; min-width: 120px; border-bottom: 1px solid #000;">
+                        Rp. 0,-</td>
+                    </tr>
+                  </table>
                 </div>
 
                 <!-- Footer Section -->
@@ -539,9 +541,8 @@
                   <p>Hormat Kami</p>
                   <p class="company-name">PT. Ranay Nusantara Sejahtera</p>
                   <div class="logo-signature">
-                    
-                    <img id="ttd-image-invoice" src="" alt="Tanda Tangan"
-                      class="signature-img" />
+
+                    <img id="ttd-image-invoice" src="" alt="Tanda Tangan" class="signature-img" />
                   </div>
                   <p class="signer-name" id="penandatangan">-</p>
                 </div>
@@ -642,22 +643,22 @@
       // Ambil nama penandatangan dari data, atau default ke Dewi
       let penandatangan = data.penandatangan;
       if (!penandatangan || penandatangan.trim() === '-' || penandatangan.trim() === '') {
-          penandatangan = 'Dewi Sulistiowati';
+        penandatangan = 'Dewi Sulistiowati';
       }
-      
+
       document.getElementById('penandatangan').textContent = penandatangan;
 
       // Logic pemilihan gambar tanda tangan
       const ttdImage = document.getElementById('ttd-image-invoice');
-      // const lowerName = penandatangan.toLowerCase();
+      const lowerName = penandatangan.toLowerCase();
 
-      // TEMPORARILY DISABLED: User requested signature to be empty initially
-      // if (lowerName.includes('heri') || lowerName.includes('pirdaus')) {
-      //   ttdImage.src = '/assets/images/ttdHeri.png';
-      // } else {
-      //   ttdImage.src = '/assets/images/ttdDewi.png';
-      // }
-      ttdImage.src = ''; // Ensure it is empty
+      // Logic pemilihan gambar tanda tangan
+      if (lowerName.includes('heri') || lowerName.includes('pirdaus')) {
+        ttdImage.src = '/assets/images/ttdHeri.png';
+      } else {
+        ttdImage.src = '/assets/images/ttdDewi.png';
+      }
+      // ttdImage.src = ''; // Ensure it is empty
 
       // Populate items - check multiple possible field names
       const tbody = document.getElementById('items-tbody');
