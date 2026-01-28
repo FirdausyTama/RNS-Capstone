@@ -112,6 +112,19 @@
                                                     <li><a class="dropdown-item" href="#" onclick="setFilter('Semua Waktu')">Semua Waktu</a></li>
                                                 </ul>
                                             </div>
+
+                                            <div class="dropdown">
+                                                <button class="btn btn-light border dropdown-toggle" type="button" id="filterStatus" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="mdi mdi-filter-variant me-1"></i>
+                                                    <span id="selectedStatusFilter">Semua Status</span>
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="filterStatus">
+                                                    <li><a class="dropdown-item" href="#" onclick="setPaymentStatusFilter('Semua Status')">Semua Status</a></li>
+                                                    <li><a class="dropdown-item" href="#" onclick="setPaymentStatusFilter('Lunas')">Lunas</a></li>
+                                                    <li><a class="dropdown-item" href="#" onclick="setPaymentStatusFilter('Belum Lunas')">Belum Lunas</a></li>
+                                                    <li><a class="dropdown-item" href="#" onclick="setPaymentStatusFilter('Cicilan')">Cicilan</a></li>
+                                                </ul>
+                                            </div>
                                             
                                             
                                             <form class="app-search">

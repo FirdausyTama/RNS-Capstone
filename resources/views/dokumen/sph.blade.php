@@ -80,6 +80,19 @@
                                             </ul>
                                         </div>
 
+                                        <div class="dropdown">
+                                            <button class="btn btn-light border dropdown-toggle" type="button" id="filterStatus" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="mdi mdi-filter-variant me-1"></i>
+                                                <span id="selectedStatusFilter">Semua Status</span>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="filterStatus">
+                                                <li><a class="dropdown-item" href="#" onclick="setSphStatusFilter('Semua Status')">Semua Status</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="setSphStatusFilter('Menunggu')">Menunggu</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="setSphStatusFilter('Diterima')">Diterima</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="setSphStatusFilter('Ditolak')">Ditolak</a></li>
+                                            </ul>
+                                        </div>
+
                                         
                                         <form class="app-search">
                                             <div class="position-relative topbar-search">

@@ -121,11 +121,22 @@ function loadPembelian(status = null, excludeStatus = null) {
         });
 }
 
+let activeStatusFilter = "Semua Status";
+
 function setFilter(period) {
     activeTimeFilter = period;
     const filterLabel = document.getElementById("selectedFilter");
     if (filterLabel) {
         filterLabel.textContent = period;
+    }
+    applyFilters();
+}
+
+function setPaymentStatusFilter(status) {
+    activeStatusFilter = status;
+    const filterLabel = document.getElementById("selectedStatusFilter");
+    if (filterLabel) {
+        filterLabel.textContent = status;
     }
     applyFilters();
 }
@@ -144,6 +155,7 @@ function applyFilters() {
     filteredData = baseData.filter((item) => {
         const itemDate = new Date(item.tgl_transaksi);
 
+        // 1. Time Filter
         let timeMatch = true;
         if (activeTimeFilter === "Hari Ini") {
             timeMatch = itemDate.toDateString() === today.toDateString();
@@ -171,12 +183,23 @@ function applyFilters() {
                 itemDate.getFullYear() === today.getFullYear();
         }
 
+        // 2. Status Filter
+        let statusMatch = true;
+        if (activeStatusFilter !== "Semua Status") {
+            // Map filter text to backend status values
+            // Filter: Lunas, Belum Lunas, Cicilan
+            // Backend: lunas, belum_lunas, cicilan
+            let targetStatus = activeStatusFilter.toLowerCase().replace(" ", "_");
+            statusMatch = item.status_pembayaran === targetStatus;
+        }
+
+        // 3. Search Filter
         const noOrder = item.no_order ? item.no_order.toLowerCase() : "";
         const nama = item.penerima_nama ? item.penerima_nama.toLowerCase() : "";
         const searchMatch =
             noOrder.includes(searchTerm) || nama.includes(searchTerm);
 
-        return timeMatch && searchMatch;
+        return timeMatch && searchMatch && statusMatch;
     });
 
     currentPage = 1;

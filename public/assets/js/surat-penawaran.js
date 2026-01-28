@@ -231,23 +231,62 @@ function changePage(page) {
 }
 
 
+// Filter State
+let activeTimeFilter = 'Semua Waktu';
+let activeStatusFilter = 'Semua Status';
 let filteredSPHData = [];
 
+// Set Filter Waktu
+window.setSphTimeFilter = function(filter) {
+    activeTimeFilter = filter;
+    document.getElementById('selectedFilter').textContent = filter;
+    searchSPH(); // Trigger Apply Filters
+}
+
+// Alias for backward compatibility if needed, but we updated Blade
+window.setFilter = window.setSphTimeFilter;
+
+// Set Filter Status
+window.setSphStatusFilter = function(filter) {
+    activeStatusFilter = filter;
+    document.getElementById('selectedStatusFilter').textContent = filter;
+    searchSPH(); // Trigger Apply Filters
+}
 
 function searchSPH() {
     const searchTerm = document.getElementById('searchInput')?.value?.toLowerCase() || '';
+    const today = new Date();
 
-    if (!searchTerm) {
+    filteredSPHData = allSPHData.filter(item => {
+        const itemDate = new Date(item.tanggal);
+        
+        // 1. Time Filter
+        let passTime = true;
+        if (activeTimeFilter === 'Hari Ini') {
+            passTime = isSameDay(itemDate, today);
+        } else if (activeTimeFilter === 'Minggu Ini') {
+             passTime = isSameWeek(itemDate, today);
+        } else if (activeTimeFilter === 'Bulan Ini') {
+             passTime = isSameMonth(itemDate, today);
+        }
 
-        filteredSPHData = allSPHData;
-    } else {
+        // 2. Status Filter
+        let passStatus = true;
+        if (activeStatusFilter !== 'Semua Status') {
+            const status = item.status || 'Menunggu';
+            passStatus = status === activeStatusFilter;
+        }
 
-        filteredSPHData = allSPHData.filter(item => {
+        // 3. Search Filter
+        let passSearch = true;
+        if (searchTerm) {
             const nomorSph = (item.nomor_sph || '').toLowerCase();
             const namaPerusahaan = (item.nama_perusahaan || '').toLowerCase();
-            return nomorSph.includes(searchTerm) || namaPerusahaan.includes(searchTerm);
-        });
-    }
+            passSearch = nomorSph.includes(searchTerm) || namaPerusahaan.includes(searchTerm);
+        }
+
+        return passTime && passStatus && passSearch;
+    });
 
     currentPage = 1;
     renderSPH(currentPage);

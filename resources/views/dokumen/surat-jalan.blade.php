@@ -158,7 +158,13 @@
             <form id="formSuratJalan">
               <div class="row">
                 
-                <div class="col-md-6 mb-3">
+                <!-- SECTION: INFORMASI UMUM -->
+                <div class="col-12 mb-2">
+                    <h6 class="text-primary fw-bold"><i class="mdi mdi-information-outline me-1"></i> Informasi Umum</h6>
+                    <hr class="mt-0 mb-3">
+                </div>
+
+                <div class="col-md-4 mb-3">
                   <label for="tanggalSuratJalan" class="form-label fw-semibold">
                     Tanggal <span class="text-danger">*</span>
                   </label>
@@ -171,8 +177,7 @@
                   />
                 </div>
                 
-                <!-- DROPDOWN PILIH PEMBELIAN -->
-                <div class="col-12 mb-3">
+                <div class="col-md-8 mb-3">
                   <label for="pembelianId" class="form-label fw-semibold">
                     Pilih Data Pembelian
                   </label>
@@ -181,6 +186,11 @@
                   </select>
                 </div>
 
+                <!-- SECTION: PENGIRIM & PENERIMA -->
+                <div class="col-12 mb-2 mt-2">
+                    <h6 class="text-primary fw-bold"><i class="mdi mdi-account-box-outline me-1"></i> Data Pengirim & Penerima</h6>
+                    <hr class="mt-0 mb-3">
+                </div>
                 
                 <div class="col-md-6 mb-3">
                   <label for="namaPengirim" class="form-label fw-semibold">
@@ -196,7 +206,6 @@
                   />
                 </div>
 
-                
                 <div class="col-md-6 mb-3">
                   <label for="namaPenerima" class="form-label fw-semibold">
                     Nama Penerima <span class="text-danger">*</span>
@@ -210,9 +219,8 @@
                     required
                   />
                 </div>
-
                 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                   <label for="telpPenerima" class="form-label fw-semibold">
                     No. Telp Penerima <span class="text-danger">*</span>
                   </label>
@@ -225,24 +233,28 @@
                     required
                   />
                 </div>
-
                 
-                <div class="col-12 mb-3">
+                <div class="col-md-8 mb-3">
                   <label for="alamatPenerima" class="form-label fw-semibold">
                     Alamat Penerima <span class="text-danger">*</span>
                   </label>
-                  <textarea 
+                  <input 
+                    type="text" 
                     class="form-control" 
                     id="alamatPenerima" 
                     name="alamat_penerima"
-                    rows="2"
                     placeholder="Alamat lengkap penerima"
                     required
-                  ></textarea>
+                  />
                 </div>
 
+                <!-- SECTION: DETAIL BARANG -->
+                <div class="col-12 mb-2 mt-2">
+                    <h6 class="text-primary fw-bold"><i class="mdi mdi-package-variant-closed me-1"></i> Detail Barang</h6>
+                    <hr class="mt-0 mb-3">
+                </div>
                 
-                <div class="col-12 mb-3">
+                <div class="col-md-9 mb-3">
                   <label for="namaBarangJasa" class="form-label fw-semibold">
                     Nama Barang/Jasa <span class="text-danger">*</span>
                   </label>
@@ -255,9 +267,8 @@
                     required
                   />
                 </div>
-
                 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-3 mb-3">
                   <label for="qty" class="form-label fw-semibold">
                     QTY <span class="text-danger">*</span>
                   </label>
@@ -270,21 +281,6 @@
                     required
                   />
                 </div>
-
-                <div class="col-md-6 mb-3">
-                  <label for="jumlah" class="form-label fw-semibold">
-                    JUMLAH <span class="text-danger">*</span>
-                  </label>
-                  <input 
-                    type="number" 
-                    class="form-control" 
-                    id="jumlah" 
-                    name="jumlah"
-                    placeholder="1000000"
-                    required
-                  />
-                </div>
-
                 
                 <div class="col-12 mb-3">
                   <label for="keterangan" class="form-label fw-semibold">

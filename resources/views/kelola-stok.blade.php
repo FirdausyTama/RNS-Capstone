@@ -158,13 +158,23 @@
                                             <span id="selectedFilter">Semua Waktu</span>
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="filterWaktu">
-                                            <li><a class="dropdown-item" href="#" onclick="setFilter('Hari Ini')">Hari Ini</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="setFilter('Minggu Ini')">Minggu Ini</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="setFilter('Bulan Ini')">Bulan Ini</a></li>
-                                            <li>
-                                                <hr class="dropdown-divider">
-                                            </li>
-                                            <li><a class="dropdown-item" href="#" onclick="setFilter('Semua Waktu')">Semua Waktu</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="setStockTimeFilter('Semua Waktu')">Semua Waktu</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="setStockTimeFilter('Hari Ini')">Hari Ini</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="setStockTimeFilter('Minggu Ini')">Minggu Ini</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="setStockTimeFilter('Bulan Ini')">Bulan Ini</a></li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="dropdown">
+                                        <button class="btn btn-light border dropdown-toggle" type="button" id="filterStatus" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="mdi mdi-filter-variant me-1"></i>
+                                            <span id="selectedStatusFilter">Semua Status</span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="filterStatus">
+                                            <li><a class="dropdown-item" href="#" onclick="setStockStatusFilter('Semua Status')">Semua Status</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="setStockStatusFilter('Stok Aman')">Stok Aman</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="setStockStatusFilter('Stok Menipis')">Stok Menipis</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="setStockStatusFilter('Stok Habis')">Stok Habis</a></li>
                                         </ul>
                                     </div>
                                     <form class="app-search">

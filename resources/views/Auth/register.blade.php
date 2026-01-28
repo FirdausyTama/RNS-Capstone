@@ -43,7 +43,7 @@
 
     .register-box {
       width: 100%;
-      max-width: 360px;
+      max-width: 700px; /* Widened for 2 columns */
     }
 
     .register-box h3 {
@@ -118,45 +118,95 @@
       <p class="text-center">PT. Ranay Nusantara Sejahtera</p>
       <div id="alertBox"></div>
       <form>
-        <div class="mb-3">
-          <label class="form-label">Username</label>
-          <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-            <input type="text" id="name" class="form-control" placeholder="Masukkan Username">
-          </div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Username</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                    <input type="text" id="name" class="form-control" placeholder="Masukkan Username">
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Email</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                    <input type="email" id="email" class="form-control" placeholder="Masukkan Email">
+                     <div class="invalid-feedback">Format email tidak valid</div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Password</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                    <input type="password" id="password" class="form-control" placeholder="Masukkan Password">
+                    <span class="input-group-text toggle-password" onclick="togglePassword('password', this)">
+                      <i class="bi bi-eye-slash"></i>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Konfirmasi Password</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                    <input type="password" id="password_confirmation" class="form-control" placeholder="Konfirmasi Password">
+                    <span class="input-group-text toggle-password" onclick="togglePassword('password_confirmation', this)">
+                      <i class="bi bi-eye-slash"></i>
+                    </span>
+                  </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">No. HP</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                        <input type="text" id="phone" class="form-control" placeholder="08xxxxxxxx">
+                         <div class="invalid-feedback">Hanya angka diperbolehkan</div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Agama</label>
+                    <select class="form-select" id="religion">
+                        <option value="">Pilih Agama</option>
+                        <option value="Islam">Islam</option>
+                        <option value="Kristen">Kristen</option>
+                        <option value="Katolik">Katolik</option>
+                        <option value="Hindu">Hindu</option>
+                        <option value="Buddha">Buddha</option>
+                        <option value="Konghucu">Konghucu</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Provinsi</label>
+                    <select class="form-select" id="province" disabled>
+                        <option value="">Pilih Provinsi</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Kabupaten/Kota</label>
+                    <select class="form-select" id="regency" disabled>
+                        <option value="">Pilih Kabupaten/Kota</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Kecamatan</label>
+                    <select class="form-select" id="district" disabled>
+                        <option value="">Pilih Kecamatan</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label">Email</label>
-          <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-            <input type="email" id="email" class="form-control" placeholder="Masukkan Email">
-          </div>
-        </div>
-
-        <div class="mb-4">
-          <label class="form-label">Password</label>
-          <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-            <input type="password" id="password" class="form-control" placeholder="Masukkan Password">
-            <span class="input-group-text toggle-password" onclick="togglePassword('password', this)">
-              <i class="bi bi-eye-slash"></i>
-            </span>
-          </div>
-        </div>
-
-        <div class="mb-4">
-          <label class="form-label">Konfirmasi Password</label>
-          <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-            <input type="password" id="password_confirmation" class="form-control" placeholder="Konfirmasi Password">
-            <span class="input-group-text toggle-password" onclick="togglePassword('password_confirmation', this)">
-              <i class="bi bi-eye-slash"></i>
-            </span>
-          </div>
-        </div>
-
-        <button type="button" class="btn btn-register w-100 py-2">Daftar</button>
+        <button type="button" class="btn btn-register w-100 py-2 mt-3">Daftar</button>
 
         <div class="text-center mt-3 text-small">
           Anda sudah punya akun?
@@ -182,6 +232,90 @@
         icon.classList.add('bi-eye-slash');
       }
     }
+
+    // --- Region & Validation Logic ---
+    document.addEventListener("DOMContentLoaded", () => {
+        const phoneInput = document.getElementById("phone");
+        const emailInput = document.getElementById("email");
+        const provinceSelect = document.getElementById("province");
+        const regencySelect = document.getElementById("regency");
+        const districtSelect = document.getElementById("district");
+        
+        const BASE_REGION_URL = "https://www.emsifa.com/api-wilayah-indonesia/api";
+
+        // Validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        emailInput.addEventListener("input", function() {
+            if (!emailRegex.test(this.value) && this.value !== "") {
+                this.classList.add("is-invalid");
+            } else {
+                this.classList.remove("is-invalid");
+            }
+        });
+
+        phoneInput.addEventListener("input", function() {
+            if (/\D/.test(this.value)) {
+                this.classList.add("is-invalid");
+            } else {
+                this.classList.remove("is-invalid");
+            }
+        });
+
+        // Regions
+        async function loadProvinces() {
+            try {
+                const res = await fetch(`${BASE_REGION_URL}/provinces.json`);
+                const provinces = await res.json();
+                provinces.forEach(p => {
+                    const opt = document.createElement("option");
+                    opt.value = p.id;
+                    opt.textContent = p.name;
+                    provinceSelect.appendChild(opt);
+                });
+                provinceSelect.disabled = false;
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadRegencies(provId) {
+             regencySelect.innerHTML = '<option value="">Memuat...</option>';
+             districtSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+             districtSelect.disabled = true;
+
+             try {
+                const res = await fetch(`${BASE_REGION_URL}/regencies/${provId}.json`);
+                const regencies = await res.json();
+                regencySelect.innerHTML = '<option value="">Pilih Kabupaten/Kota</option>';
+                regencies.forEach(r => {
+                    const opt = document.createElement("option");
+                    opt.value = r.id;
+                    opt.textContent = r.name;
+                    regencySelect.appendChild(opt);
+                });
+                regencySelect.disabled = false;
+             } catch(e) { console.error(e); }
+        }
+
+        async function loadDistricts(regId) {
+             districtSelect.innerHTML = '<option value="">Memuat...</option>';
+             try {
+                const res = await fetch(`${BASE_REGION_URL}/districts/${regId}.json`);
+                const districts = await res.json();
+                districtSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+                districts.forEach(d => {
+                    const opt = document.createElement("option");
+                    opt.value = d.id;
+                    opt.textContent = d.name;
+                    districtSelect.appendChild(opt);
+                });
+                districtSelect.disabled = false;
+             } catch(e) { console.error(e); }
+        }
+
+        provinceSelect.addEventListener("change", (e) => loadRegencies(e.target.value));
+        regencySelect.addEventListener("change", (e) => loadDistricts(e.target.value));
+
+        loadProvinces();
+    });
   </script>
   <script src="assets/js/auth.js"></script>
 

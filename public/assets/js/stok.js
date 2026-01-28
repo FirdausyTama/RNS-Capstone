@@ -241,19 +241,84 @@ function setupPagination() {
 }
 
 
+// Filter State
+let activeTimeFilter = 'Semua Waktu';
+let activeStatusFilter = 'Semua Status';
+
+// Set Time Filter
+window.setStockTimeFilter = function(filter) {
+    activeTimeFilter = filter;
+    const el = document.getElementById('selectedFilter');
+    if(el) el.textContent = filter;
+    searchProduct(); // Trigger Apply Filters
+}
+
+// Alias for backward compatibility if needed
+window.setFilter = window.setStockTimeFilter;
+
+// Set Status Filter
+window.setStockStatusFilter = function(filter) {
+    activeStatusFilter = filter;
+    const el = document.getElementById('selectedStatusFilter');
+    if(el) el.textContent = filter;
+    searchProduct(); // Trigger Apply Filters
+}
+
 function searchProduct() {
     const input = document.getElementById("searchInput");
     const term = input.value.toLowerCase();
+    const today = new Date();
 
-    filteredStok = allStok.filter(
-        (item) =>
-            (item.nama_barang &&
-                item.nama_barang.toLowerCase().includes(term)) ||
-            (item.kode_sku && item.kode_sku.toLowerCase().includes(term)) ||
-            (item.merek && item.merek.toLowerCase().includes(term))
-    );
+    filteredStok = allStok.filter((item) => {
+        // 1. Search Filter
+        const matchSearch = (item.nama_barang && item.nama_barang.toLowerCase().includes(term)) ||
+                            (item.kode_sku && item.kode_sku.toLowerCase().includes(term)) ||
+                            (item.merek && item.merek.toLowerCase().includes(term));
+
+        // 2. Time Filter
+        let matchTime = true;
+        const itemDate = new Date(item.tgl_masuk);
+        if (activeTimeFilter === 'Hari Ini') {
+            matchTime = isSameDay(itemDate, today);
+        } else if (activeTimeFilter === 'Minggu Ini') {
+            matchTime = isSameWeek(itemDate, today);
+        } else if (activeTimeFilter === 'Bulan Ini') {
+            matchTime = isSameMonth(itemDate, today);
+        }
+
+        // 3. Status Filter
+        let matchStatus = true;
+        const qty = Number(item.jumlah) || 0;
+        if (activeStatusFilter === 'Stok Aman') {
+            matchStatus = qty >= 5;
+        } else if (activeStatusFilter === 'Stok Menipis') {
+            matchStatus = qty > 0 && qty < 5;
+        } else if (activeStatusFilter === 'Stok Habis') {
+            matchStatus = qty === 0;
+        }
+
+        return matchSearch && matchTime && matchStatus;
+    });
 
     renderTable(1);
+}
+
+// Helper Date Functions
+function isSameDay(d1, d2) {
+    return d1.getFullYear() === d2.getFullYear() &&
+        d1.getMonth() === d2.getMonth() &&
+        d1.getDate() === d2.getDate();
+}
+
+function isSameMonth(d1, d2) {
+    return d1.getFullYear() === d2.getFullYear() &&
+        d1.getMonth() === d2.getMonth();
+}
+
+function isSameWeek(d1, d2) {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const diffDays = Math.round(Math.abs((d1 - d2) / oneDay));
+    return diffDays <= 7;
 }
 
 function openDetailModal(id) {

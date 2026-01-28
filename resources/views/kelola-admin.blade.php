@@ -30,9 +30,7 @@
       justify-content: center;
       border-radius: 50%;
       background-color: #d9edf7;
-      /* warna latar (ubah sesuai tema) */
       color: #31708f;
-      /* warna teks */
       font-weight: bold;
       font-size: 14px;
       text-transform: uppercase;
@@ -47,9 +45,6 @@
   @include('navbar.navbar')
   
   <div id="app-layout">
-    
-    
-    
 
     <div class="content-page">
       <div class="content">
@@ -69,10 +64,14 @@
               </ol>
             </div>
           </div>
+          
           <div class="row mb-3">
-            <div class="col-12 d-flex justify-content-end">
-              <input type="text" id="searchInput" class="form-control w-auto" placeholder="Cari admin...">
-            </div>
+             <div class="col-12 d-flex justify-content-between align-items-center">
+                 <button class="btn btn-primary" onclick="openCreateModal()">
+                     <i class="mdi mdi-plus me-1"></i> Tambah Admin
+                 </button>
+                 <!-- Search can be handled by JS as well, but keeping simple for now -->
+             </div>
           </div>
 
         </div> 
@@ -109,6 +108,111 @@
     </div>
   </div> 
 
+  <!-- Modal Admin -->
+  <div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light border-0">
+                <h5 class="modal-title fw-semibold" id="modalTitle">
+                    <i class="mdi mdi-account-plus text-primary me-2"></i>Tambah Admin
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="adminForm">
+                <div class="modal-body p-4">
+                    <input type="hidden" id="adminId">
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="name" required placeholder="Masukkan Username">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" required placeholder="Masukkan Email">
+                            <div class="invalid-feedback">Format email tidak valid (contoh@email.com)</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" placeholder="Masukkan Password">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+                            <input type="password" class="form-control" id="password_confirmation" placeholder="Konfirmasi Password">
+                        </div>
+
+                        <div class="col-md-6" id="roleField">
+                            <label for="role" class="form-label">Role</label>
+                            <select class="form-select" id="role">
+                                <option value="admin">Admin</option>
+                                <option value="user">User</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">No. HP</label>
+                            <input type="text" class="form-control" id="phone" placeholder="Contoh: 08123456789">
+                            <div class="invalid-feedback">Nomor HP harus berupa angka</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="religion" class="form-label">Agama</label>
+                            <select class="form-select" id="religion">
+                                <option value="">Pilih Agama</option>
+                                <option value="Islam">Islam</option>
+                                <option value="Kristen">Kristen</option>
+                                <option value="Katolik">Katolik</option>
+                                <option value="Hindu">Hindu</option>
+                                <option value="Buddha">Buddha</option>
+                                <option value="Konghucu">Konghucu</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6" id="statusField">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status">
+                                <option value="active">Active</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="province" class="form-label">Provinsi</label>
+                            <select class="form-select" id="province" disabled>
+                                <option value="">Pilih Provinsi</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="regency" class="form-label">Kabupaten/Kota</label>
+                            <select class="form-select" id="regency" disabled>
+                                <option value="">Pilih Kabupaten/Kota</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="district" class="form-label">Kecamatan</label>
+                            <select class="form-select" id="district" disabled>
+                                <option value="">Pilih Kecamatan</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-0 bg-light">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary" id="saveBtn">
+                         <i class="mdi mdi-content-save-outline me-1"></i>Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
+
   <footer class="footer">
     <div class="container-fluid">
       <div class="row">
@@ -130,150 +234,12 @@
   <script src="assets/libs/waypoints/lib/jquery.waypoints.min.js"></script>
   <script src="assets/libs/jquery.counterup/jquery.counterup.min.js"></script>
   <script src="assets/libs/feather-icons/feather.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
 
-  
   <script src="assets/js/app.js"></script>
+  <script src="assets/js/kelola-admin.js"></script>
   
-  <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      const dataTableElement = document.querySelector("#datatable_admin tbody");
-      const paginationElement = document.createElement("ul");
-      paginationElement.className = "pagination pagination-rounded justify-content-end mb-0";
-      paginationElement.id = "pagination";
-      
-      // Insert pagination after table
-      dataTableElement.closest('.card-body').appendChild(paginationElement);
-
-      let allAdmins = [];
-      let filteredAdmins = [];
-      let currentPage = 1;
-      const rowsPerPage = 10;
-
-      function renderAdminRow(admin) {
-        const initials = admin.name
-          .split(" ")
-          .map(n => n[0])
-          .join("")
-          .substring(0, 2)
-          .toUpperCase();
-
-        let statusLabel = "";
-        let statusClass = "";
-
-        if (admin.status.toLowerCase() === "active") {
-          statusLabel = "Aktif";
-          statusClass = "bg-success-subtle text-success";
-        } else if (admin.status.toLowerCase() === "pending") {
-          statusLabel = "Menunggu ACC";
-          statusClass = "bg-warning-subtle text-warning";
-        } else {
-          statusLabel = "Tidak Aktif";
-          statusClass = "bg-secondary-subtle text-muted";
-        }
-
-        const lastActive = admin.updated_at ?
-          new Date(admin.updated_at).toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-          }) : "-";
-
-        return `
-          <tr>
-            <td><div class="avatar-initial">${initials}</div></td>
-            <td>${admin.name}</td>
-            <td>${admin.email}</td>
-            <td><span class="badge ${statusClass}">${statusLabel}</span></td>
-            <td>${lastActive}</td>
-            <td class="text-end">
-              ${admin.status === "pending" ? `
-                <button class="btn btn-sm bg-success-subtle me-1" onclick="approveAdmin('${admin.id}', '${admin.name.replace(/'/g,"\\'")}')">
-                  <i class="mdi mdi-check fs-14 text-success"></i>
-                </button>
-                <button class="btn btn-sm bg-danger-subtle" onclick="rejectAdmin('${admin.id}', '${admin.name.replace(/'/g,"\\'")}')">
-                  <i class="mdi mdi-close fs-14 text-danger"></i>
-                </button>` :
-                admin.status === "active" ? `
-                <button class="btn btn-sm bg-danger-subtle" onclick="deleteAdmin('${admin.id}', '${admin.name.replace(/'/g,"\\'")}')">
-                  <i class="mdi mdi-delete fs-14 text-danger"></i>
-                </button>` : "-"
-              }
-            </td>
-          </tr>
-        `;
-      }
-
-      function renderTable(page = 1) {
-        currentPage = page;
-        const start = (page - 1) * rowsPerPage;
-        const end = start + rowsPerPage;
-        const paginatedItems = filteredAdmins.slice(start, end);
-
-        dataTableElement.innerHTML = paginatedItems.length ? 
-          paginatedItems.map(renderAdminRow).join("") : 
-          `<tr><td colspan="6" class="text-center text-muted py-3">Tidak ada data ditemukan</td></tr>`;
-
-        setupPagination();
-      }
-
-      function setupPagination() {
-        const totalPages = Math.ceil(filteredAdmins.length / rowsPerPage);
-        paginationElement.innerHTML = "";
-
-        if (totalPages <= 1) return;
-
-        // Prev Button
-        const prevLi = document.createElement("li");
-        prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
-        prevLi.innerHTML = `<a class="page-link" href="javascript:void(0);" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>`;
-        prevLi.onclick = () => { if (currentPage > 1) renderTable(currentPage - 1); };
-        paginationElement.appendChild(prevLi);
-
-        // Page Numbers
-        for (let i = 1; i <= totalPages; i++) {
-          const li = document.createElement("li");
-          li.className = `page-item ${currentPage === i ? "active" : ""}`;
-          li.innerHTML = `<a class="page-link" href="javascript:void(0);">${i}</a>`;
-          li.onclick = () => renderTable(i);
-          paginationElement.appendChild(li);
-        }
-
-        // Next Button
-        const nextLi = document.createElement("li");
-        nextLi.className = `page-item ${currentPage === totalPages ? "disabled" : ""}`;
-        nextLi.innerHTML = `<a class="page-link" href="javascript:void(0);" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>`;
-        nextLi.onclick = () => { if (currentPage < totalPages) renderTable(currentPage + 1); };
-        paginationElement.appendChild(nextLi);
-      }
-
-      // Search Logic
-      const searchInput = document.querySelector("#searchInput");
-      if (searchInput) {
-        searchInput.addEventListener("input", (e) => {
-          const term = e.target.value.toLowerCase();
-          filteredAdmins = allAdmins.filter(admin => 
-            admin.name.toLowerCase().includes(term) || 
-            admin.email.toLowerCase().includes(term)
-          );
-          renderTable(1); // Reset to page 1 on search
-        });
-      }
-
-      async function populateAdminTable() {
-        dataTableElement.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-3">Memuat data...</td></tr>`;
-        allAdmins = await fetchAdmins();
-        filteredAdmins = [...allAdmins]; // Initialize filtered list
-        renderTable(1);
-        
-        // Expose function globally for auth.js to call
-        window.populateAdminTable = populateAdminTable;
-      }
-
-      await populateAdminTable();
-    });
-
-
-  </script>
 </body>
 
 </html>

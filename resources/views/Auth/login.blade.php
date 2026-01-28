@@ -139,10 +139,6 @@
           </div>
         </div>
 
-        <div class="d-flex justify-content-end mb-3">
-          <a href="#" class="text-white text-small">Lupa Password?</a>
-        </div>
-
         <button type="button" class="btn btn-login w-100 py-2">
           Masuk
         </button>
